@@ -1,27 +1,49 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="源文件">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="头文件">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="资源文件">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="BAC-Base">
+      <UniqueIdentifier>{f36486be-5e08-4cec-9bbc-46346afe32e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BACInterface">
+      <UniqueIdentifier>{b94889b8-c8ce-4281-b361-f693a13ee79a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BACInterface\AntiFunction">
+      <UniqueIdentifier>{b824e0b1-8c5d-4a5c-879a-471f0ff89089}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Detours">
+      <UniqueIdentifier>{2f9c7cbd-53d1-4019-8d63-4139e1b0734a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
-      <Filter>头文件</Filter>
+    <ClInclude Include="BAC-Base.h">
+      <Filter>BAC-Base</Filter>
+    </ClInclude>
+    <ClInclude Include="BACInterface\BAC.h">
+      <Filter>BACInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="BACInterface\SystemApi.h">
+      <Filter>BACInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="Detours\include\detours.h">
+      <Filter>Detours</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dllmain.cpp">
-      <Filter>源文件</Filter>
+    <ClCompile Include="BAC-Base.cpp">
+      <Filter>BAC-Base</Filter>
+    </ClCompile>
+    <ClCompile Include="BACInterface\BAC.cpp">
+      <Filter>BACInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="BACInterface\AntiFunction\HideHook.cpp">
+      <Filter>BACInterface\AntiFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="BACInterface\AntiFunction\MoniterCreateWindow.cpp">
+      <Filter>BACInterface\AntiFunction</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

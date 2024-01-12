@@ -129,6 +129,9 @@
   <ItemGroup>
     <ClCompile Include="ByteAntiCheat.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\BAC-Base\BAC-Base.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
