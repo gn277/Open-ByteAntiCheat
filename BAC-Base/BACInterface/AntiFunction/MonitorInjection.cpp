@@ -1,6 +1,6 @@
 #include "../BAC.h"
 
-typedef NTSTATUS(WINAPI* fpLdrLoadDll)(IN PWCHAR PathToFile OPTIONAL, IN ULONG Flags OPTIONAL,
+typedef NTSTATUS(WINAPI* fpLdrLoadDll)(IN PWCHAR PathToFile OPTIONAL, IN PULONG Flags OPTIONAL,
 	IN PUNICODE_STRING ModuleFileName, OUT PHANDLE ModuleHandle);
 
 fpLdrLoadDll pfnLdrLoadDll = NULL;
@@ -13,13 +13,15 @@ fpImmGetHotKey pfnGetHotKey = NULL;
 fpImmActivateLayout pfnImmActivateLayout = NULL;
 
 
-NTSTATUS WINAPI MyLdrLoadDll(IN PWCHAR PathToFile OPTIONAL, IN ULONG Flags OPTIONAL,
+NTSTATUS WINAPI MyLdrLoadDll(IN PWCHAR PathToFile OPTIONAL, IN PULONG Flags OPTIONAL,
 	IN PUNICODE_STRING ModuleFileName, OUT PHANDLE ModuleHandle)
 {
 	bool is_hidemodle = false;
 	WCHAR szDllName[MAX_PATH];
 	ZeroMemory(szDllName, sizeof(szDllName));
 	memcpy(szDllName, ModuleFileName->Buffer, ModuleFileName->Length);
+
+	printf("[LOG]:LdrLoadDll:%S\n", szDllName);
 
 	//在加载之前判断下该模块是否被加载过
 	HMODULE hPreMod = GetModuleHandleW(szDllName);

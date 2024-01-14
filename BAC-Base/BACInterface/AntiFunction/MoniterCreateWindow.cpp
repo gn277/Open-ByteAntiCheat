@@ -146,10 +146,9 @@ BOOL WINAPI MySetWindowTextA(_In_ HWND hWnd, _In_opt_ LPCSTR lpString)
 
 void BAC::MonitorCreateWindow()
 {
-	HMODULE user32 = ::LoadLibraryA("user32.dll");
-	//HMODULE user32 = ::GetModuleHandleA("user32.dll");
-	//if (!user32)
-	//	user32 = ::LoadLibraryA("user32.dll");
+	HMODULE user32 = ::GetModuleHandleA("user32.dll");
+	if (!user32)
+		user32 = ::LoadLibraryA("user32.dll");
 
 	//获取相关函数地址
 	pfnRegisterClassExA = (fpRegisterClassExA)::GetProcAddress(user32, "RegisterClassExA");
