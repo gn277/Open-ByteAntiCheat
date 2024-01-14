@@ -1,5 +1,4 @@
 #include "../BAC.h"
-#include <Windows.h>
 
 //创建窗口函数
 typedef WORD(WINAPI* fpRegisterClassExA)(WNDCLASSEXA* lpWndCls);
@@ -32,9 +31,7 @@ fpSetWindowTextW pfnSetWindowsTextW = NULL;
 fpSetWindowTextA pfnSetWindowsTextA = NULL;
 
 
-DWORD
-WINAPI
-MyRegisterClassExA(WNDCLASSEXA* lpWndCls)
+DWORD WINAPI MyRegisterClassExA(WNDCLASSEXA* lpWndCls)
 {
 	if (lpWndCls->lpszClassName)
 	{
@@ -45,6 +42,7 @@ MyRegisterClassExA(WNDCLASSEXA* lpWndCls)
 		wsprintfA(szNewClassName, "%d_%d", GetTickCount(), GetCurrentProcessId());
 		RtlCopyMemory((PVOID)lpWndCls->lpszClassName, (PVOID)szNewClassName, strlen(lpWndCls->lpszClassName));
 	}
+
 	return pfnRegisterClassExA(lpWndCls);
 }
 
@@ -59,6 +57,7 @@ DWORD WINAPI MyRegisterClassA(WNDCLASSA* lpWndClass)
 		wsprintfA(szNewClassName, "%d_%d", GetTickCount(), GetCurrentProcessId());
 		RtlCopyMemory((PVOID)lpWndClass->lpszClassName, (PVOID)szNewClassName, strlen(lpWndClass->lpszClassName));
 	}
+
 	return pfnRegisterClassA(lpWndClass);
 }
 
@@ -73,6 +72,7 @@ DWORD WINAPI MyRegisterClassExW(WNDCLASSEXW* lpWndCls)
 		wsprintfW(szNewClassName, L"%d_%d", GetTickCount(), GetCurrentProcessId());
 		RtlCopyMemory((PVOID)lpWndCls->lpszClassName, (PVOID)szNewClassName, wcslen(lpWndCls->lpszClassName) * 2);
 	}
+
 	return pfnRegisterClassExW(lpWndCls);
 }
 
@@ -87,6 +87,7 @@ DWORD WINAPI MyRegisterClassW(WNDCLASSW* lpWndClass)
 		wsprintfW(szNewClassName, L"%d_%d", GetTickCount(), GetCurrentProcessId());
 		RtlCopyMemory((PVOID)lpWndClass->lpszClassName, (PVOID)szNewClassName, wcslen(lpWndClass->lpszClassName) * 2);
 	}
+
 	return pfnRegisterClassW(lpWndClass);
 }
 
@@ -101,6 +102,7 @@ HWND WINAPI MyCreateWindowExW(
 		wsprintfW(szNewWndName, L"%d_%ws", GetCurrentProcessId(), lpWindowName);
 		lpWindowName = szNewWndName;
 	}
+
 	return  pfnCreateWindowExW(dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
 }
 
@@ -127,6 +129,7 @@ BOOL WINAPI MySetWindowTextW(_In_ HWND hWnd, _In_opt_  LPCTSTR lpString)
 		WCHAR buff[MAX_PATH];
 		wsprintf(buff, L"%d_%s", GetCurrentProcessId(), lpString);
 	}
+
 	return pfnSetWindowsTextW(hWnd, lpString);
 }
 
@@ -143,9 +146,10 @@ BOOL WINAPI MySetWindowTextA(_In_ HWND hWnd, _In_opt_ LPCSTR lpString)
 
 void BAC::MonitorCreateWindow()
 {
-	HMODULE user32 = ::GetModuleHandleA("user32.dll");
-	if (!user32)
-		user32 = ::LoadLibraryA("user32.dll");
+	HMODULE user32 = ::LoadLibraryA("user32.dll");
+	//HMODULE user32 = ::GetModuleHandleA("user32.dll");
+	//if (!user32)
+	//	user32 = ::LoadLibraryA("user32.dll");
 
 	//获取相关函数地址
 	pfnRegisterClassExA = (fpRegisterClassExA)::GetProcAddress(user32, "RegisterClassExA");

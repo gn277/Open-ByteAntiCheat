@@ -17,21 +17,22 @@ class BAC
 {
 private:
 
-	//隐藏应用层的hook
-public:
-	void HideHook();
 private:
 	void MakePePacked(HANDLE hProcess, PBYTE pImageBuff);
 
+public:
+	//隐藏应用层的hook
+	void HideHook();
 	//监视窗口创建相关函数
-public:
 	void MonitorCreateWindow();
-private:
+	//监视LdrLoadDll注入
+	void MonitorLdrLoadDll();
+	//监视APC注入
+	void MonitorApc();
+	//监视输入法注入
+	void MonitorImme();
 
 
-	//Hook功能的回调函数
-public:
-	//static 
 
 public:
 	BAC();

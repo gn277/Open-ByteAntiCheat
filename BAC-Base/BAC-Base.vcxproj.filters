@@ -45,5 +45,11 @@
     <ClCompile Include="BACInterface\AntiFunction\MoniterCreateWindow.cpp">
       <Filter>BACInterface\AntiFunction</Filter>
     </ClCompile>
+    <ClCompile Include="BACInterface\AntiFunction\MonitorInjection.cpp">
+      <Filter>BACInterface\AntiFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="BACInterface\AntiFunction\ProtectMemory.cpp">
+      <Filter>BACInterface\AntiFunction</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
