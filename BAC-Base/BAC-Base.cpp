@@ -13,7 +13,7 @@ bool BACBaseInitialize()
 	//监视LdrLoadDll注入
 	bac->MonitorLdrLoadDll();
 	//监视输入法注入
-	bac->MonitorImme();
+	bac->MonitorImm();
 
 
 	//监视窗口创建的相关函数

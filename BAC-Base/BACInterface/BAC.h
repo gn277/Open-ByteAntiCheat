@@ -30,7 +30,7 @@ public:
 	//监视APC注入
 	void MonitorApc();
 	//监视输入法注入
-	void MonitorImme();
+	void MonitorImm();
 
 
 
