@@ -31,6 +31,8 @@ public:
 	void MonitorApc();
 	//监视输入法注入
 	void MonitorImm();
+	//监视内存读写操作
+	void MonitorMemoryOption();
 
 
 

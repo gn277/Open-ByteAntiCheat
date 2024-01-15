@@ -14,6 +14,9 @@ bool BACBaseInitialize()
 	bac->MonitorLdrLoadDll();
 	//监视输入法注入
 	bac->MonitorImm();
+	//监视内存读写操作
+	bac->MonitorMemoryOption();
+
 
 
 	//监视窗口创建的相关函数

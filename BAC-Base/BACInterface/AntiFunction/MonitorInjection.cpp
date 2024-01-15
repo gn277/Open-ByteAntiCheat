@@ -85,8 +85,8 @@ int WINAPI MyImmActivateLayout(LPARAM pa)
 void BAC::MonitorImm()
 {
 	HMODULE imm32 = LoadLibraryA("imm32.dll");
-	fpImmGetHotKey pfnGetHotKey = (fpImmGetHotKey)GetProcAddress(imm32, "ImmGetHotKey");
-	fpImmActivateLayout pfnImmActivateLayout = (fpImmActivateLayout)GetProcAddress(imm32, "ImmActivateLayout");
+	pfnGetHotKey = (fpImmGetHotKey)GetProcAddress(imm32, "ImmGetHotKey");
+	pfnImmActivateLayout = (fpImmActivateLayout)GetProcAddress(imm32, "ImmActivateLayout");
 
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
