@@ -21,9 +21,11 @@ int main()
 
     BACBaseInitialize();
     
-    ////测试调用函数
-    //WNDCLASSEX window_class = { sizeof(WNDCLASSEX), CS_CLASSDC, NULL, 0L, 0L, GetModuleHandle(NULL), LoadIcon(GetModuleHandle(NULL), (LPCWSTR)NULL), NULL, NULL, NULL, L"Test-window-class-name", NULL};
-    //::RegisterClassExW(&window_class);
+    //测试窗口注册
+    WNDCLASSEX window_class = { sizeof(WNDCLASSEX), CS_CLASSDC, NULL, 0L, 0L, GetModuleHandle(NULL), LoadIcon(GetModuleHandle(NULL), (LPCWSTR)NULL), NULL, NULL, NULL, L"Test-window-class-name", NULL};
+    ::RegisterClassExW(&window_class);
+    //测试读内存
+    IsBadReadPtr((VOID*)::GetModuleHandleA(NULL), 4);
 
 
     getchar();
