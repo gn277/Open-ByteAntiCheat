@@ -21,10 +21,9 @@ int main()
     //测试读内存
     IsBadReadPtr((VOID*)::GetModuleHandleA(NULL), 4);
 
+    //卸载BAC
     printf("回车卸载BAC\n");
     getchar();
-
-    //卸载BAC
     if (!BACBaseUnInitialize())
         printf("BAC卸载失败！\n");
 
