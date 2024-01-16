@@ -11,15 +11,9 @@
 
 int main()
 {
-    //HMODULE hmodlue = LoadLibraryA("ByteAntiCheat\\BAC-Base.dll");
-    //if (hmodlue)
-    //{
-    //
-    //}
-    //else
-    //    printf("模块加载失败！\n");
-
-    BACBaseInitialize();
+    //初始化加载BAC
+    if (!BACBaseInitialize())
+        printf("BAC加载失败！\n");
     
     //测试窗口注册
     WNDCLASSEX window_class = { sizeof(WNDCLASSEX), CS_CLASSDC, NULL, 0L, 0L, GetModuleHandle(NULL), LoadIcon(GetModuleHandle(NULL), (LPCWSTR)NULL), NULL, NULL, NULL, L"Test-window-class-name", NULL};
@@ -27,7 +21,14 @@ int main()
     //测试读内存
     IsBadReadPtr((VOID*)::GetModuleHandleA(NULL), 4);
 
+    printf("回车卸载BAC\n");
+    getchar();
 
+    //卸载BAC
+    if (!BACBaseUnInitialize())
+        printf("BAC卸载失败！\n");
+
+    printf("BAC卸载成功，回车退出...\n");
     getchar();
     return 0;
 }
