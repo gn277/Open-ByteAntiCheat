@@ -12,6 +12,8 @@
 
 #include "SystemApi.h"
 
+using namespace std;
+
 
 class BAC
 {
@@ -33,8 +35,13 @@ public:
 	void MonitorImm();
 	//监视内存读写操作
 	void MonitorMemoryOption();
+	
+	//处理循环事件
+	void LoopEvent();
 
-
+public:
+	//对内存数据做CRC32效验
+	unsigned int CRC32(void* pdata, size_t data_len);
 
 public:
 	BAC();

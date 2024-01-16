@@ -1,4 +1,5 @@
 #include "../BAC.h"
+#include "../../BAC-Base.h"
 
 
 void BAC::MakePePacked(HANDLE hProcess, PBYTE pImageBuff)
@@ -14,6 +15,10 @@ void BAC::MakePePacked(HANDLE hProcess, PBYTE pImageBuff)
 
 void BAC::HideHook()
 {
+#if _DEBUG
+	baclog->OutPutCommandLine(__FUNCTION__, "Initialize");
+#endif
+
 	DWORD dwProcessId = GetCurrentProcessId();
 	NTSTATUS Status;
 	HANDLE hProcess = NULL;
@@ -36,4 +41,8 @@ void BAC::HideHook()
 		}
 	}
 	CloseHandle(hProcess);
+
+#if _DEBUG
+	baclog->OutPutCommandLine(__FUNCTION__, "Leave");
+#endif
 }

@@ -17,6 +17,9 @@
     <Filter Include="Detours">
       <UniqueIdentifier>{2f9c7cbd-53d1-4019-8d63-4139e1b0734a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BACLog">
+      <UniqueIdentifier>{ee43e05e-682d-4360-b80d-b24ab5dadf52}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BAC-Base.h">
@@ -30,6 +33,9 @@
     </ClInclude>
     <ClInclude Include="Detours\include\detours.h">
       <Filter>Detours</Filter>
+    </ClInclude>
+    <ClInclude Include="BACLog\BACLog.h">
+      <Filter>BACLog</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +56,15 @@
     </ClCompile>
     <ClCompile Include="BACInterface\AntiFunction\ProtectMemory.cpp">
       <Filter>BACInterface\AntiFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="BACInterface\AntiFunction\CheckCRC.cpp">
+      <Filter>BACInterface\AntiFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="BACInterface\AntiFunction\LoopEvent.cpp">
+      <Filter>BACInterface\AntiFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="BACLog\BACLog.cpp">
+      <Filter>BACLog</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

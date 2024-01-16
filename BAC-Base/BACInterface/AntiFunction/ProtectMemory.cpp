@@ -1,4 +1,8 @@
+////////////////////////////////////////////////////////////////
+//						¼àÊÓÄÚ´æ¶ÁÐ´º¯Êý
+////////////////////////////////////////////////////////////////
 #include "../BAC.h"
+#include "../../BAC-Base.h"
 
 typedef NTSTATUS(NTAPI* fpNtProtectVirtualMemory)(IN HANDLE ProcessHandle, IN OUT PVOID* BaseAddress, IN OUT PULONG ProtectSize, IN ULONG NewProtect, OUT PULONG OldProtect);
 typedef BOOL(WINAPI* fpIsBadReadPtr)(_In_opt_ CONST VOID* lp, _In_ UINT_PTR ucb);
@@ -32,6 +36,10 @@ BOOL WINAPI MyIsBadWritePtr(_In_opt_ LPVOID lp, _In_ UINT_PTR ucb)
 
 void BAC::MonitorMemoryOption()
 {
+#if _DEBUG
+	baclog->OutPutCommandLine(__FUNCTION__, "Initialize");
+#endif
+
 	HMODULE ntdll = ::GetModuleHandleA("ntdll.dll");
 	HMODULE kernel32 = ::GetModuleHandleA("KERNEL32.dll");
 	pfnNtProtectVirtualMemory = (fpNtProtectVirtualMemory)::GetProcAddress(ntdll, "NtProtectVirtualMemory");
@@ -46,5 +54,9 @@ void BAC::MonitorMemoryOption()
 	DetourAttach((PVOID*)&pfnIsBadWritePtr, MyIsBadWritePtr);
 
 	DetourTransactionCommit();
+
+#if _DEBUG
+	baclog->OutPutCommandLine(__FUNCTION__, "Leave");
+#endif
 }
 

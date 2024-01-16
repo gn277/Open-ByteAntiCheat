@@ -1,4 +1,5 @@
 #include "../BAC.h"
+#include "../../BAC-Base.h"
 
 typedef NTSTATUS(WINAPI* fpLdrLoadDll)(IN PWCHAR PathToFile OPTIONAL, IN PULONG Flags OPTIONAL,
 	IN PUNICODE_STRING ModuleFileName, OUT PHANDLE ModuleHandle);
@@ -44,6 +45,10 @@ NTSTATUS WINAPI MyLdrLoadDll(IN PWCHAR PathToFile OPTIONAL, IN PULONG Flags OPTI
 
 void BAC::MonitorLdrLoadDll()
 {
+#if _DEBUG
+	baclog->OutPutCommandLine(__FUNCTION__, "Initialize");
+#endif
+
 	HMODULE ntdll = ::GetModuleHandleA("ntdll.dll");
 	if (!ntdll)
 		ntdll = ::LoadLibraryA("ntdll.dll");
@@ -57,6 +62,10 @@ void BAC::MonitorLdrLoadDll()
 	DetourAttach((PVOID*)&pfnLdrLoadDll, MyLdrLoadDll);
 
 	DetourTransactionCommit();
+
+#if _DEBUG
+	baclog->OutPutCommandLine(__FUNCTION__, "Leave");
+#endif
 }
 
 void BAC::MonitorApc()
@@ -84,6 +93,10 @@ int WINAPI MyImmActivateLayout(LPARAM pa)
 
 void BAC::MonitorImm()
 {
+#if _DEBUG
+	baclog->OutPutCommandLine(__FUNCTION__, "Initialize");
+#endif
+
 	HMODULE imm32 = LoadLibraryA("imm32.dll");
 	pfnGetHotKey = (fpImmGetHotKey)GetProcAddress(imm32, "ImmGetHotKey");
 	pfnImmActivateLayout = (fpImmActivateLayout)GetProcAddress(imm32, "ImmActivateLayout");
@@ -93,6 +106,10 @@ void BAC::MonitorImm()
 	DetourAttach((PVOID*)&pfnGetHotKey, MyImmGetHotKey);
 	DetourAttach((PVOID*)&pfnImmActivateLayout, MyImmActivateLayout);
 	DetourTransactionCommit();
+
+#if _DEBUG
+	baclog->OutPutCommandLine(__FUNCTION__, "Leave");
+#endif
 }
 
 

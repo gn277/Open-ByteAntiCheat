@@ -154,15 +154,19 @@
     <ClInclude Include="BAC-Base.h" />
     <ClInclude Include="BACInterface\BAC.h" />
     <ClInclude Include="BACInterface\SystemApi.h" />
+    <ClInclude Include="BACLog\BACLog.h" />
     <ClInclude Include="Detours\include\detours.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BAC-Base.cpp" />
+    <ClCompile Include="BACInterface\AntiFunction\CheckCRC.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\HideHook.cpp" />
+    <ClCompile Include="BACInterface\AntiFunction\LoopEvent.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\MoniterCreateWindow.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\MonitorInjection.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\ProtectMemory.cpp" />
     <ClCompile Include="BACInterface\BAC.cpp" />
+    <ClCompile Include="BACLog\BACLog.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
