@@ -6,17 +6,23 @@ void BAC::MakePePacked(HANDLE hProcess, PBYTE pImageBuff)
 {
 	PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER)pImageBuff;
 	PIMAGE_NT_HEADERS pNtHeader = (PIMAGE_NT_HEADERS)(pImageBuff + pDosHeader->e_lfanew);
+
 	DWORD dwOld = 0;
 	VirtualProtectEx(hProcess, pNtHeader, sizeof(PIMAGE_NT_HEADERS), PAGE_EXECUTE_READWRITE, &dwOld);
+
 	pNtHeader->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress = 1;
 	pNtHeader->OptionalHeader.AddressOfEntryPoint = 0;
+
 	VirtualProtectEx(hProcess, pNtHeader, sizeof(PIMAGE_NT_HEADERS), dwOld, &dwOld);
 }
 
 void BAC::HideHook()
 {
+#if NDEBUG
+	VMProtectBegin("HideHook");
+#endif
 #if _DEBUG
-	baclog->OutPutCommandLine(__FUNCTION__, "Initialize");
+	baclog->FunctionLog(__FUNCTION__, "Enter");
 #endif
 
 	DWORD dwProcessId = GetCurrentProcessId();
@@ -43,6 +49,9 @@ void BAC::HideHook()
 	CloseHandle(hProcess);
 
 #if _DEBUG
-	baclog->OutPutCommandLine(__FUNCTION__, "Leave");
+	baclog->FunctionLog(__FUNCTION__, "Leave");
+#endif
+#if NDEBUG
+	VMProtectEnd();
 #endif
 }

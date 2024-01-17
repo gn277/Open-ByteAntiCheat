@@ -6,6 +6,15 @@
 #include <stdio.h>
 #include <iostream>
 
+#include "ProtectSDK/VMProtectSDK/VMProtectSDK.h"
+#if _WIN64
+#pragma comment(lib,"ProtectSDK/VMProtectSDK/VMProtectSDK64.lib")
+#elif _WIN32
+#pragma comment(lib,"ProtectSDK/VMProtectSDK/VMProtectSDK32.lib")
+#else
+#error "Unsupported platforms"
+#endif
+
 #include "BACInterface/BAC.h"
 #include "BACLog/BACLog.h"
 

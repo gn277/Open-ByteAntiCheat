@@ -9,10 +9,18 @@ BACLog* baclog = nullptr;
 
 bool BACBaseInitialize()
 {
+#if NDEBUG
+	VMProtectBegin("BACBaseInitialize");
+#endif
+
 	//实例化BAC日志对象
 	baclog = new BACLog();
 	//实例化BAC对象
 	bac = new BAC();
+
+#if _DEBUG
+	baclog->FunctionLog(__FUNCTION__, "Enter");
+#endif
 
 	//测试CRC32
 	printf("old hash:%d\n", bac->CRC32(::GetModuleHandleA("ntdll.dll"), 0x10000));
@@ -36,19 +44,39 @@ bool BACBaseInitialize()
 	//测试CRC32
 	printf("after hook hash:%d\n", bac->CRC32(::GetModuleHandleA("ntdll.dll"), 0x10000));
 
-	printf("BAC Initialize Over...\n");
+#if _DEBUG
+	baclog->FileLogf("%s-> %s: %s", "[BAC]", __FUNCTION__, "Leave");
+#endif
 	return true;
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
 bool BACBaseUnInitialize()
 {
+#if NDEBUG
+	VMProtectBegin("BACBaseUnInitialize");
+#endif
+#if _DEBUG
+	baclog->FunctionLog(__FUNCTION__, "Enter");
+#endif
+
 	//释放BAC对象
 	if (bac)
 		delete bac;
+
+#if _DEBUG
+	baclog->FunctionLog(__FUNCTION__, "Leave");
+#endif
+
 	//释放BAC日志对象
 	if (baclog)
 		delete baclog;
 
 	return true;
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 

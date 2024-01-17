@@ -45,8 +45,11 @@ NTSTATUS WINAPI MyLdrLoadDll(IN PWCHAR PathToFile OPTIONAL, IN PULONG Flags OPTI
 
 void BAC::MonitorLdrLoadDll()
 {
+#if NDEBUG
+	VMProtectBegin("MonitorLdrLoadDll");
+#endif
 #if _DEBUG
-	baclog->OutPutCommandLine(__FUNCTION__, "Initialize");
+	baclog->FunctionLog(__FUNCTION__, "Enter");
 #endif
 
 	HMODULE ntdll = ::GetModuleHandleA("ntdll.dll");
@@ -64,13 +67,30 @@ void BAC::MonitorLdrLoadDll()
 	DetourTransactionCommit();
 
 #if _DEBUG
-	baclog->OutPutCommandLine(__FUNCTION__, "Leave");
+	baclog->FunctionLog(__FUNCTION__, "Leave");
+#endif
+#if NDEBUG
+	VMProtectEnd();
 #endif
 }
 
 void BAC::MonitorApc()
 {
+#if NDEBUG
+	VMProtectBegin("MonitorApc");
+#endif
+#if _DEBUG
+	baclog->FunctionLog(__FUNCTION__, "Enter");
+#endif
 
+
+
+#if _DEBUG
+	baclog->FunctionLog(__FUNCTION__, "Leave");
+#endif
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
 BOOL WINAPI MyImmGetHotKey(DWORD dwHotKeyID, LPUINT lpuModifiers, LPUINT lpuVKey, LPHKL lphKL)
@@ -93,8 +113,11 @@ int WINAPI MyImmActivateLayout(LPARAM pa)
 
 void BAC::MonitorImm()
 {
+#if NDEBUG
+	VMProtectBegin("MonitorImm");
+#endif
 #if _DEBUG
-	baclog->OutPutCommandLine(__FUNCTION__, "Initialize");
+	baclog->FunctionLog(__FUNCTION__, "Enter");
 #endif
 
 	HMODULE imm32 = LoadLibraryA("imm32.dll");
@@ -108,7 +131,10 @@ void BAC::MonitorImm()
 	DetourTransactionCommit();
 
 #if _DEBUG
-	baclog->OutPutCommandLine(__FUNCTION__, "Leave");
+	baclog->FunctionLog(__FUNCTION__, "Leave");
+#endif
+#if NDEBUG
+	VMProtectEnd();
 #endif
 }
 

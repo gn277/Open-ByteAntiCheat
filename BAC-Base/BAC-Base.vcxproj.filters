@@ -20,6 +20,12 @@
     <Filter Include="BACLog">
       <UniqueIdentifier>{ee43e05e-682d-4360-b80d-b24ab5dadf52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ProtectSDK">
+      <UniqueIdentifier>{9e90ccec-e6c0-4f36-91a0-393f4cb9f266}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ProtectSDK\VMProtectSDK">
+      <UniqueIdentifier>{042f249a-e47b-40bf-86fb-1fbf9ca39213}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BAC-Base.h">
@@ -36,6 +42,9 @@
     </ClInclude>
     <ClInclude Include="BACLog\BACLog.h">
       <Filter>BACLog</Filter>
+    </ClInclude>
+    <ClInclude Include="ProtectSDK\VMProtectSDK\VMProtectSDK.h">
+      <Filter>ProtectSDK\VMProtectSDK</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

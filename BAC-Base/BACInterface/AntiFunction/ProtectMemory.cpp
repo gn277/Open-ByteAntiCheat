@@ -36,8 +36,11 @@ BOOL WINAPI MyIsBadWritePtr(_In_opt_ LPVOID lp, _In_ UINT_PTR ucb)
 
 void BAC::MonitorMemoryOption()
 {
+#if NDEBUG
+	VMProtectBegin("MonitorMemoryOption");
+#endif
 #if _DEBUG
-	baclog->OutPutCommandLine(__FUNCTION__, "Initialize");
+	baclog->FunctionLog(__FUNCTION__, "Enter");
 #endif
 
 	HMODULE ntdll = ::GetModuleHandleA("ntdll.dll");
@@ -56,7 +59,10 @@ void BAC::MonitorMemoryOption()
 	DetourTransactionCommit();
 
 #if _DEBUG
-	baclog->OutPutCommandLine(__FUNCTION__, "Leave");
+	baclog->FunctionLog(__FUNCTION__, "Leave");
+#endif
+#if NDEBUG
+	VMProtectEnd();
 #endif
 }
 

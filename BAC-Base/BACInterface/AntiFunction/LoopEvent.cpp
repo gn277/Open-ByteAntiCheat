@@ -7,14 +7,20 @@
 
 void BAC::LoopEvent()
 {
+#if NDEBUG
+	VMProtectBegin("LoopEvent");
+#endif
 #if _DEBUG
-	baclog->OutPutCommandLine(__FUNCTION__, "Initialize");
+	baclog->FunctionLog(__FUNCTION__, "Enter");
 #endif
 
 
 
 #if _DEBUG
-	baclog->OutPutCommandLine(__FUNCTION__, "Leave");
-#endif	
+	baclog->FunctionLog(__FUNCTION__, "Leave");
+#endif
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 

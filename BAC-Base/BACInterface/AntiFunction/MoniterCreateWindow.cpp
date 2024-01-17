@@ -1,4 +1,5 @@
 #include "../BAC.h"
+#include "../../BAC-Base.h"
 
 //创建窗口函数
 typedef WORD(WINAPI* fpRegisterClassExA)(WNDCLASSEXA* lpWndCls);
@@ -146,6 +147,13 @@ BOOL WINAPI MySetWindowTextA(_In_ HWND hWnd, _In_opt_ LPCSTR lpString)
 
 void BAC::MonitorCreateWindow()
 {
+#if NDEBUG
+	VMProtectBegin("MonitorCreateWindow");
+#endif
+#if _DEBUG
+	baclog->FunctionLog(__FUNCTION__, "Enter");
+#endif
+
 	HMODULE user32 = ::GetModuleHandleA("user32.dll");
 	if (!user32)
 		user32 = ::LoadLibraryA("user32.dll");
@@ -170,7 +178,13 @@ void BAC::MonitorCreateWindow()
 	DetourAttach((PVOID*)&pfnCreateWindowExW, MyCreateWindowExW);
 	DetourAttach((PVOID*)&pfnCreateWindowExA, MyCreateWindowExA);
 
-
 	DetourTransactionCommit();
+
+#if _DEBUG
+	baclog->FunctionLog(__FUNCTION__, "Leave");
+#endif
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
