@@ -37,7 +37,6 @@ bool BACBaseInitialize()
 	bac->LoopEvent();
 
 
-
 	//监视窗口创建的相关函数
 	bac->MonitorCreateWindow();
 
