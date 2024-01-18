@@ -80,11 +80,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetName>BAC-Base</TargetName>
-    <OutDir>..\Release\</OutDir>
+    <OutDir>..\Release\ByteAntiCheat\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>BAC-Base</TargetName>
-    <OutDir>..\Debug\</OutDir>
+    <OutDir>..\Debug\ByteAntiCheat\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -164,6 +164,7 @@
     <ClCompile Include="BACInterface\AntiFunction\HideHook.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\LoopEvent.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\MoniterCreateWindow.cpp" />
+    <ClCompile Include="BACInterface\AntiFunction\MonitorCallbacks.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\MonitorInjection.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\ProtectMemory.cpp" />
     <ClCompile Include="BACInterface\BAC.cpp" />

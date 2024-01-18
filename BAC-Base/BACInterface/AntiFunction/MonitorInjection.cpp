@@ -14,9 +14,13 @@ fpImmGetHotKey pfnGetHotKey = NULL;
 fpImmActivateLayout pfnImmActivateLayout = NULL;
 
 
-NTSTATUS WINAPI MyLdrLoadDll(IN PWCHAR PathToFile OPTIONAL, IN PULONG Flags OPTIONAL,
+NTSTATUS WINAPI BACLdrLoadDll(IN PWCHAR PathToFile OPTIONAL, IN PULONG Flags OPTIONAL,
 	IN PUNICODE_STRING ModuleFileName, OUT PHANDLE ModuleHandle)
 {
+#if NDEBUG
+	VMProtectBegin("BACLdrLoadDll");
+#endif
+
 	bool is_hidemodle = false;
 	WCHAR szDllName[MAX_PATH];
 	ZeroMemory(szDllName, sizeof(szDllName));
@@ -41,6 +45,10 @@ NTSTATUS WINAPI MyLdrLoadDll(IN PWCHAR PathToFile OPTIONAL, IN PULONG Flags OPTI
 	//»Ö¸´´íÎóÂë
 	SetLastError(dwLastError);
 	return ntStatus;
+
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
 void BAC::MonitorLdrLoadDll()
@@ -62,7 +70,7 @@ void BAC::MonitorLdrLoadDll()
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
 
-	DetourAttach((PVOID*)&pfnLdrLoadDll, MyLdrLoadDll);
+	DetourAttach((PVOID*)&pfnLdrLoadDll, BACLdrLoadDll);
 
 	DetourTransactionCommit();
 
@@ -93,14 +101,26 @@ void BAC::MonitorApc()
 #endif
 }
 
-BOOL WINAPI MyImmGetHotKey(DWORD dwHotKeyID, LPUINT lpuModifiers, LPUINT lpuVKey, LPHKL lphKL)
+BOOL WINAPI BACImmGetHotKey(DWORD dwHotKeyID, LPUINT lpuModifiers, LPUINT lpuVKey, LPHKL lphKL)
 {
+#if NDEBUG
+	VMProtectBegin("BACImmGetHotKey");
+#endif
+
 	active_flag = true;
 	return pfnGetHotKey(dwHotKeyID, lpuModifiers, lpuVKey, lphKL);
+
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
-int WINAPI MyImmActivateLayout(LPARAM pa)
+int WINAPI BACImmActivateLayout(LPARAM pa)
 {
+#if NDEBUG
+	VMProtectBegin("BACImmActivateLayout");
+#endif
+
 	if (active_flag)
 		active_flag = true;
 	else
@@ -109,6 +129,10 @@ int WINAPI MyImmActivateLayout(LPARAM pa)
 		ExitProcess(5);
 	}
 	return pfnImmActivateLayout(pa);
+
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
 void BAC::MonitorImm()
@@ -126,8 +150,8 @@ void BAC::MonitorImm()
 
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
-	DetourAttach((PVOID*)&pfnGetHotKey, MyImmGetHotKey);
-	DetourAttach((PVOID*)&pfnImmActivateLayout, MyImmActivateLayout);
+	DetourAttach((PVOID*)&pfnGetHotKey, BACImmGetHotKey);
+	DetourAttach((PVOID*)&pfnImmActivateLayout, BACImmActivateLayout);
 	DetourTransactionCommit();
 
 #if _DEBUG

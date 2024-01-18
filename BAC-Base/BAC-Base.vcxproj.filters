@@ -75,5 +75,8 @@
     <ClCompile Include="BACLog\BACLog.cpp">
       <Filter>BACLog</Filter>
     </ClCompile>
+    <ClCompile Include="BACInterface\AntiFunction\MonitorCallbacks.cpp">
+      <Filter>BACInterface\AntiFunction</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

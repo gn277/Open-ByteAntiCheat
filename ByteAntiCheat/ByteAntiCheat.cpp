@@ -1,14 +1,30 @@
-﻿#include <Windows.h>
+﻿////////////////////////////////////////////////////////////////
+//			此项目用于调用BAC-Base.dll并测试函数调用
+////////////////////////////////////////////////////////////////
+#include <Windows.h>
 #include <stdio.h>
 
+#if _WIN64
 typedef bool(__stdcall* pfBACBaseInitialize)(void);
 typedef bool(__stdcall* pfBACBaseUnInitialize)(void);
+#elif _WIN32
+typedef bool(__cdecl* pfBACBaseInitialize)(void);
+typedef bool(__cdecl* pfBACBaseUnInitialize)(void);
+#else
+#error "unsupport"
+#endif
 
 
 int main()
 {
     //加载dll
+#if _WIN64
     auto bac_module = ::LoadLibraryA("ByteAntiCheat/BAC-Base64.dll");
+#elif _WIN32
+    auto bac_module = ::LoadLibraryA("ByteAntiCheat/BAC-Base.dll");
+#else
+#error "unsupport"
+#endif
     if (!bac_module)
     {
         printf("BAC 模块加载失败！\n");

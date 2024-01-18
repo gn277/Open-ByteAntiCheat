@@ -4,6 +4,10 @@
 
 void BAC::MakePePacked(HANDLE hProcess, PBYTE pImageBuff)
 {
+#if NDEBUG
+	VMProtectBegin("MakePePacked");
+#endif
+
 	PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER)pImageBuff;
 	PIMAGE_NT_HEADERS pNtHeader = (PIMAGE_NT_HEADERS)(pImageBuff + pDosHeader->e_lfanew);
 
@@ -14,6 +18,10 @@ void BAC::MakePePacked(HANDLE hProcess, PBYTE pImageBuff)
 	pNtHeader->OptionalHeader.AddressOfEntryPoint = 0;
 
 	VirtualProtectEx(hProcess, pNtHeader, sizeof(PIMAGE_NT_HEADERS), dwOld, &dwOld);
+
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
 void BAC::HideHook()

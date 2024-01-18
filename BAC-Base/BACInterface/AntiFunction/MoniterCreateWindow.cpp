@@ -32,8 +32,12 @@ fpSetWindowTextW pfnSetWindowsTextW = NULL;
 fpSetWindowTextA pfnSetWindowsTextA = NULL;
 
 
-DWORD WINAPI MyRegisterClassExA(WNDCLASSEXA* lpWndCls)
+DWORD WINAPI BACRegisterClassExA(WNDCLASSEXA* lpWndCls)
 {
+#if NDEBUG
+	VMProtectBegin("BACRegisterClassExA");
+#endif
+
 	if (lpWndCls->lpszClassName)
 	{
 		CHAR szNewClassName[MAX_PATH];
@@ -45,10 +49,18 @@ DWORD WINAPI MyRegisterClassExA(WNDCLASSEXA* lpWndCls)
 	}
 
 	return pfnRegisterClassExA(lpWndCls);
+
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
-DWORD WINAPI MyRegisterClassA(WNDCLASSA* lpWndClass)
+DWORD WINAPI BACRegisterClassA(WNDCLASSA* lpWndClass)
 {
+#if NDEBUG
+	VMProtectBegin("BACRegisterClassA");
+#endif
+
 	if (lpWndClass->lpszClassName)
 	{
 		CHAR szNewClassName[MAX_PATH];
@@ -60,10 +72,18 @@ DWORD WINAPI MyRegisterClassA(WNDCLASSA* lpWndClass)
 	}
 
 	return pfnRegisterClassA(lpWndClass);
+
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
-DWORD WINAPI MyRegisterClassExW(WNDCLASSEXW* lpWndCls)
+DWORD WINAPI BACRegisterClassExW(WNDCLASSEXW* lpWndCls)
 {
+#if NDEBUG
+	VMProtectBegin("BACRegisterClassExW");
+#endif
+
 	if (lpWndCls->lpszClassName)
 	{
 		WCHAR szNewClassName[MAX_PATH];
@@ -75,10 +95,18 @@ DWORD WINAPI MyRegisterClassExW(WNDCLASSEXW* lpWndCls)
 	}
 
 	return pfnRegisterClassExW(lpWndCls);
+
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
-DWORD WINAPI MyRegisterClassW(WNDCLASSW* lpWndClass)
+DWORD WINAPI BACRegisterClassW(WNDCLASSW* lpWndClass)
 {
+#if NDEBUG
+	VMProtectBegin("BACRegisterClassW");
+#endif
+
 	if (lpWndClass->lpszClassName)
 	{
 		WCHAR szNewClassName[MAX_PATH];
@@ -90,13 +118,21 @@ DWORD WINAPI MyRegisterClassW(WNDCLASSW* lpWndClass)
 	}
 
 	return pfnRegisterClassW(lpWndClass);
+
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
-HWND WINAPI MyCreateWindowExW(
+HWND WINAPI BACCreateWindowExW(
 	__in DWORD dwExStyle, __in_opt LPCWSTR lpClassName, __in_opt LPCWSTR lpWindowName, __in DWORD dwStyle,
 	__in int X, __in int Y, __in int nWidth, __in int nHeight, __in_opt HWND hWndParent, __in_opt HMENU hMenu,
 	__in_opt HINSTANCE hInstance, __in_opt LPVOID lpParam)
 {
+#if NDEBUG
+	VMProtectBegin("BACCreateWindowExW");
+#endif
+
 	if (lpWindowName)
 	{
 		WCHAR szNewWndName[MAX_PATH];
@@ -105,13 +141,21 @@ HWND WINAPI MyCreateWindowExW(
 	}
 
 	return  pfnCreateWindowExW(dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
+
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
-HWND WINAPI MyCreateWindowExA(
+HWND WINAPI BACCreateWindowExA(
 	__in DWORD dwExStyle, __in_opt LPCSTR lpClassName, __in_opt LPCSTR lpWindowName, __in DWORD dwStyle,
 	__in int X, __in int Y, __in int nWidth, __in int nHeight, __in_opt HWND hWndParent, __in_opt HMENU hMenu,
 	__in_opt HINSTANCE hInstance, __in_opt LPVOID lpParam)
 {
+#if NDEBUG
+	VMProtectBegin("BACCreateWindowExA");
+#endif
+
 	if (lpWindowName)
 	{
 		CHAR szNewWndName[MAX_PATH];
@@ -120,11 +164,18 @@ HWND WINAPI MyCreateWindowExA(
 	}
 
 	return  pfnCreateWindowExA(dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
+
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
-
-BOOL WINAPI MySetWindowTextW(_In_ HWND hWnd, _In_opt_  LPCTSTR lpString)
+BOOL WINAPI BACSetWindowTextW(_In_ HWND hWnd, _In_opt_  LPCTSTR lpString)
 {
+#if NDEBUG
+	VMProtectBegin("BACSetWindowTextW");
+#endif
+
 	if (lpString)
 	{
 		WCHAR buff[MAX_PATH];
@@ -132,10 +183,21 @@ BOOL WINAPI MySetWindowTextW(_In_ HWND hWnd, _In_opt_  LPCTSTR lpString)
 	}
 
 	return pfnSetWindowsTextW(hWnd, lpString);
+
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
-BOOL WINAPI MySetWindowTextA(_In_ HWND hWnd, _In_opt_ LPCSTR lpString)
+BOOL WINAPI BACSetWindowTextA(_In_ HWND hWnd, _In_opt_ LPCSTR lpString)
 {
+#if NDEBUG
+	VMProtectBegin("BACSetWindowTextA");
+#endif
+#if _DEBUG
+	baclog->FunctionLog(__FUNCTION__, "Enter");
+#endif
+
 	if (lpString)
 	{
 		char buff[MAX_PATH];
@@ -143,6 +205,13 @@ BOOL WINAPI MySetWindowTextA(_In_ HWND hWnd, _In_opt_ LPCSTR lpString)
 	}
 
 	return pfnSetWindowsTextA(hWnd, lpString);
+
+#if _DEBUG
+	baclog->FunctionLog(__FUNCTION__, "Leave");
+#endif
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
 void BAC::MonitorCreateWindow()
@@ -171,12 +240,12 @@ void BAC::MonitorCreateWindow()
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
 
-	DetourAttach((PVOID*)&pfnRegisterClassExA, MyRegisterClassExA);
-	DetourAttach((PVOID*)&pfnRegisterClassA, MyRegisterClassA);
-	DetourAttach((PVOID*)&pfnRegisterClassExW, MyRegisterClassExW);
-	DetourAttach((PVOID*)&pfnRegisterClassW, MyRegisterClassW);
-	DetourAttach((PVOID*)&pfnCreateWindowExW, MyCreateWindowExW);
-	DetourAttach((PVOID*)&pfnCreateWindowExA, MyCreateWindowExA);
+	DetourAttach((PVOID*)&pfnRegisterClassExA, BACRegisterClassExA);
+	DetourAttach((PVOID*)&pfnRegisterClassA, BACRegisterClassA);
+	DetourAttach((PVOID*)&pfnRegisterClassExW, BACRegisterClassExW);
+	DetourAttach((PVOID*)&pfnRegisterClassW, BACRegisterClassW);
+	DetourAttach((PVOID*)&pfnCreateWindowExW, BACCreateWindowExW);
+	DetourAttach((PVOID*)&pfnCreateWindowExA, BACCreateWindowExA);
 
 	DetourTransactionCommit();
 

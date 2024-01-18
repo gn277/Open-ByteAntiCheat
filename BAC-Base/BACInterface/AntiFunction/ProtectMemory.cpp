@@ -13,25 +13,49 @@ fpIsBadReadPtr pfnIsBadReadPtr = NULL;
 fpIsBadWritePtr pfnIsBadWritePtr = NULL;
 
 
-NTSTATUS NTAPI MyNtProtectVirtualMemory(IN HANDLE ProcessHandle, IN OUT PVOID* BaseAddress, IN OUT PULONG ProtectSize, IN ULONG NewProtect, OUT PULONG OldProtect)
+NTSTATUS NTAPI BACNtProtectVirtualMemory(IN HANDLE ProcessHandle, IN OUT PVOID* BaseAddress, IN OUT PULONG ProtectSize, IN ULONG NewProtect, OUT PULONG OldProtect)
 {
+#if NDEBUG
+	VMProtectBegin("BACNtProtectVirtualMemory");
+#endif
+
 	printf("MyNtProtectVirtualMemory ...\n");
 
 	return pfnNtProtectVirtualMemory(ProcessHandle, BaseAddress, ProtectSize, NewProtect, OldProtect);
+
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
-BOOL WINAPI MyIsBadReadPtr(_In_opt_ CONST VOID* lp, _In_ UINT_PTR ucb)
+BOOL WINAPI BACIsBadReadPtr(_In_opt_ CONST VOID* lp, _In_ UINT_PTR ucb)
 {
+#if NDEBUG
+	VMProtectBegin("BACIsBadReadPtr");
+#endif
+
 	printf("MyIsBadReadPtr ...\n");
 
 	return pfnIsBadReadPtr(lp, ucb);
+
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
-BOOL WINAPI MyIsBadWritePtr(_In_opt_ LPVOID lp, _In_ UINT_PTR ucb)
+BOOL WINAPI BACIsBadWritePtr(_In_opt_ LPVOID lp, _In_ UINT_PTR ucb)
 {
+#if NDEBUG
+	VMProtectBegin("BACIsBadWritePtr");
+#endif
+
 	printf("MyIsBadWritePtr ...\n");
 
 	return pfnIsBadWritePtr(lp, ucb);
+
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
 void BAC::MonitorMemoryOption()
@@ -52,9 +76,9 @@ void BAC::MonitorMemoryOption()
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
 
-	DetourAttach((PVOID*)&pfnNtProtectVirtualMemory, MyNtProtectVirtualMemory);
-	DetourAttach((PVOID*)&pfnIsBadReadPtr, MyIsBadReadPtr);
-	DetourAttach((PVOID*)&pfnIsBadWritePtr, MyIsBadWritePtr);
+	DetourAttach((PVOID*)&pfnNtProtectVirtualMemory, BACNtProtectVirtualMemory);
+	DetourAttach((PVOID*)&pfnIsBadReadPtr, BACIsBadReadPtr);
+	DetourAttach((PVOID*)&pfnIsBadWritePtr, BACIsBadWritePtr);
 
 	DetourTransactionCommit();
 
