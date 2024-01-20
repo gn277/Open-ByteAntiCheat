@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////////////////
-//				这里定义内核与应用层共用的数据结构
+//				这里定义内核与应用层共用的通讯控制码
 ////////////////////////////////////////////////////////////////
 #pragma once
 
-#define DRIVER_NAME L"\\Device\\BACDriver"
-#define DRIVER_LINKER_NAME L"\\??\\BACLinker"
+//通讯控制码
+#define Test_Code CTL_CODE(FILE_DEVICE_UNKNOWN,0x801,METHOD_BUFFERED,FILE_ANY_ACCESS)
 
 

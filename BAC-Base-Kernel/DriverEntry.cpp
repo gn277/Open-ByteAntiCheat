@@ -1,9 +1,6 @@
 #include "BAC-Base-Kernel/BAC-Base-Kernel.h"
 #include "IRPControl/IRPControl.h"
 
-#define DRIVER_NAME L"\\Device\\BACDriver"
-#define DRIVER_LINKER_NAME L"\\??\\BACLinker"
-
 BACBase* bac = nullptr;
 
 

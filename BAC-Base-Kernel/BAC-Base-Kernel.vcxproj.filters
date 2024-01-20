@@ -50,5 +50,8 @@
     <ClInclude Include="IRPControl\BAC-DataStruct.h">
       <Filter>IRPControl</Filter>
     </ClInclude>
+    <ClInclude Include="IRPControl\IRPControlCode.h">
+      <Filter>IRPControl</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -11,6 +11,7 @@
 #endif
 
 #include "SystemApi.h"
+#include "BACKernelApi/BACKernel.h"
 
 using namespace std;
 
@@ -18,6 +19,7 @@ using namespace std;
 class BAC
 {
 private:
+	BACKernel* bac_kernel = nullptr;
 
 private:
 	void MakePePacked(HANDLE hProcess, PBYTE pImageBuff);
@@ -42,6 +44,11 @@ public:
 public:
 	//对内存数据做CRC32效验
 	unsigned int CRC32(void* pdata, size_t data_len);
+
+public:
+	//BAC内核接口初始化
+	bool InitializeBACKernel();
+	bool UnInitializeBACKernel();
 
 public:
 	BAC();

@@ -5,6 +5,7 @@
 
 BAC* bac = nullptr;
 BACLog* baclog = nullptr;
+HMODULE self_module = NULL;
 
 
 bool BACBaseInitialize()
@@ -22,7 +23,11 @@ bool BACBaseInitialize()
 	baclog->FunctionLog(__FUNCTION__, "Enter");
 #endif
 
-	//测试CRC32
+	//加载驱动
+	if (!bac->InitializeBACKernel())
+		throw "initialize bac kernel error!";
+
+	//Hook前测试CRC32
 	printf("old hash:%d\n", bac->CRC32(::GetModuleHandleA("ntdll.dll"), 0x10000));
 
 	//应用层隐藏hook
@@ -37,11 +42,10 @@ bool BACBaseInitialize()
 	bac->LoopEvent();
 
 
-
 	//监视窗口创建的相关函数
 	bac->MonitorCreateWindow();
 
-	//测试CRC32
+	//Hook后测试CRC32
 	printf("after hook hash:%d\n", bac->CRC32(::GetModuleHandleA("ntdll.dll"), 0x10000));
 
 #if _DEBUG
@@ -64,7 +68,13 @@ bool BACBaseUnInitialize()
 
 	//释放BAC对象
 	if (bac)
+	{
+		if(!bac->UnInitializeBACKernel())
+			throw "uninitialize bac kernel error";
 		delete bac;
+	}
+	else
+		return false;
 
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");
@@ -73,10 +83,30 @@ bool BACBaseUnInitialize()
 	//释放BAC日志对象
 	if (baclog)
 		delete baclog;
-
+	else
+		return false;
 	return true;
 #if NDEBUG
 	VMProtectEnd();
 #endif
+}
+
+BOOL APIENTRY DllMain(HMODULE h_module, DWORD ul_reason_for_call, LPVOID lpReserved)
+{
+	switch (ul_reason_for_call)
+	{
+		case DLL_PROCESS_ATTACH:
+		{
+			self_module = h_module;
+			break;
+		}
+		case DLL_THREAD_ATTACH:
+			break;
+		case DLL_THREAD_DETACH:
+			break;
+		case DLL_PROCESS_DETACH:
+			break;
+		}
+	return TRUE;
 }
 

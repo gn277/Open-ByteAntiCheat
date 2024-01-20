@@ -32,9 +32,9 @@ NTSTATUS BACDispatchRoutine(PDEVICE_OBJECT device_object, PIRP irp)
 		case IRP_MJ_READ:
 			break;
 	}
-	irp->IoStatus.Information = info;//当 IRP 引发数据的传送操作，通常设置 Information 值为传送的字节数。
+	irp->IoStatus.Information = info;
 	irp->IoStatus.Status = status;
-	IoCompleteRequest(irp, IO_NO_INCREMENT);//指令完成派遣函数
+	IoCompleteRequest(irp, IO_NO_INCREMENT);
 	return status;
 }
 

@@ -49,6 +49,15 @@
     <ClInclude Include="ProtectSDK\VMProtectSDK\VMProtectSDK.h">
       <Filter>ProtectSDK\VMProtectSDK</Filter>
     </ClInclude>
+    <ClInclude Include="BACInterface\BACKernelApi\BACKernel.h">
+      <Filter>BACInterface\BACKernelApi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BAC-Base-Kernel\IRPControl\BAC-DataStruct.h">
+      <Filter>BACInterface\BACKernelApi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BAC-Base-Kernel\IRPControl\IRPControlCode.h">
+      <Filter>BACInterface\BACKernelApi</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BAC-Base.cpp">
@@ -80,6 +89,9 @@
     </ClCompile>
     <ClCompile Include="BACInterface\AntiFunction\MonitorCallbacks.cpp">
       <Filter>BACInterface\AntiFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="BACInterface\BACKernelApi\BACKernel.cpp">
+      <Filter>BACInterface\BACKernelApi</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

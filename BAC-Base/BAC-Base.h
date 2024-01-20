@@ -21,6 +21,7 @@
 
 extern "C" BAC* bac;
 extern "C" BACLog* baclog;
+extern "C" HMODULE self_module;
 
 extern "C" __declspec(dllexport) bool BACBaseInitialize();
 extern "C" __declspec(dllexport) bool BACBaseUnInitialize();
