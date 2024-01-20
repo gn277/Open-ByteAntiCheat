@@ -34,3 +34,6 @@ R0:
 * Communicate with R3's heartbeat
 * to be later add
 ----
+
+Welcome to join us in joint development, let's immerse ourselves in the direction of technological development that we all value, and strive for it!
+====
