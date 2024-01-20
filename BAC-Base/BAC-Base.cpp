@@ -8,6 +8,13 @@ BACLog* baclog = nullptr;
 HMODULE self_module = NULL;
 
 
+LONG CALLBACK UnHandleException(EXCEPTION_POINTERS* p_exception)
+{
+	bac->UnInitializeBACKernel();
+
+	return EXCEPTION_CONTINUE_SEARCH;
+}
+
 bool BACBaseInitialize()
 {
 #if NDEBUG
@@ -22,6 +29,9 @@ bool BACBaseInitialize()
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
 #endif
+
+	//设置顶层异常过滤函数
+	::SetUnhandledExceptionFilter(&UnHandleException);
 
 	//加载驱动
 	if (!bac->InitializeBACKernel())
