@@ -13,7 +13,7 @@ R3:
 * DLL injection detection
 * Monitor read/write related functions
 * Monitoring window create related functions
-* 
+* to be later add
 R0:
 ----
 * to be later add
