@@ -17,6 +17,12 @@
       <UniqueIdentifier>{8E41214B-6785-4CFE-B992-037D68949A14}</UniqueIdentifier>
       <Extensions>inf;inv;inx;mof;mc;</Extensions>
     </Filter>
+    <Filter Include="BAC-Base-Kernel">
+      <UniqueIdentifier>{15fa6539-8844-4cca-b742-353930f36e86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IRPControl">
+      <UniqueIdentifier>{fc45fe00-f7da-4438-aa9d-e743a74c2492}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Inf Include="BAC-Base-Kernel.inf">
@@ -27,5 +33,22 @@
     <ClCompile Include="DriverEntry.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="BAC-Base-Kernel\BAC-Base-Kernel.cpp">
+      <Filter>BAC-Base-Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="IRPControl\IRPControl.cpp">
+      <Filter>IRPControl</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BAC-Base-Kernel\BAC-Base-Kernel.h">
+      <Filter>BAC-Base-Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="IRPControl\IRPControl.h">
+      <Filter>IRPControl</Filter>
+    </ClInclude>
+    <ClInclude Include="IRPControl\BAC-DataStruct.h">
+      <Filter>IRPControl</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BAC-Base", "BAC-Base\BAC-Ba
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BAC-Base-Kernel", "BAC-Base-Kernel\BAC-Base-Kernel.vcxproj", "{E73601F5-2F54-440E-8CFE-A927EDE7B9D1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BAC-Server", "BAC-Server", "{DE05554F-DD7F-4575-9389-F71AF0C9F3B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
