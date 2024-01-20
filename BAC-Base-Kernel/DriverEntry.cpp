@@ -4,6 +4,8 @@
 #define DRIVER_NAME L"\\Device\\BACDriver"
 #define DRIVER_LINKER_NAME L"\\??\\BACLinker"
 
+BACBase* bac = nullptr;
+
 
 void DriverUnload(PDRIVER_OBJECT p_driver_object)
 {
@@ -19,6 +21,9 @@ void DriverUnload(PDRIVER_OBJECT p_driver_object)
 	RtlInitUnicodeString(&link_name, DRIVER_LINKER_NAME);
 	IoDeleteSymbolicLink(&link_name);
 
+	//ÊÍ·ÅBACBase
+	if (bac)
+		delete bac;
 
 #if _DEBUG
 	OutPutBACLog(__FUNCTION__, "Leave");
@@ -70,8 +75,8 @@ extern "C" NTSTATUS DriverEntry(PDRIVER_OBJECT p_driver_object, PUNICODE_STRING 
 	}
 	p_driver_object->DriverUnload = DriverUnload;
 
-
-
+	//ÊµÀý»¯BACBase
+	bac = new BACBase;
 
 #if _DEBUG
 	OutPutBACLog(__FUNCTION__, "Leave");

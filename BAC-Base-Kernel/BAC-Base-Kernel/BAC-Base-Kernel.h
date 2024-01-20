@@ -16,11 +16,18 @@ void OutPutBACLog(IN const char* function, IN const char* data);
 
 class BACBase
 {
+private:
+
 public:
 	BACBase();
 	~BACBase();
 
-private:
+public:
+	void* operator new(size_t size, POOL_TYPE pool_type = NonPagedPool);
+	void operator delete(void* pointer);
+
+public:
+
 
 };
 
