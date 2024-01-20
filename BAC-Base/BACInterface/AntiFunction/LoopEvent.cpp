@@ -8,7 +8,7 @@
 void BAC::LoopEvent()
 {
 #if NDEBUG
-	VMProtectBegin("LoopEvent");
+	VMProtectBegin("BAC::LoopEvent");
 #endif
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");

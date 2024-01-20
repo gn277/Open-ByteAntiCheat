@@ -13,7 +13,7 @@ BAC::~BAC()
 bool BAC::InitializeBACKernel()
 {
 #if NDEBUG
-	VMProtectBegin("InitializeBACKernel");
+	VMProtectBegin("BAC::InitializeBACKernel");
 #endif
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
@@ -61,9 +61,9 @@ bool BAC::InitializeBACKernel()
 
 bool BAC::UnInitializeBACKernel()
 {
-#if NDEBUG
-	VMProtectBegin("UnInitializeBACKernel");
-#endif
+//#if NDEBUG
+//	VMProtectBegin("BAC::UnInitializeBACKernel");
+//#endif
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
 #endif
@@ -90,8 +90,8 @@ bool BAC::UnInitializeBACKernel()
 	baclog->FunctionLog(__FUNCTION__, "Leave");
 #endif
 	return true;
-#if NDEBUG
-	VMProtectEnd();
-#endif
+//#if NDEBUG
+//	VMProtectEnd();
+//#endif
 }
 

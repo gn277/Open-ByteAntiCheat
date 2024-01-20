@@ -217,7 +217,7 @@ BOOL WINAPI BACSetWindowTextA(_In_ HWND hWnd, _In_opt_ LPCSTR lpString)
 void BAC::MonitorCreateWindow()
 {
 #if NDEBUG
-	VMProtectBegin("MonitorCreateWindow");
+	VMProtectBegin("BAC::MonitorCreateWindow");
 #endif
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");

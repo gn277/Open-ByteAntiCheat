@@ -5,7 +5,7 @@
 void BAC::MakePePacked(HANDLE hProcess, PBYTE pImageBuff)
 {
 #if NDEBUG
-	VMProtectBegin("MakePePacked");
+	VMProtectBegin("BAC::MakePePacked");
 #endif
 
 	PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER)pImageBuff;
@@ -26,9 +26,9 @@ void BAC::MakePePacked(HANDLE hProcess, PBYTE pImageBuff)
 
 void BAC::HideHook()
 {
-#if NDEBUG
-	VMProtectBegin("HideHook");
-#endif
+//#if NDEBUG
+//	VMProtectBegin("BAC::HideHook");
+//#endif
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
 #endif
@@ -59,7 +59,7 @@ void BAC::HideHook()
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");
 #endif
-#if NDEBUG
-	VMProtectEnd();
-#endif
+//#if NDEBUG
+//	VMProtectEnd();
+//#endif
 }

@@ -18,9 +18,9 @@ BACKernel::~BACKernel()
 
 bool BACKernel::InstiallDriver()
 {
-#if NDEBUG
-	VMProtectBegin("InstallDriver");
-#endif
+//#if NDEBUG
+//	VMProtectBegin("BACKernel::InstallDriver");
+//#endif
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
 #endif
@@ -79,15 +79,15 @@ bool BACKernel::InstiallDriver()
 	baclog->FunctionLog(__FUNCTION__, "Leave");
 #endif
 	return b_ret;
-#if NDEBUG
-	VMProtectEnd();
-#endif
+//#if NDEBUG
+//	VMProtectEnd();
+//#endif
 }
 
 bool BACKernel::UnInstallDriver()
 {
 #if NDEBUG
-	VMProtectBegin("UnInstallDriver");
+	VMProtectBegin("BACKernel::UnInstallDriver");
 #endif
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
@@ -164,9 +164,9 @@ bool BACKernel::UnInstallDriver()
 
 bool BACKernel::OpenDriverHandle()
 {
-#if NDEBUG
-	VMProtectBegin("OpenDriverHandle");
-#endif
+//#if NDEBUG
+//	VMProtectBegin("BACKernel::OpenDriverHandle");
+//#endif
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
 #endif
@@ -194,9 +194,9 @@ bool BACKernel::OpenDriverHandle()
 	baclog->FunctionLog(__FUNCTION__, "Leave");
 #endif
 	return TRUE;
-#if NDEBUG
-	VMProtectEnd();
-#endif
+//#if NDEBUG
+//	VMProtectEnd();
+//#endif
 }
 
 

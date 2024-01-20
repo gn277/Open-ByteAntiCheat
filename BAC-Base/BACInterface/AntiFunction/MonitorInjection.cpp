@@ -54,7 +54,7 @@ NTSTATUS WINAPI BACLdrLoadDll(IN PWCHAR PathToFile OPTIONAL, IN PULONG Flags OPT
 void BAC::MonitorLdrLoadDll()
 {
 #if NDEBUG
-	VMProtectBegin("MonitorLdrLoadDll");
+	VMProtectBegin("BAC::MonitorLdrLoadDll");
 #endif
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
@@ -85,7 +85,7 @@ void BAC::MonitorLdrLoadDll()
 void BAC::MonitorApc()
 {
 #if NDEBUG
-	VMProtectBegin("MonitorApc");
+	VMProtectBegin("BAC::MonitorApc");
 #endif
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
@@ -138,7 +138,7 @@ int WINAPI BACImmActivateLayout(LPARAM pa)
 void BAC::MonitorImm()
 {
 #if NDEBUG
-	VMProtectBegin("MonitorImm");
+	VMProtectBegin("BAC::MonitorImm");
 #endif
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
