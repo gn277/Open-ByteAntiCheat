@@ -1,3 +1,5 @@
+NOTE:
+====
 ByteAntiCheat is a lightweight kernel/user layer open-source anti cheating system written in C/C++for the Windows platform.
 
 Due to the lightweight nature of this project, the syntax used is the basic C/C++syntax, and many annotations are written in Chinese for beginners to read and understand.
