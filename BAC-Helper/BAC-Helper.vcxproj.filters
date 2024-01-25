@@ -12,6 +12,9 @@
     <Filter Include="PEInject">
       <UniqueIdentifier>{9bd7bb66-1828-4436-b1b7-54ea6bc13c79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BAC-Helper">
+      <UniqueIdentifier>{744c5d1b-92e0-4723-ae25-55ba78fe1229}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -20,10 +23,13 @@
     <ClCompile Include="PEInject\PEInject.cpp">
       <Filter>PEInject</Filter>
     </ClCompile>
+    <ClCompile Include="BAC-Helper.cpp">
+      <Filter>BAC-Helper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PEInject\PEInject.h">
-      <Filter>PEInject</Filter>
+    <ClInclude Include="BAC-Helper.h">
+      <Filter>BAC-Helper</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

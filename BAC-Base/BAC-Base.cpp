@@ -33,7 +33,7 @@ bool BACBaseInitialize()
 	//设置顶层异常过滤函数
 	::SetUnhandledExceptionFilter(&UnHandleException);
 
-	//加载驱动
+	//加载驱动 如驱动未签名此处会触发异常断下，请检查驱动签名
 	if (!bac->InitializeBACKernel())
 		throw "initialize bac kernel error!";
 
