@@ -220,7 +220,7 @@ bool BACHelper::ImportTableInject(const char* target_exe_path, const char* new_e
 #if NDEBUG
     VMProtectBegin("BACHelper::ImportTableInject");
 #endif
-
+    printf("target exe path:%s\n", target_exe_path);
 
     DWORD	Size = 0;
     LPVOID	pFileBuffer = NULL;

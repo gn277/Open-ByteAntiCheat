@@ -10,13 +10,7 @@
 #include "../../../BAC-Base-Kernel/IRPControl/IRPControlCode.h"
 
 //驱动文件名称
-#if _WIN64
-#define DRIVER_FILE_NAME _T("BAC-Base64.sys")
-#elif _WIN32
 #define DRIVER_FILE_NAME _T("BAC-Base.sys")
-#else
-#error "unsupport"
-#endif
 
 
 class BACKernel
