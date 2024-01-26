@@ -33,9 +33,9 @@ bool BACBaseInitialize()
 	//设置顶层异常过滤函数
 	::SetUnhandledExceptionFilter(&UnHandleException);
 
-	////加载驱动 如驱动未签名此处会触发异常断下，请检查驱动签名
-	//if (!bac->InitializeBACKernel())
-	//	throw "initialize bac kernel error!";
+	//加载驱动 如驱动未签名此处会触发异常断下，请检查驱动签名
+	if (!bac->InitializeBACKernel())
+		throw "initialize bac kernel error!";
 
 	//Hook前测试CRC32
 	printf("old hash:%d\n", bac->CRC32(::GetModuleHandleA("ntdll.dll"), 0x10000));

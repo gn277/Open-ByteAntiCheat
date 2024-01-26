@@ -20,7 +20,7 @@ bool BAC::InitializeBACKernel()
 #endif
 
 	//ÊµÀý»¯BACKernel
-	this->bac_kernel = new BACKernel;
+	this->bac_kernel = new BACKernel();
 	if (!this->bac_kernel)
 	{
 #if _DEBUG

@@ -134,13 +134,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <DebuggerFlavor>DbgengKernelDebugger</DebuggerFlavor>
     <EnableInf2cat>false</EnableInf2cat>
-    <TargetName>BAC-Base64</TargetName>
+    <TargetName>BAC-Base</TargetName>
     <OutDir>..\x64\Debug\ByteAntiCheat\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <DebuggerFlavor>DbgengKernelDebugger</DebuggerFlavor>
     <EnableInf2cat>false</EnableInf2cat>
-    <TargetName>BAC-Base64</TargetName>
+    <TargetName>BAC-Base</TargetName>
     <OutDir>..\x64\Release\ByteAntiCheat\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
