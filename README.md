@@ -6,6 +6,9 @@ Due to the lightweight nature of this project, the syntax used is the basic C/C+
 
 This project is in the early development stage, and friends who are interested in developing an anti cheating system are welcome to raise questions about this project. If interested, you can also participate in the development of Byte Anti Cheating System together.
 
+QQ群：784026453
+====
+
 Completed development
 ====
 R3:
