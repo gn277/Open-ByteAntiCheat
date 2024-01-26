@@ -23,7 +23,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	//向主进程注入BAC-Base.dll
 #if _WIN64
-	if (!bac_helper->ImportTableInject("ByteAntiCheat\\TestGame.exe", "TestGame.exe", "ByteAntiCheat\\BAC-Base64.dll", "..BACBaseInitialize"))
+	//if (!bac_helper->ImportTableInject("ByteAntiCheat\\TestGame.exe", "TestGame.exe", "ByteAntiCheat\\BAC-Base64.dll", "..BACBaseInitialize"))
+	if (!bac_helper->ImportTableInject("E:\\source\\repos\\ByteAntiCheat\\x64\\Debug\\ByteAntiCheat\\TestGame.exe", "E:\\source\\repos\\ByteAntiCheat\\x64\\Debug\\TestGame.exe", "ByteAntiCheat\\BAC-Base64.dll", "..BACBaseInitialize"))
 #elif _WIN32
 	if (!bac_helper->ImportTableInject("ByteAntiCheat\\TestGame.exe", "TestGame.exe", "ByteAntiCheat\\BAC-Base.dll", "..BACBaseInitialize"))
 #endif
