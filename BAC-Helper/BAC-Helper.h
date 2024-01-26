@@ -22,18 +22,13 @@ public:
 
 	//PE注入：向游戏主进程中注入BAC-Base.dll以达到主动加载反作弊的目的
 public:
-#if _WIN32
 	bool ImportTableInject(const char* target_exe_path, const char* new_exe_path, const char* dll_name, const char* import_function_name);
-#endif
 
 private:
-#if _WIN32
 	LPVOID ReadFileToBuffer(const char* file_path);
 	DWORD* AddSection(char* file_buffer, DWORD section_size, DWORD virtual_size);
 	DWORD RVAtoFOA(DWORD roa_address, char* file_buffer);
 	DWORD FOAtoRVA(char* file_buffer, DWORD foa_address);
-#endif
-
 
 };
 

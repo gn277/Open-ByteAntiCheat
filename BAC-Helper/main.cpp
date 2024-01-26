@@ -22,10 +22,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	//这里做BAC-Base模块的版本检测，如未更新将进行更新操作
 
 	//向主进程注入BAC-Base.dll
-#if _WIN32
-	if (!bac_helper->ImportTableInject("E:\\source\\repos\\ByteAntiCheat\\Debug\\ByteAntiCheat.exe", "E:\\source\\repos\\ByteAntiCheat\\Debug\\ByteAntiCheat.exe", "ByteAntiCheat\\BAC-Base.dll", "..BACBaseInitialize"))
-#elif _WIN64
-	if (!bac_helper->ImportTableInject64("../ByteAntiCheat.exe", "../ByteAntiCheatNew.exe", "BAC-Base64.dll", "BACBaseInitialize"))
+#if _WIN64
+	if (!bac_helper->ImportTableInject("ByteAntiCheat\\TestGame.exe", "TestGame.exe", "ByteAntiCheat\\BAC-Base64.dll", "..BACBaseInitialize"))
+#elif _WIN32
+	if (!bac_helper->ImportTableInject("ByteAntiCheat\\TestGame.exe", "TestGame.exe", "ByteAntiCheat\\BAC-Base.dll", "..BACBaseInitialize"))
 #endif
 	{
 		MessageBoxA(NULL, "An error occurred while starting the game", "Error", MB_OK);
@@ -40,8 +40,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	if (bac_helper)
 		delete bac_helper;
 
-
-	MessageBoxA(NULL, "BAC-Helper running over,OK to exit", "Error", MB_OK);
 	return 0;
 }
 

@@ -225,6 +225,9 @@ bool BACHelper::ImportTableInject(const char* target_exe_path, const char* new_e
     DWORD	Size = 0;
     LPVOID	pFileBuffer = NULL;
     pFileBuffer = this->ReadFileToBuffer(target_exe_path);
+    if (pFileBuffer == NULL)
+        return false;
+
     //新建一个节
     char* NewBuffer = (char*)this->AddSection((char*)pFileBuffer, 0x1000, 0x600);
     PIMAGE_DOS_HEADER dos = (PIMAGE_DOS_HEADER)NewBuffer;

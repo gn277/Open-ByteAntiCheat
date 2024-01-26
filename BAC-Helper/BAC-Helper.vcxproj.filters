@@ -32,4 +32,7 @@
       <Filter>BAC-Helper</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
+  </ItemGroup>
 </Project>

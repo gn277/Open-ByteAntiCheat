@@ -33,9 +33,9 @@ bool BACBaseInitialize()
 	//设置顶层异常过滤函数
 	::SetUnhandledExceptionFilter(&UnHandleException);
 
-	//加载驱动 如驱动未签名此处会触发异常断下，请检查驱动签名
-	if (!bac->InitializeBACKernel())
-		throw "initialize bac kernel error!";
+	////加载驱动 如驱动未签名此处会触发异常断下，请检查驱动签名
+	//if (!bac->InitializeBACKernel())
+	//	throw "initialize bac kernel error!";
 
 	//Hook前测试CRC32
 	printf("old hash:%d\n", bac->CRC32(::GetModuleHandleA("ntdll.dll"), 0x10000));
@@ -108,6 +108,10 @@ BOOL APIENTRY DllMain(HMODULE h_module, DWORD ul_reason_for_call, LPVOID lpReser
 		case DLL_PROCESS_ATTACH:
 		{
 			self_module = h_module;
+
+			if (!BACBaseInitialize())
+				MessageBoxA(NULL, "BAC load error, please check!", "Error", MB_OK);
+
 			break;
 		}
 		case DLL_THREAD_ATTACH:
@@ -115,8 +119,11 @@ BOOL APIENTRY DllMain(HMODULE h_module, DWORD ul_reason_for_call, LPVOID lpReser
 		case DLL_THREAD_DETACH:
 			break;
 		case DLL_PROCESS_DETACH:
+		{
+			BACBaseUnInitialize();
 			break;
 		}
+	}
 	return TRUE;
 }
 
