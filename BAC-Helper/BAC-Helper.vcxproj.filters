@@ -15,6 +15,9 @@
     <Filter Include="BAC-Helper">
       <UniqueIdentifier>{92861474-75de-43f2-80f3-70705a18e025}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BACPlugin">
+      <UniqueIdentifier>{770082b9-4a91-4590-8b52-d866382c32f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
