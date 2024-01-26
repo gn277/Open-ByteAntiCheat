@@ -3,8 +3,10 @@
 #include <iostream>
 
 #include "BAC-Helper.h"
+#include "BAC-Config/BAC-Config.h"
 
 BACHelper* bac_helper = nullptr;
+BACConfig* bac_config = nullptr;
 
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpcmdLine, _In_ int nCmdShow)
@@ -18,6 +20,8 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	bac_helper = new BACHelper();
 
 	//这里可以读一些配置信息
+	bac_config = new BACConfig();
+
 
 	//这里做BAC-Base模块的版本检测，如未更新将进行更新操作
 

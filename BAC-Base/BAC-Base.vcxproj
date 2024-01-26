@@ -164,6 +164,7 @@
     <ClInclude Include="BACLog\BACLog.h" />
     <ClInclude Include="Detours\include\detours.h" />
     <ClInclude Include="ProtectSDK\VMProtectSDK\VMProtectSDK.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BAC-Base.cpp" />
@@ -180,6 +181,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="BAC-Base.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

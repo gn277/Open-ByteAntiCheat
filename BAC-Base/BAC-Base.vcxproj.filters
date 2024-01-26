@@ -58,6 +58,7 @@
     <ClInclude Include="..\BAC-Base-Kernel\IRPControl\IRPControlCode.h">
       <Filter>BACInterface\BACKernelApi</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BAC-Base.cpp">
@@ -96,5 +97,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="BAC-Base.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

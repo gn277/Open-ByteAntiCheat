@@ -140,11 +140,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BAC-Config\BAC-Config.cpp" />
     <ClCompile Include="BAC-Helper.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PEInject\PEInject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BAC-Config\BAC-Config.h" />
     <ClInclude Include="BAC-Helper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
