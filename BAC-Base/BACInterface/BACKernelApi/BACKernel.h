@@ -19,11 +19,16 @@ private:
 	//驱动文件句柄
 	HANDLE _driver_handle = NULL;
 	//驱动文件路径
-	TCHAR _driver_full_path[MAX_PATH] = { 0 };
+	TCHAR _driver_full_path[MAX_PATH] = { NULL };
+	TCHAR _driver_name[MAX_PATH] = { NULL };
 
 public:
 	BACKernel();
 	~BACKernel();
+
+private:
+	bool ServiceExists(const wchar_t* service_name);
+	void DriverEventLogUninstall(const wchar_t* service_name);
 
 public:
 	bool InstiallDriver();
