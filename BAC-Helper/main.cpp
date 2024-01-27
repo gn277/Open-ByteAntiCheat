@@ -18,7 +18,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	//实例化BACHelper
 	bac_helper = new BACHelper();
-
 	//这里可以读一些配置信息
 	bac_config = new BACConfig();
 
@@ -47,7 +46,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	//释放BACConfig
 	if (bac_config)
 		delete bac_config;
-
 	//释放BACHelper
 	if (bac_helper)
 		delete bac_helper;
