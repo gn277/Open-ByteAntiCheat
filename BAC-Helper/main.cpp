@@ -22,14 +22,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	//这里可以读一些配置信息
 	bac_config = new BACConfig();
 
+	//读取配置文件中的游戏进程名
+	std::string gamefile_full_name;
+	bac_config->ReadConfig("GameFullName", &gamefile_full_name);
+	//std::cout << "gamefile_full_name:" << gamefile_full_name.c_str() << endl;
 
 	//这里做BAC-Base模块的版本检测，如未更新将进行更新操作
 
 	//向主进程注入BAC-Base.dll
 #if _WIN64
-	if (!bac_helper->ImportTableInject("ByteAntiCheat\\TestGame.exe", "TestGame.exe", "ByteAntiCheat\\BAC-Base64.dll", "..BACBaseInitialize"))
+	if (!bac_helper->ImportTableInject(std::string("ByteAntiCheat\\" + gamefile_full_name).c_str(), gamefile_full_name.c_str(), "ByteAntiCheat\\BAC-Base64.dll", "..BACBaseInitialize"))
 #elif _WIN32
-	if (!bac_helper->ImportTableInject("ByteAntiCheat\\TestGame.exe", "TestGame.exe", "ByteAntiCheat\\BAC-Base.dll", "..BACBaseInitialize"))
+	if (!bac_helper->ImportTableInject(std::string("ByteAntiCheat\\" + gamefile_full_name).c_str(), gamefile_full_name.c_str(), "ByteAntiCheat\\BAC-Base.dll", "..BACBaseInitialize"))
 #endif
 	{
 		MessageBoxA(NULL, "An error occurred while starting the game", "Error", MB_OK);
@@ -40,10 +44,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 
 
+	//释放BACConfig
+	if (bac_config)
+		delete bac_config;
+
 	//释放BACHelper
 	if (bac_helper)
 		delete bac_helper;
 
+	MessageBoxA(NULL, "An error occurred while starting the game", "Error", MB_OK);
 	return 0;
 }
 

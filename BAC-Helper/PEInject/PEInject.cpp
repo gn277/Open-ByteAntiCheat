@@ -1,7 +1,11 @@
 #include "../BAC-Helper.h"
 
 
+#if _WIN64
+DWORD64 BACHelper::FOAtoRVA(char* file_buffer, DWORD64 foa_address)
+#else
 DWORD BACHelper::FOAtoRVA(char* file_buffer, DWORD foa_address)
+#endif
 {
     PIMAGE_DOS_HEADER p_dos_header = NULL;
     PIMAGE_NT_HEADERS p_nt_header = NULL;
@@ -16,8 +20,13 @@ DWORD BACHelper::FOAtoRVA(char* file_buffer, DWORD foa_address)
     DWORD size_of_raw_data = NULL;
     DWORD poip_nt_headerer_raw_data = NULL;
 
+#if _WIN64
+    DWORD64 image_base = NULL;
+    DWORD64 rva_address = NULL;
+#else
     DWORD image_base = NULL;
     DWORD rva_address = NULL;
+#endif
 
 
     p_dos_header = (PIMAGE_DOS_HEADER)file_buffer;
@@ -31,7 +40,7 @@ DWORD BACHelper::FOAtoRVA(char* file_buffer, DWORD foa_address)
     size_of_p_option_header = p_file_header->SizeOfOptionalHeader;
 
     p_section_header = (PIMAGE_SECTION_HEADER)((char*)p_option_header + size_of_p_option_header);
-    for (int i = 0; i < number_of_section; i++)
+    for (unsigned int i = 0; i < number_of_section; i++)
     {
         //prip_nt_headerf("%x", ((PIMAGE_SECTION_HEADER)((char*)p_section_header + 40))->VirtualAddress);
         if (foa_address >= p_section_header->PointerToRawData && foa_address < ((PIMAGE_SECTION_HEADER)((char*)p_section_header + 40))->PointerToRawData)
@@ -50,6 +59,8 @@ DWORD BACHelper::FOAtoRVA(char* file_buffer, DWORD foa_address)
         rva_address = foa_address - p_section_header->PointerToRawData + virtual_address;
         return rva_address;
     }
+
+    return 0;
 }
 
 DWORD BACHelper::RVAtoFOA(DWORD roa_address, char* file_buffer)
@@ -67,7 +78,11 @@ DWORD BACHelper::RVAtoFOA(DWORD roa_address, char* file_buffer)
     DWORD size_of_raw_data = NULL;
     DWORD pointer_raw_data = NULL;
     //DWORD virtual_address = NULL;
+#if _WIN64
+    DWORD64 image_base = NULL;
+#else
     DWORD image_base = NULL;
+#endif
     DWORD foa_address = NULL;
 
     p_dos_header = (PIMAGE_DOS_HEADER)file_buffer;
@@ -82,7 +97,7 @@ DWORD BACHelper::RVAtoFOA(DWORD roa_address, char* file_buffer)
 
     p_section_header = (PIMAGE_SECTION_HEADER)((char*)p_option_header + size_of_option_header);
     //virtual_address = section_header->VirtualAddress;
-    for (int i = 0; i < number_of_sections; i++)
+    for (unsigned int i = 0; i < number_of_sections; i++)
     {
         //printf("%x", ((PIMAGE_SECTION_HEADER)((char*)section_header + 40))->VirtualAddress);
         if (roa_address >= p_section_header->VirtualAddress && roa_address < ((PIMAGE_SECTION_HEADER)((char*)p_section_header + 40))->VirtualAddress)
@@ -101,6 +116,8 @@ DWORD BACHelper::RVAtoFOA(DWORD roa_address, char* file_buffer)
         foa_address = roa_address - p_section_header->VirtualAddress + pointer_raw_data;
         return foa_address;
     }
+
+    return 0;
 }
 
 DWORD* BACHelper::AddSection(char* file_buffer, DWORD section_size, DWORD virtual_size)
@@ -143,7 +160,7 @@ DWORD* BACHelper::AddSection(char* file_buffer, DWORD section_size, DWORD virtua
         DWORD size_now_header = lfanew + sizeof(*p_nt_header) + number_of_section * sizeof(*p_section_header);
     }
     //添加两个节表  移动到最后一个节表处
-    for (int i = 0; i < number_of_section - 1; i++)
+    for (unsigned int i = 0; i < number_of_section - 1; i++)
         p_section_header = p_section_header + 1;
 
     //添加节表
@@ -244,7 +261,7 @@ bool BACHelper::ImportTableInject(const char* target_exe_path, const char* new_e
     PIMAGE_SECTION_HEADER section_header = (PIMAGE_SECTION_HEADER)((char*)option + dwSizeofOptionHeader);
     DWORD AddNumSction = file_header->NumberOfSections;
     DWORD dwNumofSection = file_header->NumberOfSections;
-    for (int i = 0; i < AddNumSction - 1; i++)
+    for (unsigned int i = 0; i < AddNumSction - 1; i++)
         section_header = (PIMAGE_SECTION_HEADER)((char*)section_header + 40);
 
     DWORD dwUnInitDataSize = section_header->Misc.VirtualSize;
@@ -274,13 +291,17 @@ bool BACHelper::ImportTableInject(const char* target_exe_path, const char* new_e
     memcpy(FuncnameAddress, import_function_name, strlen(import_function_name));
     //修复各种地址
 
-    newImportDescriptor->Name = this->FOAtoRVA(NewBuffer, (char*)dll_nameAddress - NewBuffer);
-    newImportDescriptor->OriginalFirstThunk = this->FOAtoRVA(NewBuffer, (char*)newThunkDataOri - NewBuffer);
-    newImportDescriptor->FirstThunk = this->FOAtoRVA(NewBuffer, (char*)newThunkDatafirs - NewBuffer);
-    newThunkDataOri->u1.Function = this->FOAtoRVA(NewBuffer, (char*)FuncnameAddress - NewBuffer);
-    newThunkDatafirs->u1.Function = this->FOAtoRVA(NewBuffer, (char*)FuncnameAddress - NewBuffer);
+    newImportDescriptor->Name = (DWORD)this->FOAtoRVA(NewBuffer, (char*)dll_nameAddress - NewBuffer);
+    newImportDescriptor->OriginalFirstThunk = (DWORD)this->FOAtoRVA(NewBuffer, (char*)newThunkDataOri - NewBuffer);
+    newImportDescriptor->FirstThunk = (DWORD)this->FOAtoRVA(NewBuffer, (char*)newThunkDatafirs - NewBuffer);
+    newThunkDataOri->u1.Function = (DWORD)this->FOAtoRVA(NewBuffer, (char*)FuncnameAddress - NewBuffer);
+    newThunkDatafirs->u1.Function = (DWORD)this->FOAtoRVA(NewBuffer, (char*)FuncnameAddress - NewBuffer);
     //改变目录项地址
+#if _WIN64
+    *(DWORD64*)(ImportDIR) = this->FOAtoRVA(NewBuffer, dwCodeWirteAddress);
+#else
     *(DWORD*)(ImportDIR) = this->FOAtoRVA(NewBuffer, dwCodeWirteAddress);
+#endif
 
     FILE* fp = NULL;
     fopen_s(&fp, new_exe_path, "wb+");

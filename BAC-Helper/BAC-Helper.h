@@ -28,7 +28,11 @@ private:
 	LPVOID ReadFileToBuffer(const char* file_path);
 	DWORD* AddSection(char* file_buffer, DWORD section_size, DWORD virtual_size);
 	DWORD RVAtoFOA(DWORD roa_address, char* file_buffer);
+#if _WIN64
+	DWORD64 FOAtoRVA(char* file_buffer, DWORD64 foa_address);
+#else
 	DWORD FOAtoRVA(char* file_buffer, DWORD foa_address);
+#endif
 
 };
 
