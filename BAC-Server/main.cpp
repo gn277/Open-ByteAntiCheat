@@ -5,5 +5,22 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 {
 
 
-	return 0;
+
+	HACCEL acc_table = LoadAccelerators(hInstance, MAKEINTRESOURCE(NULL));
+
+	//主消息循环:
+	MSG msg;
+	while (GetMessage(&msg, nullptr, 0, 0))
+	{
+		if (!TranslateAccelerator(msg.hwnd, acc_table, &msg))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+	}
+
+	//处理退出事件
+
+
+	return (int)msg.wParam;
 }

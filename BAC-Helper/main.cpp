@@ -50,7 +50,24 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	if (bac_helper)
 		delete bac_helper;
 
-	MessageBoxA(NULL, "An error occurred while starting the game", "Error", MB_OK);
-	return 0;
+	std::cout << "Launcher over ..." << std::endl;
+
+	HACCEL acc_table = LoadAccelerators(hInstance, MAKEINTRESOURCE(NULL));
+
+	//主消息循环:
+	MSG msg;
+	while (GetMessage(&msg, nullptr, 0, 0))
+	{
+		if (!TranslateAccelerator(msg.hwnd, acc_table, &msg))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+	}
+
+	//处理退出事件
+
+
+	return (int)msg.wParam;
 }
 
