@@ -75,12 +75,14 @@ void BAC::MonitorMemoryOption()
 
 	//记录hook点
 #if _WIN64
-	this->_hook_list.insert({
+	std::map<std::string, DWORD64> hook_address;
+	hook_address.insert({
 		{ "NtProtectVirtualMemory", (DWORD64)pfnNtProtectVirtualMemory },
 		{ "IsBadReadPtr",(DWORD64)pfnIsBadReadPtr },
 		{ "IsBadWritePtr",(DWORD64)pfnIsBadWritePtr } });
 #else
-	this->_hook_list.insert({
+	std::map<std::string, DWORD> hook_address;
+	hook_address.insert({
 		{ "NtProtectVirtualMemory", (DWORD)pfnNtProtectVirtualMemory },
 		{ "IsBadReadPtr",(DWORD)pfnIsBadReadPtr },
 		{ "IsBadWritePtr",(DWORD)pfnIsBadWritePtr } });
@@ -94,6 +96,10 @@ void BAC::MonitorMemoryOption()
 	DetourAttach((PVOID*)&pfnIsBadWritePtr, BACIsBadWritePtr);
 
 	DetourTransactionCommit();
+
+	//记录Hook点并计算CRC32
+	for (auto pair : hook_address)
+		this->_hook_list[pair.first].emplace(pair.second, this->CRC32((void*)pair.second, 5));
 
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");

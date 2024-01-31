@@ -69,9 +69,11 @@ void BAC::MonitorLdrLoadDll()
 
 	//记录hook点
 #if _WIN64
-	this->_hook_list.insert(std::make_pair("LdrLoadDll", (DWORD64)pfnLdrLoadDll));
+	std::map<std::string, DWORD64> hook_address;
+	hook_address.insert(std::make_pair("LdrLoadDll", (DWORD64)pfnLdrLoadDll));
 #else
-	this->_hook_list.insert(std::make_pair("LdrLoadDll", (DWORD)pfnLdrLoadDll));
+	std::map<std::string, DWORD> hook_address;
+	hook_address.insert(std::make_pair("LdrLoadDll", (DWORD)pfnLdrLoadDll));
 #endif
 
 	DetourTransactionBegin();
@@ -80,6 +82,10 @@ void BAC::MonitorLdrLoadDll()
 	DetourAttach((PVOID*)&pfnLdrLoadDll, BACLdrLoadDll);
 
 	DetourTransactionCommit();
+
+	//记录Hook点并计算CRC32
+	for (auto pair : hook_address)
+		this->_hook_list[pair.first].emplace(pair.second, this->CRC32((void*)pair.second, 5));
 
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");
@@ -157,11 +163,13 @@ void BAC::MonitorImm()
 
 	//记录hook点
 #if _WIN64
-	this->_hook_list.insert({
+	std::map<std::string, DWORD64> hook_address;
+	hook_address.insert({
 		{ "ImmGetHotKey", (DWORD64)pfnGetHotKey },
 		{ "ImmActivateLayout",(DWORD64)pfnImmActivateLayout } });
 #else
-	this->_hook_list.insert({
+	std::map<std::string, DWORD> hook_address;
+	hook_address.insert({
 		{ "ImmGetHotKey", (DWORD)pfnGetHotKey },
 		{ "ImmActivateLayout",(DWORD)pfnImmActivateLayout } });
 #endif
@@ -171,6 +179,10 @@ void BAC::MonitorImm()
 	DetourAttach((PVOID*)&pfnGetHotKey, BACImmGetHotKey);
 	DetourAttach((PVOID*)&pfnImmActivateLayout, BACImmActivateLayout);
 	DetourTransactionCommit();
+
+	//记录Hook点并计算CRC32
+	for (auto pair : hook_address)
+		this->_hook_list[pair.first].emplace(pair.second, this->CRC32((void*)pair.second, 5));
 
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");

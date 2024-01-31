@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <utility>
 
 #include "../Detours/include/detours.h"
 #if _WIN64
@@ -25,9 +26,9 @@ private:
 
 	//Hook点容器，记录成功Hook地址后续循环效验是否被恢复
 #if _WIN64
-	std::map<std::string, DWORD64> _hook_list;
+	std::map<const std::string/*Api名*/, std::map<DWORD64/*地址*/, unsigned int/*Hook后CRC32值*/>> _hook_list;
 #else
-	std::map<std::string, DWORD> _hook_list;
+	std::map<const std::string/*Api名*/, std::map<DWORD/*地址*/, unsigned int/*Hook后CRC32值*/>> _hook_list;
 #endif
 
 private:
@@ -53,6 +54,8 @@ public:
 public:
 	//对内存数据做CRC32效验
 	unsigned int CRC32(void* pdata, size_t data_len);
+	//检查Hook点状态
+	void CheckHookPointer();
 
 public:
 	//BAC内核接口初始化

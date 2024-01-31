@@ -236,10 +236,10 @@ void BAC::MonitorCreateWindow()
 	pfnCreateWindowExA = (fpCreateWindowExA)::GetProcAddress(user32, "CreateWindowExA");
 	pfnSetWindowTextW = (fpSetWindowTextW)::GetProcAddress(user32, "SetWindowTextW");
 	pfnSetWindowTextA = (fpSetWindowTextA)::GetProcAddress(user32, "SetWindowTextA");
-
-	//记录hook点
+	
 #if _WIN64
-	this->_hook_list.insert({
+	std::map<std::string, DWORD64> hook_address;
+	hook_address.insert({
 		{ "RegisterClassExA", (DWORD64)pfnRegisterClassExA },
 		{ "RegisterClassA",(DWORD64)pfnRegisterClassA },
 		{ "RegisterClassExW",(DWORD64)pfnRegisterClassExW },
@@ -249,7 +249,8 @@ void BAC::MonitorCreateWindow()
 		{ "SetWindowTextW",(DWORD64)pfnSetWindowTextW },
 		{ "SetWindowTextA",(DWORD64)pfnSetWindowTextA } });
 #else
-	this->_hook_list.insert({
+	std::map<std::string, DWORD64> hook_address;
+	hook_address.insert({
 		{ "RegisterClassExA", (DWORD)pfnRegisterClassExA },
 		{ "RegisterClassA",(DWORD)pfnRegisterClassA },
 		{ "RegisterClassExW",(DWORD)pfnRegisterClassExW },
@@ -273,6 +274,21 @@ void BAC::MonitorCreateWindow()
 	DetourAttach((PVOID*)&pfnSetWindowTextA, BACSetWindowTextA);
 
 	DetourTransactionCommit();
+
+	//记录Hook点并计算CRC32
+	for (auto pair : hook_address)
+		this->_hook_list[pair.first].emplace(pair.second, this->CRC32((void*)pair.second, 5));
+
+	for (auto pair : this->_hook_list)
+	{
+		std::cout << "api name:" << pair.first << std::endl;
+
+		for (auto tpair : pair.second)
+		{
+			std::cout << "address:" << tpair.first << std::endl;
+			std::cout << "crc32:" << tpair.second << std::endl;
+		}
+	}
 
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");

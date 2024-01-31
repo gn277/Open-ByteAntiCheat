@@ -94,6 +94,9 @@
     <ClCompile Include="BACInterface\BACKernelApi\BACKernel.cpp">
       <Filter>BACInterface\BACKernelApi</Filter>
     </ClCompile>
+    <ClCompile Include="BACInterface\AntiFunction\CheckHookPointer.cpp">
+      <Filter>BACInterface\AntiFunction</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

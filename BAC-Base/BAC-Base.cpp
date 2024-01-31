@@ -37,9 +37,6 @@ bool BACBaseInitialize()
 	if (!bac->InitializeBACKernel())
 		throw "initialize bac kernel error!";
 
-	//Hook前测试CRC32
-	printf("old hash:%d\n", bac->CRC32(::GetModuleHandleA("ntdll.dll"), 0x10000));
-
 	//应用层隐藏hook
 	bac->HideHook();
 	//监视LdrLoadDll注入
@@ -48,15 +45,12 @@ bool BACBaseInitialize()
 	bac->MonitorImm();
 	//监视内存读写操作
 	bac->MonitorMemoryOption();
-	//处理循环事件
-	bac->LoopEvent();
-
-
 	//监视窗口创建的相关函数
 	bac->MonitorCreateWindow();
 
-	//Hook后测试CRC32
-	printf("after hook hash:%d\n", bac->CRC32(::GetModuleHandleA("ntdll.dll"), 0x10000));
+
+	//处理循环事件
+	bac->LoopEvent();
 
 #if _DEBUG
 	baclog->FileLogf("%s-> %s: %s", "[BAC]", __FUNCTION__, "Leave");
