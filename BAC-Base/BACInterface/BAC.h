@@ -2,6 +2,8 @@
 #include <Windows.h>
 #include <stdio.h>
 #include <iostream>
+#include <vector>
+#include <map>
 
 #include "../Detours/include/detours.h"
 #if _WIN64
@@ -20,6 +22,13 @@ class BAC
 {
 private:
 	BACKernel* bac_kernel = nullptr;
+
+	//Hook点容器，记录成功Hook地址后续循环效验是否被恢复
+#if _WIN64
+	std::map<std::string, DWORD64> _hook_list;
+#else
+	std::map<std::string, DWORD> _hook_list;
+#endif
 
 private:
 	void MakePePacked(HANDLE hProcess, PBYTE pImageBuff);

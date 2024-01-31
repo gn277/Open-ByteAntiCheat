@@ -67,6 +67,13 @@ void BAC::MonitorLdrLoadDll()
 	//获取相关函数地址
 	pfnLdrLoadDll = (fpLdrLoadDll)::GetProcAddress(ntdll, "LdrLoadDll");
 
+	//记录hook点
+#if _WIN64
+	this->_hook_list.insert(std::make_pair("LdrLoadDll", (DWORD64)pfnLdrLoadDll));
+#else
+	this->_hook_list.insert(std::make_pair("LdrLoadDll", (DWORD)pfnLdrLoadDll));
+#endif
+
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
 
@@ -147,6 +154,17 @@ void BAC::MonitorImm()
 	HMODULE imm32 = LoadLibraryA("imm32.dll");
 	pfnGetHotKey = (fpImmGetHotKey)GetProcAddress(imm32, "ImmGetHotKey");
 	pfnImmActivateLayout = (fpImmActivateLayout)GetProcAddress(imm32, "ImmActivateLayout");
+
+	//记录hook点
+#if _WIN64
+	this->_hook_list.insert({
+		{ "ImmGetHotKey", (DWORD64)pfnGetHotKey },
+		{ "ImmActivateLayout",(DWORD64)pfnImmActivateLayout } });
+#else
+	this->_hook_list.insert({
+		{ "ImmGetHotKey", (DWORD)pfnGetHotKey },
+		{ "ImmActivateLayout",(DWORD)pfnImmActivateLayout } });
+#endif
 
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());

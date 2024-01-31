@@ -17,14 +17,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DriverEntry.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="BAC-Base-Kernel\BAC-Base-Kernel.cpp">
       <Filter>BAC-Base-Kernel</Filter>
     </ClCompile>
     <ClCompile Include="IRPControl\IRPControl.cpp">
       <Filter>IRPControl</Filter>
+    </ClCompile>
+    <ClCompile Include="DriverEntry.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

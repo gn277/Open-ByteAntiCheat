@@ -73,6 +73,19 @@ void BAC::MonitorMemoryOption()
 	pfnIsBadReadPtr = (fpIsBadReadPtr)::GetProcAddress(kernel32, "IsBadReadPtr");
 	pfnIsBadWritePtr = (fpIsBadWritePtr)::GetProcAddress(kernel32, "IsBadWritePtr");
 
+	//¼ÇÂ¼hookµã
+#if _WIN64
+	this->_hook_list.insert({
+		{ "NtProtectVirtualMemory", (DWORD64)pfnNtProtectVirtualMemory },
+		{ "IsBadReadPtr",(DWORD64)pfnIsBadReadPtr },
+		{ "IsBadWritePtr",(DWORD64)pfnIsBadWritePtr } });
+#else
+	this->_hook_list.insert({
+		{ "NtProtectVirtualMemory", (DWORD)pfnNtProtectVirtualMemory },
+		{ "IsBadReadPtr",(DWORD)pfnIsBadReadPtr },
+		{ "IsBadWritePtr",(DWORD)pfnIsBadWritePtr } });
+#endif
+
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
 

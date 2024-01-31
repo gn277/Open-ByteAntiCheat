@@ -28,8 +28,8 @@ fpRegisterClassExW pfnRegisterClassExW = NULL;
 fpRegisterClassW pfnRegisterClassW = NULL;
 fpCreateWindowExW pfnCreateWindowExW = NULL;
 fpCreateWindowExA pfnCreateWindowExA = NULL;
-fpSetWindowTextW pfnSetWindowsTextW = NULL;
-fpSetWindowTextA pfnSetWindowsTextA = NULL;
+fpSetWindowTextW pfnSetWindowTextW = NULL;
+fpSetWindowTextA pfnSetWindowTextA = NULL;
 
 
 DWORD WINAPI BACRegisterClassExA(WNDCLASSEXA* lpWndCls)
@@ -182,7 +182,7 @@ BOOL WINAPI BACSetWindowTextW(_In_ HWND hWnd, _In_opt_  LPCTSTR lpString)
 		wsprintf(buff, L"%d_%s", GetCurrentProcessId(), lpString);
 	}
 
-	return pfnSetWindowsTextW(hWnd, lpString);
+	return pfnSetWindowTextW(hWnd, lpString);
 
 #if NDEBUG
 	VMProtectEnd();
@@ -204,7 +204,7 @@ BOOL WINAPI BACSetWindowTextA(_In_ HWND hWnd, _In_opt_ LPCSTR lpString)
 		wsprintfA(buff, "%d_%s", GetCurrentProcessId(), lpString);
 	}
 
-	return pfnSetWindowsTextA(hWnd, lpString);
+	return pfnSetWindowTextA(hWnd, lpString);
 
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");
@@ -234,8 +234,31 @@ void BAC::MonitorCreateWindow()
 	pfnRegisterClassW = (fpRegisterClassW)::GetProcAddress(user32, "RegisterClassW");
 	pfnCreateWindowExW = (fpCreateWindowExW)::GetProcAddress(user32, "CreateWindowExW");
 	pfnCreateWindowExA = (fpCreateWindowExA)::GetProcAddress(user32, "CreateWindowExA");
-	pfnSetWindowsTextW = (fpSetWindowTextW)::GetProcAddress(user32, "SetWindowTextW");
-	pfnSetWindowsTextA = (fpSetWindowTextA)::GetProcAddress(user32, "SetWindowTextA");
+	pfnSetWindowTextW = (fpSetWindowTextW)::GetProcAddress(user32, "SetWindowTextW");
+	pfnSetWindowTextA = (fpSetWindowTextA)::GetProcAddress(user32, "SetWindowTextA");
+
+	//¼ÇÂ¼hookµã
+#if _WIN64
+	this->_hook_list.insert({
+		{ "RegisterClassExA", (DWORD64)pfnRegisterClassExA },
+		{ "RegisterClassA",(DWORD64)pfnRegisterClassA },
+		{ "RegisterClassExW",(DWORD64)pfnRegisterClassExW },
+		{ "RegisterClassW",(DWORD64)pfnRegisterClassW },
+		{ "CreateWindowExW",(DWORD64)pfnCreateWindowExW} ,
+		{ "CreateWindowExA",(DWORD64)pfnCreateWindowExA },
+		{ "SetWindowTextW",(DWORD64)pfnSetWindowTextW },
+		{ "SetWindowTextA",(DWORD64)pfnSetWindowTextA } });
+#else
+	this->_hook_list.insert({
+		{ "RegisterClassExA", (DWORD)pfnRegisterClassExA },
+		{ "RegisterClassA",(DWORD)pfnRegisterClassA },
+		{ "RegisterClassExW",(DWORD)pfnRegisterClassExW },
+		{ "RegisterClassW",(DWORD)pfnRegisterClassW },
+		{ "CreateWindowExW",(DWORD)pfnCreateWindowExW} ,
+		{ "CreateWindowExA",(DWORD)pfnCreateWindowExA },
+		{ "SetWindowTextW",(DWORD)pfnSetWindowTextW },
+		{ "SetWindowTextA",(DWORD)pfnSetWindowTextA } });
+#endif
 
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
@@ -246,8 +269,16 @@ void BAC::MonitorCreateWindow()
 	DetourAttach((PVOID*)&pfnRegisterClassW, BACRegisterClassW);
 	DetourAttach((PVOID*)&pfnCreateWindowExW, BACCreateWindowExW);
 	DetourAttach((PVOID*)&pfnCreateWindowExA, BACCreateWindowExA);
+	DetourAttach((PVOID*)&pfnSetWindowTextW, BACSetWindowTextW);
+	DetourAttach((PVOID*)&pfnSetWindowTextA, BACSetWindowTextA);
 
 	DetourTransactionCommit();
+
+	for (auto pair : this->_hook_list)
+	{
+		printf("first:%s\n", pair.first.c_str());
+		printf("second:%p\n", pair.second);
+	}
 
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");

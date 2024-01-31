@@ -318,4 +318,3 @@ bool BACHelper::ImportTableInject(const char* target_exe_path, const char* new_e
 #endif
 }
 
-

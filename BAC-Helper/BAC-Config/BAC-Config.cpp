@@ -45,7 +45,7 @@ bool BACConfig::WriteConfig(std::string key, std::string value)
 	//int current_line_number = 0;
 	//while (fgets(line, sizeof(line), file) != NULL)
 	//{
-	//	// 查找'='
+	//	//查找'='
 	//	std::string temp_key(strtok(line, "="));
 	//	if (!temp_key.empty())
 	//	{
@@ -90,7 +90,7 @@ bool BACConfig::ReadConfig(std::string key, std::string* p_value)
 	char line[256];
 	while (fgets(line, sizeof(line), file))
 	{
-		// 查找'='
+		//查找'='
 		std::string temp_key(strtok(line, "="));
 		std::string temp_value(strtok(NULL, "\n"));
 		if (!temp_key.empty() && !temp_value.empty())

@@ -119,9 +119,7 @@ typedef enum _KWAIT_REASON {
 }KWAIT_REASON;
 
 
-
-
-typedef LONG	NTSTATUS;
+//typedef LONG	NTSTATUS;
 typedef LONG    KPRIORITY;
 
 ///////////////////////////////////////
@@ -131,7 +129,6 @@ typedef struct _CLIENT_ID {
 	HANDLE        UniqueProcess; // PID
 	HANDLE        UniqueThread;  // TID
 } CLIENT_ID, * PCLIENT_ID;
-
 
 typedef struct _VM_COUNTERS {
 	SIZE_T        PeakVirtualSize;
