@@ -274,12 +274,6 @@ void BAC::MonitorCreateWindow()
 
 	DetourTransactionCommit();
 
-	for (auto pair : this->_hook_list)
-	{
-		printf("first:%s\n", pair.first.c_str());
-		printf("second:%p\n", pair.second);
-	}
-
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");
 #endif
