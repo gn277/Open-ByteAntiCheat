@@ -15,11 +15,12 @@
 
 #include "SystemApi.h"
 #include "BACKernelApi/BACKernel.h"
+#include "../BACTools/BACTools.h"
 
 using namespace std;
 
 
-class BAC
+class BAC : public Tools
 {
 private:
 	BACKernel* bac_kernel = nullptr;
@@ -33,6 +34,7 @@ private:
 
 private:
 	void MakePePacked(HANDLE hProcess, PBYTE pImageBuff);
+	bool JudgmentHookModule(PVOID hook_address);
 
 public:
 	//隐藏应用层的hook
@@ -49,7 +51,7 @@ public:
 	void MonitorMemoryOption();
 	
 	//处理循环事件
-	void LoopEvent();
+	static void LoopEvent();
 
 public:
 	//对内存数据做CRC32效验

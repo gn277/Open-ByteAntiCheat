@@ -42,7 +42,11 @@ DWORD WINAPI BACRegisterClassExA(WNDCLASSEXA* lpWndCls)
 	{
 		CHAR szNewClassName[MAX_PATH];
 		DWORD dwOld;
+
 		OutputDebugStringA(lpWndCls->lpszClassName);
+
+		//std::cout<<"[LOG]"<<__FUNCTION__<<lpWndCls->lpszClassName <<std::endl;
+
 		VirtualProtect((LPVOID)lpWndCls->lpszClassName, strlen(lpWndCls->lpszClassName) + 1, PAGE_EXECUTE_READWRITE, &dwOld);
 		wsprintfA(szNewClassName, "%d_%d", GetTickCount(), GetCurrentProcessId());
 		RtlCopyMemory((PVOID)lpWndCls->lpszClassName, (PVOID)szNewClassName, strlen(lpWndCls->lpszClassName));
@@ -65,7 +69,9 @@ DWORD WINAPI BACRegisterClassA(WNDCLASSA* lpWndClass)
 	{
 		CHAR szNewClassName[MAX_PATH];
 		DWORD dwOld;
+
 		OutputDebugStringA(lpWndClass->lpszClassName);
+
 		VirtualProtect((LPVOID)lpWndClass->lpszClassName, strlen(lpWndClass->lpszClassName) + 1, PAGE_EXECUTE_READWRITE, &dwOld);
 		wsprintfA(szNewClassName, "%d_%d", GetTickCount(), GetCurrentProcessId());
 		RtlCopyMemory((PVOID)lpWndClass->lpszClassName, (PVOID)szNewClassName, strlen(lpWndClass->lpszClassName));
@@ -88,7 +94,9 @@ DWORD WINAPI BACRegisterClassExW(WNDCLASSEXW* lpWndCls)
 	{
 		WCHAR szNewClassName[MAX_PATH];
 		DWORD dwOld;
+
 		OutputDebugStringW(lpWndCls->lpszClassName);
+
 		VirtualProtect((LPVOID)lpWndCls->lpszClassName, wcslen(lpWndCls->lpszClassName) + 1, PAGE_EXECUTE_READWRITE, &dwOld);
 		wsprintfW(szNewClassName, L"%d_%d", GetTickCount(), GetCurrentProcessId());
 		RtlCopyMemory((PVOID)lpWndCls->lpszClassName, (PVOID)szNewClassName, wcslen(lpWndCls->lpszClassName) * 2);
@@ -111,7 +119,9 @@ DWORD WINAPI BACRegisterClassW(WNDCLASSW* lpWndClass)
 	{
 		WCHAR szNewClassName[MAX_PATH];
 		DWORD dwOld;
+
 		OutputDebugStringW(lpWndClass->lpszClassName);
+
 		VirtualProtect((LPVOID)lpWndClass->lpszClassName, wcslen(lpWndClass->lpszClassName) + 1, PAGE_EXECUTE_READWRITE, &dwOld);
 		wsprintfW(szNewClassName, L"%d_%d", GetTickCount(), GetCurrentProcessId());
 		RtlCopyMemory((PVOID)lpWndClass->lpszClassName, (PVOID)szNewClassName, wcslen(lpWndClass->lpszClassName) * 2);
@@ -238,8 +248,7 @@ void BAC::MonitorCreateWindow()
 	pfnSetWindowTextA = (fpSetWindowTextA)::GetProcAddress(user32, "SetWindowTextA");
 	
 #if _WIN64
-	std::map<std::string, DWORD64> hook_address;
-	hook_address.insert({
+	std::map<std::string, DWORD64> hook_address = {
 		{ "RegisterClassExA", (DWORD64)pfnRegisterClassExA },
 		{ "RegisterClassA",(DWORD64)pfnRegisterClassA },
 		{ "RegisterClassExW",(DWORD64)pfnRegisterClassExW },
@@ -247,10 +256,9 @@ void BAC::MonitorCreateWindow()
 		{ "CreateWindowExW",(DWORD64)pfnCreateWindowExW} ,
 		{ "CreateWindowExA",(DWORD64)pfnCreateWindowExA },
 		{ "SetWindowTextW",(DWORD64)pfnSetWindowTextW },
-		{ "SetWindowTextA",(DWORD64)pfnSetWindowTextA } });
+		{ "SetWindowTextA",(DWORD64)pfnSetWindowTextA } };
 #else
-	std::map<std::string, DWORD64> hook_address;
-	hook_address.insert({
+	std::map<std::string, DWORD64> hook_address = {
 		{ "RegisterClassExA", (DWORD)pfnRegisterClassExA },
 		{ "RegisterClassA",(DWORD)pfnRegisterClassA },
 		{ "RegisterClassExW",(DWORD)pfnRegisterClassExW },
@@ -258,7 +266,7 @@ void BAC::MonitorCreateWindow()
 		{ "CreateWindowExW",(DWORD)pfnCreateWindowExW} ,
 		{ "CreateWindowExA",(DWORD)pfnCreateWindowExA },
 		{ "SetWindowTextW",(DWORD)pfnSetWindowTextW },
-		{ "SetWindowTextA",(DWORD)pfnSetWindowTextA } });
+		{ "SetWindowTextA",(DWORD)pfnSetWindowTextA } };
 #endif
 
 	DetourTransactionBegin();
@@ -278,17 +286,6 @@ void BAC::MonitorCreateWindow()
 	//记录Hook点并计算CRC32
 	for (auto pair : hook_address)
 		this->_hook_list[pair.first].emplace(pair.second, this->CRC32((void*)pair.second, 5));
-
-	for (auto pair : this->_hook_list)
-	{
-		std::cout << "api name:" << pair.first << std::endl;
-
-		for (auto tpair : pair.second)
-		{
-			std::cout << "address:" << tpair.first << std::endl;
-			std::cout << "crc32:" << tpair.second << std::endl;
-		}
-	}
 
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");

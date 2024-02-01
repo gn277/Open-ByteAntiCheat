@@ -48,11 +48,11 @@ void BAC::HideHook()
 	{
 		pPeb = (PPEB)ProcessInfo.PebBaseAddress;
 
-		for (PLIST_ENTRY pListEntry = pPeb->Ldr->InLoadOrderModuleList.Flink; pListEntry != &pPeb->Ldr->InLoadOrderModuleList; pListEntry = pListEntry->Flink)
-		{
-			PLDR_DATA_TABLE_ENTRY pEntry = CONTAINING_RECORD(pListEntry, LDR_DATA_TABLE_ENTRY, InLoadOrderLinks);
-			this->MakePePacked(hProcess, (PBYTE)pEntry->DllBase);
-		}
+		//for (PLIST_ENTRY pListEntry = pPeb->Ldr->InLoadOrderModuleList.Flink; pListEntry != &pPeb->Ldr->InLoadOrderModuleList; pListEntry = pListEntry->Flink)
+		//{
+		//	PLDR_DATA_TABLE_ENTRY pEntry = CONTAINING_RECORD(pListEntry, LDR_DATA_TABLE_ENTRY, InLoadOrderLinks);
+		//	this->MakePePacked(hProcess, (PBYTE)pEntry->DllBase);
+		//}
 	}
 	CloseHandle(hProcess);
 

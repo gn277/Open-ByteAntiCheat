@@ -21,7 +21,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	//这里可以读一些配置信息
 	bac_config = new BACConfig();
 
-	//读取配置文件中的游戏进程名
+	//读取配置文件中的游戏进程名 自己在ByteAntiCheat目录下创建BACConfig.ini文件其中写GameFullName=TestGame.exe，发布时带着配置文件一起解压
 	std::string gamefile_full_name;
 	bac_config->ReadConfig("GameFullName", &gamefile_full_name);
 	//std::cout << "gamefile_full_name:" << gamefile_full_name.c_str() << endl;

@@ -50,7 +50,7 @@ bool BACBaseInitialize()
 
 
 	//处理循环事件
-	bac->LoopEvent();
+	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BAC::LoopEvent, NULL, NULL, NULL);
 
 #if _DEBUG
 	baclog->FileLogf("%s-> %s: %s", "[BAC]", __FUNCTION__, "Leave");

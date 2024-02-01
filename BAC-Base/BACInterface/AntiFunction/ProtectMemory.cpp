@@ -19,7 +19,7 @@ NTSTATUS NTAPI BACNtProtectVirtualMemory(IN HANDLE ProcessHandle, IN OUT PVOID* 
 	VMProtectBegin("BACNtProtectVirtualMemory");
 #endif
 
-	printf("MyNtProtectVirtualMemory ...\n");
+	std::cout << "[LOG]:" << __FUNCTION__ << " address:" << BaseAddress << " newprotect:" << NewProtect << std::endl;
 
 	return pfnNtProtectVirtualMemory(ProcessHandle, BaseAddress, ProtectSize, NewProtect, OldProtect);
 
@@ -34,7 +34,7 @@ BOOL WINAPI BACIsBadReadPtr(_In_opt_ CONST VOID* lp, _In_ UINT_PTR ucb)
 	VMProtectBegin("BACIsBadReadPtr");
 #endif
 
-	printf("MyIsBadReadPtr ...\n");
+	std::cout << "[LOG]:" << __FUNCTION__ << " address:" << lp << std::endl;
 
 	return pfnIsBadReadPtr(lp, ucb);
 
@@ -49,7 +49,7 @@ BOOL WINAPI BACIsBadWritePtr(_In_opt_ LPVOID lp, _In_ UINT_PTR ucb)
 	VMProtectBegin("BACIsBadWritePtr");
 #endif
 
-	printf("MyIsBadWritePtr ...\n");
+	std::cout << "[LOG]:" << __FUNCTION__ << " address:" << lp << std::endl;
 
 	return pfnIsBadWritePtr(lp, ucb);
 
@@ -75,17 +75,15 @@ void BAC::MonitorMemoryOption()
 
 	//¼ÇÂ¼hookµã
 #if _WIN64
-	std::map<std::string, DWORD64> hook_address;
-	hook_address.insert({
+	std::map<std::string, DWORD64> hook_address = {
 		{ "NtProtectVirtualMemory", (DWORD64)pfnNtProtectVirtualMemory },
 		{ "IsBadReadPtr",(DWORD64)pfnIsBadReadPtr },
-		{ "IsBadWritePtr",(DWORD64)pfnIsBadWritePtr } });
+		{ "IsBadWritePtr",(DWORD64)pfnIsBadWritePtr } };
 #else
-	std::map<std::string, DWORD> hook_address;
-	hook_address.insert({
+	std::map<std::string, DWORD> hook_address = {
 		{ "NtProtectVirtualMemory", (DWORD)pfnNtProtectVirtualMemory },
 		{ "IsBadReadPtr",(DWORD)pfnIsBadReadPtr },
-		{ "IsBadWritePtr",(DWORD)pfnIsBadWritePtr } });
+		{ "IsBadWritePtr",(DWORD)pfnIsBadWritePtr } };
 #endif
 
 	DetourTransactionBegin();

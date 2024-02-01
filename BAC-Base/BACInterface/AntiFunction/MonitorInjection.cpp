@@ -26,7 +26,7 @@ NTSTATUS WINAPI BACLdrLoadDll(IN PWCHAR PathToFile OPTIONAL, IN PULONG Flags OPT
 	ZeroMemory(szDllName, sizeof(szDllName));
 	memcpy(szDllName, ModuleFileName->Buffer, ModuleFileName->Length);
 
-	printf("[LOG]:LdrLoadDll:%S\n", szDllName);
+	std::cout << "[LOG]:" << __FUNCTION__ << szDllName << std::endl;
 
 	//在加载之前判断下该模块是否被加载过
 	HMODULE hPreMod = GetModuleHandleW(szDllName);
@@ -69,11 +69,9 @@ void BAC::MonitorLdrLoadDll()
 
 	//记录hook点
 #if _WIN64
-	std::map<std::string, DWORD64> hook_address;
-	hook_address.insert(std::make_pair("LdrLoadDll", (DWORD64)pfnLdrLoadDll));
+	std::map<std::string, DWORD64> hook_address = { {"LdrLoadDll", (DWORD64)pfnLdrLoadDll} };
 #else
-	std::map<std::string, DWORD> hook_address;
-	hook_address.insert(std::make_pair("LdrLoadDll", (DWORD)pfnLdrLoadDll));
+	std::map<std::string, DWORD> hook_address = { {"LdrLoadDll", (DWORD)pfnLdrLoadDll} };
 #endif
 
 	DetourTransactionBegin();
@@ -163,21 +161,21 @@ void BAC::MonitorImm()
 
 	//记录hook点
 #if _WIN64
-	std::map<std::string, DWORD64> hook_address;
-	hook_address.insert({
+	std::map<std::string, DWORD64> hook_address = {
 		{ "ImmGetHotKey", (DWORD64)pfnGetHotKey },
-		{ "ImmActivateLayout",(DWORD64)pfnImmActivateLayout } });
+		{ "ImmActivateLayout",(DWORD64)pfnImmActivateLayout } };
 #else
-	std::map<std::string, DWORD> hook_address;
-	hook_address.insert({
+	std::map<std::string, DWORD> hook_address = {
 		{ "ImmGetHotKey", (DWORD)pfnGetHotKey },
-		{ "ImmActivateLayout",(DWORD)pfnImmActivateLayout } });
+		{ "ImmActivateLayout",(DWORD)pfnImmActivateLayout } };
 #endif
 
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
+
 	DetourAttach((PVOID*)&pfnGetHotKey, BACImmGetHotKey);
 	DetourAttach((PVOID*)&pfnImmActivateLayout, BACImmActivateLayout);
+
 	DetourTransactionCommit();
 
 	//记录Hook点并计算CRC32

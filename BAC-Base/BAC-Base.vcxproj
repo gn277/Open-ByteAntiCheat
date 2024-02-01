@@ -162,6 +162,7 @@
     <ClInclude Include="BACInterface\BACKernelApi\BACKernel.h" />
     <ClInclude Include="BACInterface\SystemApi.h" />
     <ClInclude Include="BACLog\BACLog.h" />
+    <ClInclude Include="BACTools\BACTools.h" />
     <ClInclude Include="Detours\include\detours.h" />
     <ClInclude Include="ProtectSDK\VMProtectSDK\VMProtectSDK.h" />
     <ClInclude Include="resource.h" />
@@ -179,6 +180,7 @@
     <ClCompile Include="BACInterface\BAC.cpp" />
     <ClCompile Include="BACInterface\BACKernelApi\BACKernel.cpp" />
     <ClCompile Include="BACLog\BACLog.cpp" />
+    <ClCompile Include="BACTools\BACTools.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
