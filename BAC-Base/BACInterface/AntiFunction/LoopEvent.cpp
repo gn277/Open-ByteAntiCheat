@@ -19,6 +19,7 @@ void BAC::LoopEvent()
 	{
 		//检查Hook是否被还原
 		bac->CheckHookPointer();
+		//扫描内存
 
 
 		::Sleep(5000);
