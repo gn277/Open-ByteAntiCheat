@@ -11,7 +11,7 @@
 #pragma comment(lib, "NtStrSafe.lib")
 #pragma comment(lib, "NtosKrnl.lib")
 
-#include <VMProtectDDK.h>
+#include "../../BAC-Base/ProtectSDK/VMProtectSDK/VMProtectDDK.h"
 
 #include "ProcessProtect/ProcessProtect.h"
 

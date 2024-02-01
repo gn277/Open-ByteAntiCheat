@@ -35,7 +35,7 @@ fpSetWindowTextA pfnSetWindowTextA = NULL;
 DWORD WINAPI BACRegisterClassExA(WNDCLASSEXA* lpWndCls)
 {
 #if NDEBUG
-	VMProtectBegin("BACRegisterClassExA");
+	VMProtectBeginUltra("BACRegisterClassExA");
 #endif
 
 	if (lpWndCls->lpszClassName)
@@ -62,7 +62,7 @@ DWORD WINAPI BACRegisterClassExA(WNDCLASSEXA* lpWndCls)
 DWORD WINAPI BACRegisterClassA(WNDCLASSA* lpWndClass)
 {
 #if NDEBUG
-	VMProtectBegin("BACRegisterClassA");
+	VMProtectBeginUltra("BACRegisterClassA");
 #endif
 
 	if (lpWndClass->lpszClassName)
@@ -87,7 +87,7 @@ DWORD WINAPI BACRegisterClassA(WNDCLASSA* lpWndClass)
 DWORD WINAPI BACRegisterClassExW(WNDCLASSEXW* lpWndCls)
 {
 #if NDEBUG
-	VMProtectBegin("BACRegisterClassExW");
+	VMProtectBeginUltra("BACRegisterClassExW");
 #endif
 
 	if (lpWndCls->lpszClassName)
@@ -112,7 +112,7 @@ DWORD WINAPI BACRegisterClassExW(WNDCLASSEXW* lpWndCls)
 DWORD WINAPI BACRegisterClassW(WNDCLASSW* lpWndClass)
 {
 #if NDEBUG
-	VMProtectBegin("BACRegisterClassW");
+	VMProtectBeginUltra("BACRegisterClassW");
 #endif
 
 	if (lpWndClass->lpszClassName)
@@ -140,7 +140,7 @@ HWND WINAPI BACCreateWindowExW(
 	__in_opt HINSTANCE hInstance, __in_opt LPVOID lpParam)
 {
 #if NDEBUG
-	VMProtectBegin("BACCreateWindowExW");
+	VMProtectBeginUltra("BACCreateWindowExW");
 #endif
 
 	if (lpWindowName)
@@ -163,7 +163,7 @@ HWND WINAPI BACCreateWindowExA(
 	__in_opt HINSTANCE hInstance, __in_opt LPVOID lpParam)
 {
 #if NDEBUG
-	VMProtectBegin("BACCreateWindowExA");
+	VMProtectBeginUltra("BACCreateWindowExA");
 #endif
 
 	if (lpWindowName)
@@ -183,7 +183,7 @@ HWND WINAPI BACCreateWindowExA(
 BOOL WINAPI BACSetWindowTextW(_In_ HWND hWnd, _In_opt_  LPCTSTR lpString)
 {
 #if NDEBUG
-	VMProtectBegin("BACSetWindowTextW");
+	VMProtectBeginUltra("BACSetWindowTextW");
 #endif
 
 	if (lpString)
@@ -202,7 +202,7 @@ BOOL WINAPI BACSetWindowTextW(_In_ HWND hWnd, _In_opt_  LPCTSTR lpString)
 BOOL WINAPI BACSetWindowTextA(_In_ HWND hWnd, _In_opt_ LPCSTR lpString)
 {
 #if NDEBUG
-	VMProtectBegin("BACSetWindowTextA");
+	VMProtectBeginUltra("BACSetWindowTextA");
 #endif
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
@@ -227,11 +227,9 @@ BOOL WINAPI BACSetWindowTextA(_In_ HWND hWnd, _In_opt_ LPCSTR lpString)
 void BAC::MonitorCreateWindow()
 {
 #if NDEBUG
-	VMProtectBegin("BAC::MonitorCreateWindow");
+	VMProtectBeginUltra("BAC::MonitorCreateWindow");
 #endif
-#if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
-#endif
 
 	HMODULE user32 = ::GetModuleHandleA("user32.dll");
 	if (!user32)
@@ -287,9 +285,7 @@ void BAC::MonitorCreateWindow()
 	for (auto pair : hook_address)
 		this->_hook_list[pair.first].emplace(pair.second, this->CRC32((void*)pair.second, 5));
 
-#if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");
-#endif
 #if NDEBUG
 	VMProtectEnd();
 #endif

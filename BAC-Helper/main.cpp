@@ -11,10 +11,10 @@ BACConfig* bac_config = nullptr;
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpcmdLine, _In_ int nCmdShow)
 {
-#if _DEBUG
+//#if _DEBUG
 	AllocConsole();
 	freopen("CONOUT$", "w", stdout);
-#endif
+//#endif
 
 	//ÊµÀý»¯BACHelper
 	bac_helper = new BACHelper();

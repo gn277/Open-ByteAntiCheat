@@ -8,11 +8,9 @@
 void BAC::LoopEvent()
 {
 #if NDEBUG
-	VMProtectBegin("BAC::LoopEvent");
+	VMProtectBeginUltra("BAC::LoopEvent");
 #endif
-#if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
-#endif
 
 	//处理循环事件
 	while (true)
@@ -22,12 +20,10 @@ void BAC::LoopEvent()
 		//扫描内存
 
 
-		::Sleep(5000);
+		::Sleep(10000);
 	}
 
-#if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");
-#endif
 #if NDEBUG
 	VMProtectEnd();
 #endif

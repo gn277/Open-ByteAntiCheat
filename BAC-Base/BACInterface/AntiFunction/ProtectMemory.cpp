@@ -16,7 +16,7 @@ fpIsBadWritePtr pfnIsBadWritePtr = NULL;
 NTSTATUS NTAPI BACNtProtectVirtualMemory(IN HANDLE ProcessHandle, IN OUT PVOID* BaseAddress, IN OUT PULONG ProtectSize, IN ULONG NewProtect, OUT PULONG OldProtect)
 {
 #if NDEBUG
-	VMProtectBegin("BACNtProtectVirtualMemory");
+	VMProtectBeginUltra("BACNtProtectVirtualMemory");
 #endif
 
 	std::cout << "[LOG]:" << __FUNCTION__ << " address:" << BaseAddress << " newprotect:" << NewProtect << std::endl;
@@ -31,7 +31,7 @@ NTSTATUS NTAPI BACNtProtectVirtualMemory(IN HANDLE ProcessHandle, IN OUT PVOID* 
 BOOL WINAPI BACIsBadReadPtr(_In_opt_ CONST VOID* lp, _In_ UINT_PTR ucb)
 {
 #if NDEBUG
-	VMProtectBegin("BACIsBadReadPtr");
+	VMProtectBeginUltra("BACIsBadReadPtr");
 #endif
 
 	std::cout << "[LOG]:" << __FUNCTION__ << " address:" << lp << std::endl;
@@ -46,7 +46,7 @@ BOOL WINAPI BACIsBadReadPtr(_In_opt_ CONST VOID* lp, _In_ UINT_PTR ucb)
 BOOL WINAPI BACIsBadWritePtr(_In_opt_ LPVOID lp, _In_ UINT_PTR ucb)
 {
 #if NDEBUG
-	VMProtectBegin("BACIsBadWritePtr");
+	VMProtectBeginUltra("BACIsBadWritePtr");
 #endif
 
 	std::cout << "[LOG]:" << __FUNCTION__ << " address:" << lp << std::endl;
@@ -61,11 +61,9 @@ BOOL WINAPI BACIsBadWritePtr(_In_opt_ LPVOID lp, _In_ UINT_PTR ucb)
 void BAC::MonitorMemoryOption()
 {
 #if NDEBUG
-	VMProtectBegin("MonitorMemoryOption");
+	VMProtectBeginUltra("MonitorMemoryOption");
 #endif
-#if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
-#endif
 
 	HMODULE ntdll = ::GetModuleHandleA("ntdll.dll");
 	HMODULE kernel32 = ::GetModuleHandleA("KERNEL32.dll");
@@ -99,9 +97,7 @@ void BAC::MonitorMemoryOption()
 	for (auto pair : hook_address)
 		this->_hook_list[pair.first].emplace(pair.second, this->CRC32((void*)pair.second, 5));
 
-#if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");
-#endif
 #if NDEBUG
 	VMProtectEnd();
 #endif

@@ -8,7 +8,7 @@
 bool BAC::JudgmentHookModule(PVOID hook_address)
 {
 #if NDEBUG
-	VMProtectBegin("BAC::JudgmentHookModule");
+	VMProtectBeginUltra("BAC::JudgmentHookModule");
 #endif
 
 	DWORD64 bac_module_end = (DWORD64)this->Tools::GetModuleEndAddress(self_module);
@@ -43,7 +43,7 @@ bool BAC::JudgmentHookModule(PVOID hook_address)
 void BAC::CheckHookPointer()
 {
 #if NDEBUG
-	VMProtectBegin("BAC::CheckHookPointer");
+	VMProtectBeginUltra("BAC::CheckHookPointer");
 #endif
 
 	for (auto pair : this->_hook_list)

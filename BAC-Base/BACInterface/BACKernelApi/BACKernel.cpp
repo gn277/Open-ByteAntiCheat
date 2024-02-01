@@ -74,12 +74,7 @@ void BACKernel::DriverEventLogUninstall(const wchar_t* service_name)
 
 bool BACKernel::InstiallDriver()
 {
-//#if NDEBUG
-//	VMProtectBegin("BACKernel::InstallDriver");
-//#endif
-#if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
-#endif
 
 	//加载前先尝试卸载驱动
 	this->UnInstallDriver();
@@ -95,22 +90,22 @@ bool BACKernel::InstiallDriver()
 			CloseServiceHandle(h_service_mgr);
 		if (NULL != h_service_ddk)
 			CloseServiceHandle(h_service_ddk);
-#if _DEBUG
+
 		baclog->FileLog("OpenSCManager error");
 		baclog->FunctionLog(__FUNCTION__, "Leave");
-#endif
+
 		return FALSE;
 	}
 
 	h_service_ddk = CreateService(h_service_mgr,
-		this->_driver_name,					// 驱动程序的在注册表中的名字    
-		this->_driver_name,					// 注册表驱动程序的 DisplayName 值    
-		SERVICE_ALL_ACCESS,				// 加载驱动程序的访问权限    
-		SERVICE_KERNEL_DRIVER,			// 表示加载的服务是驱动程序    
-		SERVICE_DEMAND_START,			// 注册表驱动程序的 Start 值    
-		SERVICE_ERROR_IGNORE,			// 注册表驱动程序的 ErrorControl 值    
-		this->_driver_full_path,		// 注册表驱动程序的 ImagePath 值    
-		NULL,							// GroupOrder HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GroupOrderList
+		this->_driver_name,						// 驱动程序的在注册表中的名字    
+		this->_driver_name,						// 注册表驱动程序的 DisplayName 值    
+		SERVICE_ALL_ACCESS,						// 加载驱动程序的访问权限    
+		SERVICE_KERNEL_DRIVER,					// 表示加载的服务是驱动程序    
+		SERVICE_DEMAND_START,					// 注册表驱动程序的 Start 值    
+		SERVICE_ERROR_IGNORE,					// 注册表驱动程序的 ErrorControl 值    
+		this->_driver_full_path,				// 注册表驱动程序的 ImagePath 值    
+		NULL,									// GroupOrder HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\GroupOrderList
 		NULL,
 		NULL,
 		NULL,
@@ -129,29 +124,22 @@ bool BACKernel::InstiallDriver()
 
 	this->DriverEventLogUninstall(this->_driver_name);
 
-#if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");
-#endif
+
 	return b_ret;
-//#if NDEBUG
-//	VMProtectEnd();
-//#endif
 }
 
 bool BACKernel::UnInstallDriver()
 {
 #if NDEBUG
-	VMProtectBegin("BACKernel::UnInstallDriver");
+	VMProtectBeginUltra("BACKernel::UnInstallDriver");
 #endif
-#if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
-#endif
+
 	//卸载前判断服务是否存在
 	if (!this->ServiceExists(this->_driver_name))
 	{
-#if _DEBUG
 		baclog->FunctionLog(__FUNCTION__, "Leave");
-#endif
 		return true;
 	}
 	this->DriverEventLogUninstall(this->_driver_name);
@@ -165,10 +153,9 @@ bool BACKernel::UnInstallDriver()
 	h_service_mgr = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
 	if (h_service_mgr == NULL)
 	{
-#if _DEBUG
 		baclog->FileLog("OpenSCManager error");
 		baclog->FunctionLog(__FUNCTION__, "Leave");
-#endif
+
 		if (NULL != h_service_mgr)
 			CloseServiceHandle(h_service_mgr);
 		if (NULL != h_service_ddk)
@@ -184,10 +171,9 @@ bool BACKernel::UnInstallDriver()
 	h_service_ddk = OpenService(h_service_mgr, driver_name, SERVICE_ALL_ACCESS);
 	if (NULL == h_service_ddk)
 	{
-#if _DEBUG
 		baclog->FileLog("OpenService error");
 		baclog->FunctionLog(__FUNCTION__, "Leave");
-#endif
+
 		if (NULL != h_service_mgr)
 			CloseServiceHandle(h_service_mgr);
 		if (NULL != h_service_ddk)
@@ -197,10 +183,9 @@ bool BACKernel::UnInstallDriver()
 
 	if (!ControlService(h_service_ddk, SERVICE_CONTROL_STOP, &svr_sta))
 	{
-#if _DEBUG
 		baclog->FileLog("ControlService error");
 		baclog->FunctionLog(__FUNCTION__, "Leave");
-#endif
+
 		if (NULL != h_service_mgr)
 			CloseServiceHandle(h_service_mgr);
 		if (NULL != h_service_ddk)
@@ -211,13 +196,12 @@ bool BACKernel::UnInstallDriver()
 	//动态卸载驱动程序
 	DeleteService(h_service_ddk);
 
-#if _DEBUG
-	baclog->FunctionLog(__FUNCTION__, "Leave");
-#endif
 	if (NULL != h_service_mgr)
 		CloseServiceHandle(h_service_mgr);
 	if (NULL != h_service_ddk)
 		CloseServiceHandle(h_service_ddk);
+
+	baclog->FunctionLog(__FUNCTION__, "Leave");
 	return TRUE;
 
 #if NDEBUG
@@ -227,12 +211,7 @@ bool BACKernel::UnInstallDriver()
 
 bool BACKernel::OpenDriverHandle()
 {
-//#if NDEBUG
-//	VMProtectBegin("BACKernel::OpenDriverHandle");
-//#endif
-#if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
-#endif
 
 	//read_able_event = CreateEvent(NULL, FALSE, FALSE, NULL);
 	this->_driver_handle = CreateFileW(
@@ -246,20 +225,14 @@ bool BACKernel::OpenDriverHandle()
 
 	if (NULL == this->_driver_handle || INVALID_HANDLE_VALUE == this->_driver_handle)
 	{
-#if _DEBUG
 		baclog->FileLog("driver handle open fialed");
 		baclog->FunctionLog(__FUNCTION__, "Leave");
-#endif
+
 		return FALSE;
 	}
 
-#if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");
-#endif
 	return TRUE;
-//#if NDEBUG
-//	VMProtectEnd();
-//#endif
 }
 
 

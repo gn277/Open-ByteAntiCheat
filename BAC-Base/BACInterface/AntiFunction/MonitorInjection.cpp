@@ -18,7 +18,7 @@ NTSTATUS WINAPI BACLdrLoadDll(IN PWCHAR PathToFile OPTIONAL, IN PULONG Flags OPT
 	IN PUNICODE_STRING ModuleFileName, OUT PHANDLE ModuleHandle)
 {
 #if NDEBUG
-	VMProtectBegin("BACLdrLoadDll");
+	VMProtectBeginUltra("BACLdrLoadDll");
 #endif
 
 	bool is_hidemodle = false;
@@ -26,7 +26,7 @@ NTSTATUS WINAPI BACLdrLoadDll(IN PWCHAR PathToFile OPTIONAL, IN PULONG Flags OPT
 	ZeroMemory(szDllName, sizeof(szDllName));
 	memcpy(szDllName, ModuleFileName->Buffer, ModuleFileName->Length);
 
-	std::cout << "[LOG]:" << __FUNCTION__ << szDllName << std::endl;
+	printf("[LOG]:%s dll name:%S\n", __FUNCTION__, szDllName);
 
 	//在加载之前判断下该模块是否被加载过
 	HMODULE hPreMod = GetModuleHandleW(szDllName);
@@ -54,11 +54,9 @@ NTSTATUS WINAPI BACLdrLoadDll(IN PWCHAR PathToFile OPTIONAL, IN PULONG Flags OPT
 void BAC::MonitorLdrLoadDll()
 {
 #if NDEBUG
-	VMProtectBegin("BAC::MonitorLdrLoadDll");
+	VMProtectBeginUltra("BAC::MonitorLdrLoadDll");
 #endif
-#if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
-#endif
 
 	HMODULE ntdll = ::GetModuleHandleA("ntdll.dll");
 	if (!ntdll)
@@ -85,9 +83,7 @@ void BAC::MonitorLdrLoadDll()
 	for (auto pair : hook_address)
 		this->_hook_list[pair.first].emplace(pair.second, this->CRC32((void*)pair.second, 5));
 
-#if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");
-#endif
 #if NDEBUG
 	VMProtectEnd();
 #endif
@@ -96,17 +92,13 @@ void BAC::MonitorLdrLoadDll()
 void BAC::MonitorApc()
 {
 #if NDEBUG
-	VMProtectBegin("BAC::MonitorApc");
+	VMProtectBeginUltra("BAC::MonitorApc");
 #endif
-#if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
-#endif
 
 
 
-#if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");
-#endif
 #if NDEBUG
 	VMProtectEnd();
 #endif
@@ -115,7 +107,7 @@ void BAC::MonitorApc()
 BOOL WINAPI BACImmGetHotKey(DWORD dwHotKeyID, LPUINT lpuModifiers, LPUINT lpuVKey, LPHKL lphKL)
 {
 #if NDEBUG
-	VMProtectBegin("BACImmGetHotKey");
+	VMProtectBeginUltra("BACImmGetHotKey");
 #endif
 
 	active_flag = true;
@@ -129,7 +121,7 @@ BOOL WINAPI BACImmGetHotKey(DWORD dwHotKeyID, LPUINT lpuModifiers, LPUINT lpuVKe
 int WINAPI BACImmActivateLayout(LPARAM pa)
 {
 #if NDEBUG
-	VMProtectBegin("BACImmActivateLayout");
+	VMProtectBeginUltra("BACImmActivateLayout");
 #endif
 
 	if (active_flag)
@@ -149,11 +141,9 @@ int WINAPI BACImmActivateLayout(LPARAM pa)
 void BAC::MonitorImm()
 {
 #if NDEBUG
-	VMProtectBegin("BAC::MonitorImm");
+	VMProtectBeginUltra("BAC::MonitorImm");
 #endif
-#if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
-#endif
 
 	HMODULE imm32 = LoadLibraryA("imm32.dll");
 	pfnGetHotKey = (fpImmGetHotKey)GetProcAddress(imm32, "ImmGetHotKey");
@@ -182,9 +172,7 @@ void BAC::MonitorImm()
 	for (auto pair : hook_address)
 		this->_hook_list[pair.first].emplace(pair.second, this->CRC32((void*)pair.second, 5));
 
-#if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");
-#endif
 #if NDEBUG
 	VMProtectEnd();
 #endif

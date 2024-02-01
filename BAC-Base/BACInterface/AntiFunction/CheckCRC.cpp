@@ -95,19 +95,12 @@ unsigned int uiCRC32_Table[256] = {
 
 unsigned int BAC::CRC32(void* pdata, size_t data_len)
 {
-#if NDEBUG
-	VMProtectBeginUltra("BAC::CRC32");
-#endif
-
 	unsigned int uiCRC32 = 0xFFFFFFFF;
 	unsigned char* psz_data = (unsigned char*)pdata;
 
 	for (size_t i = 0; i < data_len; ++i)
 		uiCRC32 = ((uiCRC32 >> 8) & 0x00FFFFFF) ^ uiCRC32_Table[(uiCRC32 ^ (unsigned int)*psz_data++) & 0xFF];
 
-#if NDEBUG
-	VMProtectEnd();
-#endif
 	return (uiCRC32 ^ 0xFFFFFFFF);
 }
 

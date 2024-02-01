@@ -17,18 +17,15 @@ LONG CALLBACK UnHandleException(EXCEPTION_POINTERS* p_exception)
 
 bool BACBaseInitialize()
 {
-#if NDEBUG
-	VMProtectBeginUltra("BACBaseInitialize");
-#endif
-
 	//实例化BAC日志对象
 	baclog = new BACLog();
 	//实例化BAC对象
 	bac = new BAC();
 
-#if _DEBUG
-	baclog->FunctionLog(__FUNCTION__, "Enter");
+#if NDEBUG
+	VMProtectBeginUltra("BACBaseInitialize");
 #endif
+	baclog->FunctionLog(__FUNCTION__, "Enter");
 
 	//设置顶层异常过滤函数
 	::SetUnhandledExceptionFilter(&UnHandleException);
@@ -52,12 +49,10 @@ bool BACBaseInitialize()
 	//处理循环事件
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BAC::LoopEvent, NULL, NULL, NULL);
 
-#if _DEBUG
-	baclog->FileLogf("%s-> %s: %s", "[BAC]", __FUNCTION__, "Leave");
-#endif
 #if NDEBUG
 	VMProtectEnd();
 #endif
+	baclog->FileLogf("%s-> %s: %s", "[BAC]", __FUNCTION__, "Leave");
 	return true;
 }
 
@@ -66,9 +61,7 @@ bool BACBaseUnInitialize()
 #if NDEBUG
 	VMProtectBeginUltra("BACBaseUnInitialize");
 #endif
-#if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
-#endif
 
 	//释放BAC对象
 	if (bac)
@@ -77,12 +70,8 @@ bool BACBaseUnInitialize()
 			throw "uninitialize bac kernel error";
 		delete bac;
 	}
-	else
-		return false;
 
-#if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");
-#endif
 #if NDEBUG
 	VMProtectEnd();
 #endif
@@ -90,8 +79,7 @@ bool BACBaseUnInitialize()
 	//释放BAC日志对象
 	if (baclog)
 		delete baclog;
-	else
-		return false;
+
 	return true;
 }
 
