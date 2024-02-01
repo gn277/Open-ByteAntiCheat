@@ -16,7 +16,7 @@ BACBase::~BACBase()
 
 void* BACBase::operator new(size_t size, POOL_TYPE pool_type)
 {
-    return ExAllocatePoolWithTag(pool_type, size, 'bac1');
+    return ExAllocatePool2(pool_type, size, 'bac1');
 }
 
 void BACBase::operator delete(void* pointer)

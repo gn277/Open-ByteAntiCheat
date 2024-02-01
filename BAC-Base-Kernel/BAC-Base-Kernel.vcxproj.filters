@@ -15,6 +15,9 @@
     <Filter Include="IRPControl">
       <UniqueIdentifier>{fc45fe00-f7da-4438-aa9d-e743a74c2492}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BAC-Base-Kernel\ProcessProtect">
+      <UniqueIdentifier>{88d210fe-19c6-4b40-aaee-05281ac754e8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BAC-Base-Kernel\BAC-Base-Kernel.cpp">
@@ -25,6 +28,9 @@
     </ClCompile>
     <ClCompile Include="DriverEntry.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BAC-Base-Kernel\ProcessProtect\ProcessProtect.cpp">
+      <Filter>BAC-Base-Kernel\ProcessProtect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -39,6 +45,9 @@
     </ClInclude>
     <ClInclude Include="IRPControl\IRPControlCode.h">
       <Filter>IRPControl</Filter>
+    </ClInclude>
+    <ClInclude Include="BAC-Base-Kernel\ProcessProtect\ProcessProtect.h">
+      <Filter>BAC-Base-Kernel\ProcessProtect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

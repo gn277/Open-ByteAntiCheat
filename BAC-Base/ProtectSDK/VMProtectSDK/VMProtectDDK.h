@@ -3,11 +3,11 @@
 #define VMP_IMPORT __declspec(dllimport)
 #define VMP_API __stdcall
 #define VMP_WCHAR wchar_t
-#ifdef _WIN64
-	#pragma comment(lib, "VMProtectDDK64.lib")
-#else
-	#pragma comment(lib, "VMProtectDDK32.lib")
-#endif // _WIN64
+//#ifdef _WIN64
+//	#pragma comment(lib, "VMProtectDDK64.lib")
+//#else
+//	#pragma comment(lib, "VMProtectDDK32.lib")
+//#endif // _WIN64
 
 #ifdef __cplusplus
 extern "C" {

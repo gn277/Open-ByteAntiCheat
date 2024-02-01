@@ -235,7 +235,7 @@ LPVOID BACHelper::ReadFileToBuffer(const char* file_path)
 bool BACHelper::ImportTableInject(const char* target_exe_path, const char* new_exe_path, const char* dll_name, const char* import_function_name)
 {
 #if NDEBUG
-    VMProtectBegin("BACHelper::ImportTableInject");
+    VMProtectBeginUltra("BACHelper::ImportTableInject");
 #endif
 
     DWORD	Size = 0;

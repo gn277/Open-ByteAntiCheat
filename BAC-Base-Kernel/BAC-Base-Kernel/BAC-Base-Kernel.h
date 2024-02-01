@@ -11,10 +11,14 @@
 #pragma comment(lib, "NtStrSafe.lib")
 #pragma comment(lib, "NtosKrnl.lib")
 
+#include <VMProtectDDK.h>
+
+#include "ProcessProtect/ProcessProtect.h"
+
 
 void OutPutBACLog(IN const char* function, IN const char* data);
 
-class BACBase
+class BACBase : public ProcessProtect
 {
 private:
 

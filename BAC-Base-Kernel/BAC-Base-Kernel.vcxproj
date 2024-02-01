@@ -136,12 +136,16 @@
     <EnableInf2cat>false</EnableInf2cat>
     <TargetName>BAC-Base</TargetName>
     <OutDir>..\x64\Debug\ByteAntiCheat\</OutDir>
+    <IncludePath>E:\GNSource\ByteAntiCheat\BAC-Base\ProtectSDK\VMProtectSDK;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\GNSource\ByteAntiCheat\BAC-Base\ProtectSDK\VMProtectSDK;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <DebuggerFlavor>DbgengKernelDebugger</DebuggerFlavor>
     <EnableInf2cat>false</EnableInf2cat>
     <TargetName>BAC-Base</TargetName>
     <OutDir>..\x64\Release\ByteAntiCheat\</OutDir>
+    <LibraryPath>E:\GNSource\ByteAntiCheat\BAC-Base\ProtectSDK\VMProtectSDK;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\GNSource\ByteAntiCheat\BAC-Base\ProtectSDK\VMProtectSDK;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <DebuggerFlavor>DbgengKernelDebugger</DebuggerFlavor>
@@ -162,13 +166,20 @@
       <TreatWarningAsError>false</TreatWarningAsError>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>VMProtectDDK64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <WarningLevel>Level3</WarningLevel>
       <TreatWarningAsError>false</TreatWarningAsError>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>VMProtectSDK64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -190,11 +201,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BAC-Base-Kernel\BAC-Base-Kernel.cpp" />
+    <ClCompile Include="BAC-Base-Kernel\ProcessProtect\ProcessProtect.cpp" />
     <ClCompile Include="DriverEntry.cpp" />
     <ClCompile Include="IRPControl\IRPControl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BAC-Base-Kernel\BAC-Base-Kernel.h" />
+    <ClInclude Include="BAC-Base-Kernel\ProcessProtect\ProcessProtect.h" />
     <ClInclude Include="IRPControl\BAC-DataStruct.h" />
     <ClInclude Include="IRPControl\IRPControl.h" />
     <ClInclude Include="IRPControl\IRPControlCode.h" />

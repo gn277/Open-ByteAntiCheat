@@ -7,6 +7,10 @@
 
 bool BAC::JudgmentHookModule(PVOID hook_address)
 {
+#if NDEBUG
+	VMProtectBegin("BAC::JudgmentHookModule");
+#endif
+
 	DWORD64 bac_module_end = (DWORD64)this->Tools::GetModuleEndAddress(self_module);
 
 	//计算jmp跳转到的地址
@@ -31,10 +35,17 @@ bool BAC::JudgmentHookModule(PVOID hook_address)
 	}
 
 	return true;
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
 void BAC::CheckHookPointer()
 {
+#if NDEBUG
+	VMProtectBegin("BAC::CheckHookPointer");
+#endif
+
 	for (auto pair : this->_hook_list)
 	{
 		for (auto tpair : pair.second)
@@ -48,4 +59,8 @@ void BAC::CheckHookPointer()
 				std::cout << "[LOG]:" << __FUNCTION__ << " hook to address not bac module!" << std::endl;
 		}
 	}
+
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }

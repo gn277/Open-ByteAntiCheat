@@ -18,7 +18,7 @@ LONG CALLBACK UnHandleException(EXCEPTION_POINTERS* p_exception)
 bool BACBaseInitialize()
 {
 #if NDEBUG
-	VMProtectBegin("BACBaseInitialize");
+	VMProtectBeginUltra("BACBaseInitialize");
 #endif
 
 	//实例化BAC日志对象
@@ -55,16 +55,16 @@ bool BACBaseInitialize()
 #if _DEBUG
 	baclog->FileLogf("%s-> %s: %s", "[BAC]", __FUNCTION__, "Leave");
 #endif
-	return true;
 #if NDEBUG
 	VMProtectEnd();
 #endif
+	return true;
 }
 
 bool BACBaseUnInitialize()
 {
 #if NDEBUG
-	VMProtectBegin("BACBaseUnInitialize");
+	VMProtectBeginUltra("BACBaseUnInitialize");
 #endif
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Enter");
@@ -83,6 +83,9 @@ bool BACBaseUnInitialize()
 #if _DEBUG
 	baclog->FunctionLog(__FUNCTION__, "Leave");
 #endif
+#if NDEBUG
+	VMProtectEnd();
+#endif
 
 	//释放BAC日志对象
 	if (baclog)
@@ -90,9 +93,6 @@ bool BACBaseUnInitialize()
 	else
 		return false;
 	return true;
-#if NDEBUG
-	VMProtectEnd();
-#endif
 }
 
 BOOL APIENTRY DllMain(HMODULE h_module, DWORD ul_reason_for_call, LPVOID lpReserved)
