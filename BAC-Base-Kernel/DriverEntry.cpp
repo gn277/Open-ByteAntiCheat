@@ -3,6 +3,26 @@
 
 BACBase* bac = nullptr;
 
+
+NTSTATUS InitializeBACKernel(PDRIVER_OBJECT p_driver_object, PUNICODE_STRING p_register_path)
+{
+#if _DEBUG
+	OutPutBACLog(__FUNCTION__, "Enter");
+#endif
+
+	//实例化BACBase
+	bac = new BACBase(p_driver_object);
+
+	//测试保护启动的进程
+	bac->ProcessProtect::ProtectProcess("TestGame.exe");
+
+	
+#if _DEBUG
+	OutPutBACLog(__FUNCTION__, "Leave");
+#endif
+	return STATUS_SUCCESS;
+}
+
 void DriverUnload(PDRIVER_OBJECT p_driver_object)
 {
 #if _DEBUG
@@ -71,8 +91,8 @@ extern "C" NTSTATUS DriverEntry(PDRIVER_OBJECT p_driver_object, PUNICODE_STRING 
 	}
 	p_driver_object->DriverUnload = DriverUnload;
 
-	//实例化BACBase
-	bac = new BACBase;
+	//初始化BACKernel
+	status = InitializeBACKernel(p_driver_object, p_register_path);
 
 #if _DEBUG
 	OutPutBACLog(__FUNCTION__, "Leave");

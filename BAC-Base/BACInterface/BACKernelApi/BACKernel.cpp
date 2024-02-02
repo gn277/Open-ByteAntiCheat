@@ -126,7 +126,7 @@ bool BACKernel::InstiallDriver()
 
 	baclog->FunctionLog(__FUNCTION__, "Leave");
 
-	return b_ret;
+	return true;
 }
 
 bool BACKernel::UnInstallDriver()

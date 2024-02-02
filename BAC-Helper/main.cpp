@@ -15,6 +15,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	AllocConsole();
 	freopen("CONOUT$", "w", stdout);
 //#endif
+	OutputDebugStringA("[BAC]:BAC-Helper init()\n");
 
 	//实例化BACHelper
 	bac_helper = new BACHelper();
@@ -58,6 +59,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	MSG msg;
 	while (GetMessage(&msg, nullptr, 0, 0))
 	{
+		OutputDebugStringA("[BAC]:BAC-Helper running()\n");
 		if (!TranslateAccelerator(msg.hwnd, acc_table, &msg))
 		{
 			TranslateMessage(&msg);
@@ -66,7 +68,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	}
 
 	//处理退出事件
-
+	OutputDebugStringA("[BAC]:BAC-Helper exit()\n");
 
 	return (int)msg.wParam;
 }

@@ -5,7 +5,6 @@
 #include <windef.h>
 #include <ntimage.h>
 #include <wdf.h>
-#include <wdm.h>
 #include <ntstrsafe.h>
 
 #pragma comment(lib, "NtStrSafe.lib")
@@ -23,7 +22,7 @@ class BACBase : public ProcessProtect
 private:
 
 public:
-	BACBase();
+	BACBase(PDRIVER_OBJECT p_driver_object);
 	~BACBase();
 
 public:
