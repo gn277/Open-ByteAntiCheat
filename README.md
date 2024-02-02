@@ -35,7 +35,7 @@ R3:
 R0:
 ----
 * Communicate with R3's heartbeat
-* PspidTable protect game process
+* PspCidTable protect game process
 * to be later add
 ----
 
