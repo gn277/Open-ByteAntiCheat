@@ -6,6 +6,9 @@ class ProcessProtect
 {
 private:
 
+private:
+	__int64 ExpLookupHandleTableEntry(unsigned int* a1, __int64 a2);
+
 public:
 	ProcessProtect();
 	~ProcessProtect();
