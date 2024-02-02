@@ -208,6 +208,7 @@
   <ItemGroup>
     <ClInclude Include="BAC-Base-Kernel\BAC-Base-Kernel.h" />
     <ClInclude Include="BAC-Base-Kernel\ProcessProtect\ProcessProtect.h" />
+    <ClInclude Include="DriverEntry.h" />
     <ClInclude Include="IRPControl\BAC-DataStruct.h" />
     <ClInclude Include="IRPControl\IRPControl.h" />
     <ClInclude Include="IRPControl\IRPControlCode.h" />

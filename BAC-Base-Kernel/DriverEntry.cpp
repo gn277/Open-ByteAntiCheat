@@ -1,8 +1,7 @@
-#include "BAC-Base-Kernel/BAC-Base-Kernel.h"
+#include "DriverEntry.h"
 #include "IRPControl/IRPControl.h"
 
 BACBase* bac = nullptr;
-
 
 void DriverUnload(PDRIVER_OBJECT p_driver_object)
 {
