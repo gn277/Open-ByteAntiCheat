@@ -16,6 +16,7 @@ R3:
 * DLL injection detection
 * Monitor read/write related functions
 * Monitoring window create related functions
+* Complete game launcher
 * to be later add
 ----
 R0:
@@ -26,7 +27,6 @@ Planned features for development:
 ====
 R3:
 ----
-* Complete game launcher
 * Remote thread injection detection
 * Enumerating abnormal threads
 * Enumerating abnormal virtual memory without modules
@@ -35,6 +35,7 @@ R3:
 R0:
 ----
 * Communicate with R3's heartbeat
+* PspidTable protect game process
 * to be later add
 ----
 
