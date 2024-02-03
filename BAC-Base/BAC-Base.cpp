@@ -10,7 +10,7 @@ HMODULE self_module = NULL;
 
 LONG CALLBACK UnHandleException(EXCEPTION_POINTERS* p_exception)
 {
-	bac->UnInitializeBACKernel();
+	bac->BACKernel::UnInstallDriver();
 
 	return EXCEPTION_CONTINUE_SEARCH;
 }
@@ -31,7 +31,7 @@ bool BACBaseInitialize()
 	::SetUnhandledExceptionFilter(&UnHandleException);
 
 	//加载驱动 如驱动未签名此处会触发异常断下，请检查驱动签名
-	if (!bac->InitializeBACKernel())
+	if (!bac->BACKernel::InstiallDriver())
 		throw "initialize bac kernel error!";
 
 	//应用层隐藏hook
@@ -45,6 +45,11 @@ bool BACBaseInitialize()
 	//监视窗口创建的相关函数
 	bac->MonitorCreateWindow();
 
+	//测试保护自己进程
+	if (!bac->BACKernel::ProtectProcessByName(L"TestGame.exe"))
+		printf("error\nerror\nerror\nerror\nerror\n");
+	else
+		printf("!!!!!!!!!!!\n!!!!!!!!!!!\n!!!!!!!!!!!\n!!!!!!!!!!!\n");
 
 	//处理循环事件
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BAC::LoopEvent, NULL, NULL, NULL);
@@ -66,7 +71,7 @@ bool BACBaseUnInitialize()
 	//释放BAC对象
 	if (bac)
 	{
-		if(!bac->UnInitializeBACKernel())
+		if(!bac->BACKernel::UnInstallDriver())
 			throw "uninitialize bac kernel error";
 		delete bac;
 	}

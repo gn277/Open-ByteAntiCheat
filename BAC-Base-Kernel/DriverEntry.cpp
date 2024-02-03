@@ -13,9 +13,6 @@ NTSTATUS InitializeBACKernel(PDRIVER_OBJECT p_driver_object, PUNICODE_STRING p_r
 	//实例化BACBase
 	bac = new BACBase(p_driver_object);
 
-	//测试保护启动的进程
-	bac->ProcessProtect::ProtectProcess("TestGame.exe");
-
 	
 #if _DEBUG
 	OutPutBACLog(__FUNCTION__, "Leave");
@@ -90,6 +87,9 @@ extern "C" NTSTATUS DriverEntry(PDRIVER_OBJECT p_driver_object, PUNICODE_STRING 
 		return status;
 	}
 	p_driver_object->DriverUnload = DriverUnload;
+
+	//未签名验证，解决ObRegisterCallbacks返回：0xC0000022 ->未签名
+	*(PULONG)((ULONG64)p_driver_object->DriverSection + 0x68) |= 0x20;
 
 	//初始化BACKernel
 	status = InitializeBACKernel(p_driver_object, p_register_path);

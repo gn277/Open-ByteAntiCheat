@@ -8,13 +8,49 @@ typedef struct _OB_REG_CONTEXT
 	USHORT ulIndex;
 	OB_OPERATION_REGISTRATION* OperationRegistration;
 } REG_CONTEXT, * PREG_CONTEXT;
+typedef struct _SYSTEM_THREADS
+{
+	LARGE_INTEGER  KernelTime;
+	LARGE_INTEGER  UserTime;
+	LARGE_INTEGER  CreateTime;
+	ULONG    WaitTime;
+	PVOID    StartAddress;
+	CLIENT_ID   ClientID;
+	KPRIORITY   Priority;
+	KPRIORITY   BasePriority;
+	ULONG    ContextSwitchCount;
+	ULONG    ThreadState;
+	KWAIT_REASON  WaitReason;
+	ULONG    Reserved; //Add
+}SYSTEM_THREADS, * PSYSTEM_THREADS;
+typedef struct _SYSTEM_PROCESSES
+{
+	ULONG    NextEntryDelta;//构成结构序列的偏移量
+	ULONG    ThreadCount;//线程数目
+	ULONG    Reserved[6];
+	LARGE_INTEGER  CreateTime;//创建时间;
+	LARGE_INTEGER  UserTime;//用户模式(Ring3)创建时间
+	LARGE_INTEGER  KernelTime;//内核模式(Ring0)创建时间
+	UNICODE_STRING  ProcessName;//进程名
+	KPRIORITY   BasePriority;//进程优先权
+	HANDLE   ProcessId;  //进程ID
+	HANDLE   InheritedFromProcessId;//父进程ID
+	ULONG    HandleCount;//句柄数目
+	ULONG    SessionId;
+	ULONG_PTR  PageDirectoryBase;
+	VM_COUNTERS VmCounters;//虚拟寄存器结构
+	SIZE_T    PrivatePageCount;//Add
+	IO_COUNTERS  IoCounters; //windows 2000 only IO计数器结构
+	struct _SYSTEM_THREADS Threads[1];//进程相关线程的结构数组
+}SYSTEM_PROCESSES, * PSYSTEM_PROCESSES;
 
 
 class ProcessProtect
 {
 private:
 	PDRIVER_OBJECT _p_driver_object = nullptr;
-	char _protect_process_name[100] = { NULL };
+	HANDLE _protect_pid = 0;
+	wchar_t _protect_process_name[100] = { NULL };
 	HANDLE _callbacks_handle = NULL;
 
 private:
@@ -30,14 +66,14 @@ public:
 	~ProcessProtect();
 
 public:
-	char* GetProtectProcessName();
+	wchar_t* GetProtectProcessName();
 	HANDLE GetProcessID(const char* process_name);
-	bool JudgmentProtectProcess(PEPROCESS p_current_eproc);
+	HANDLE GetProcessIDByName(const wchar_t* process_name);
 	static OB_PREOP_CALLBACK_STATUS ProcessHandlePreCallback(PVOID registration_context, POB_PRE_OPERATION_INFORMATION operation_information);
 	static OB_PREOP_CALLBACK_STATUS ThreadHandlePreCallback(PVOID registration_context, POB_PRE_OPERATION_INFORMATION operation_information);
 
 public:
-	NTSTATUS ProtectProcess(const char* process_name);
+	NTSTATUS ProtectProcess(const wchar_t* process_name);
 
 };
 

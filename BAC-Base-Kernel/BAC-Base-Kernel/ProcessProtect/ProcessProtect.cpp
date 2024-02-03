@@ -1,10 +1,19 @@
 #include "ProcessProtect.h"
 #include "../../DriverEntry.h"
 
-//char protect_process_name[100] = { NULL };
-
 //申明函数
 extern "C" PCHAR PsGetProcessImageFileName(IN PEPROCESS p_process);
+extern "C" NTSYSAPI NTSTATUS NTAPI ZwQueryInformationProcess(
+	IN HANDLE ProcessHandle,
+	IN PROCESSINFOCLASS ProcessInformationClass,
+	OUT PVOID ProcessInformation,
+	IN ULONG ProcessInformationLength,
+	IN PULONG ReturnLength);
+extern "C" NTSYSAPI NTSTATUS NTAPI ZwQuerySystemInformation(
+	IN ULONG SystemInformationClass,
+	OUT PVOID SystemInformation,
+	IN ULONG SystemInformationLength,
+	OUT PULONG ReturnLength);
 
 
 ProcessProtect::ProcessProtect(PDRIVER_OBJECT p_driver_object)
@@ -55,9 +64,6 @@ NTSTATUS ProcessProtect::RegisterProtectProcessCallbacks()
 	OB_OPERATION_REGISTRATION ob_operation_registration[2];
 	OB_CALLBACK_REGISTRATION ob_callback_registration;
 
-	//未签名验证，解决ObRegisterCallbacks返回：0xC0000022 ->未签名
-	*(PULONG)((ULONG64)this->_p_driver_object->DriverSection + 0x68) |= 0x20;
-
 	memset(&reg_context, 0, sizeof(REG_CONTEXT));
 	reg_context.ulIndex = 1;
 	reg_context.Version = 120;
@@ -102,7 +108,7 @@ NTSTATUS ProcessProtect::RegisterProtectProcessCallbacks()
 	return STATUS_SUCCESS;
 }
 
-char* ProcessProtect::GetProtectProcessName()
+wchar_t* ProcessProtect::GetProtectProcessName()
 {
 	return this->_protect_process_name;
 }
@@ -118,7 +124,7 @@ HANDLE ProcessProtect::GetProcessID(const char* process_name)
 			//通过eprocess获取进程名的函数需更新，否则只能获取15个字节
 			if (_stricmp(PsGetProcessImageFileName(eprocess), process_name) == 0)
 			{
-				//DbgPrint("[BAC]:process name: %s --> id = %d\n", PsGetProcessImageFileName(eprocess), PsGetProcessId(eprocess));
+				DbgPrint("[BAC]:process name: %s --> id = %d\n", PsGetProcessImageFileName(eprocess), PsGetProcessId(eprocess));
 				ObDereferenceObject(eprocess);
 				return PsGetProcessId(eprocess);
 			}
@@ -129,19 +135,59 @@ HANDLE ProcessProtect::GetProcessID(const char* process_name)
 	return 0;
 }
 
-bool ProcessProtect::JudgmentProtectProcess(PEPROCESS p_current_eproc)
+HANDLE ProcessProtect::GetProcessIDByName(const wchar_t* process_name)
 {
-	PCHAR p_current_process_name = PsGetProcessImageFileName(p_current_eproc);
+	NTSTATUS status = STATUS_SUCCESS;
+	ULONG ret_length = 0;
+	PVOID p_proc_info = 0;
+	PSYSTEM_PROCESSES p_proc_index = { NULL };
 
-	if (p_current_process_name)
+	//调用函数，获取进程信息
+	status = ZwQuerySystemInformation(5/*获取进程信息,宏定义为5*/, NULL, 0, &ret_length);
+	if (!ret_length)
 	{
-		if (_stricmp(this->_protect_process_name, p_current_process_name) == 0)
-			return true;
-		else
-			return false;
+		DbgPrint("[BAC]:ZwQuerySystemInformation error!\n");
+		return 0;
 	}
 
-	return false;
+	//申请空间
+	p_proc_info = ExAllocatePool(NonPagedPool, ret_length);
+	if (!p_proc_info)
+	{
+		DbgPrint("[BAC]:ExAllocatePool error!\n");
+		return 0;
+	}
+
+	status = ZwQuerySystemInformation(5/*获取进程信息,宏定义为5*/, p_proc_info, ret_length, &ret_length);
+	if (NT_SUCCESS(status))
+	{
+		p_proc_index = (PSYSTEM_PROCESSES)p_proc_info;
+
+		////第一个进程应该是 pid 为 0 的进程
+		//if (p_proc_index->ProcessId == 0)
+		//	DbgPrint("[BAC]:PID 0 System Idle Process\n");
+
+		//循环打印所有进程信息,因为最后一个进程的NextEntryDelta值为0,所以先打印后判断
+		do
+		{
+			p_proc_index = (PSYSTEM_PROCESSES)((char*)p_proc_index + p_proc_index->NextEntryDelta);
+
+			if (_wcsicmp(p_proc_index->ProcessName.Buffer, process_name) == 0)
+			{
+				HANDLE pid = p_proc_index->ProcessId;
+				//DbgPrint("[BAC]:ProcName:  %-20ws     pid:  %u\n", p_proc_index->ProcessName.Buffer, pid);
+
+				ExFreePool(p_proc_info);
+				return pid;
+			}
+		} while (p_proc_index->NextEntryDelta != 0);
+	}
+	//else
+	//	DbgPrint("[BAC]:GetProcessIDByName-> error code : %u!!!\n", status);
+
+	ExFreePool(p_proc_info);
+
+	return 0;
 }
 
 OB_PREOP_CALLBACK_STATUS ProcessProtect::ProcessHandlePreCallback(PVOID registration_context, POB_PRE_OPERATION_INFORMATION operation_information)
@@ -156,7 +202,7 @@ OB_PREOP_CALLBACK_STATUS ProcessProtect::ProcessHandlePreCallback(PVOID registra
 	HANDLE my_process_id = (HANDLE)PsGetProcessId(current_process);
 
 	//判断是否需要保护的进程id
-	HANDLE protect_pid = bac->ProcessProtect::GetProcessID("TestGame.exe");
+	HANDLE protect_pid = bac->ProcessProtect::GetProcessIDByName(bac->ProcessProtect::GetProtectProcessName());
 	if (protect_pid)
 	{
 		if (PsGetProcessId((PEPROCESS)operation_information->Object) == protect_pid)
@@ -179,7 +225,7 @@ OB_PREOP_CALLBACK_STATUS ProcessProtect::ThreadHandlePreCallback(PVOID registrat
 	if (operation_information->KernelHandle)
 		return OB_PREOP_SUCCESS;
 
-	HANDLE protect_pid = bac->ProcessProtect::GetProcessID("TestGame.exe");
+	HANDLE protect_pid = bac->ProcessProtect::GetProcessIDByName(bac->ProcessProtect::GetProtectProcessName());
 
 	//放走进程自己线程的权限访问
 	if (PsGetCurrentProcessId() == protect_pid)
@@ -196,12 +242,13 @@ OB_PREOP_CALLBACK_STATUS ProcessProtect::ThreadHandlePreCallback(PVOID registrat
 	return OB_PREOP_SUCCESS;
 }
 
-NTSTATUS ProcessProtect::ProtectProcess(const char* process_name)
+NTSTATUS ProcessProtect::ProtectProcess(const wchar_t* process_name)
 {
 	//保存需要保护的进程名
-	strcpy(this->_protect_process_name, process_name);
+	wcscpy(this->_protect_process_name, process_name);
 
-	HANDLE protect_process_id = this->GetProcessID(this->_protect_process_name);
+	//DbgPrint("[BAC]:需要保护的进程：%S", this->_protect_process_name);
+	this->_protect_pid = this->GetProcessIDByName(this->_protect_process_name);
 
 	//注册回调
 	return this->RegisterProtectProcessCallbacks();

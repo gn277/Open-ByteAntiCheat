@@ -1,3 +1,4 @@
+#include "../DriverEntry.h"
 #include "IRPControl.h"
 
 
@@ -15,12 +16,11 @@ NTSTATUS BACDispatchRoutine(PDEVICE_OBJECT device_object, PIRP irp)
 			ULONG IrpCode = stack->Parameters.DeviceIoControl.IoControlCode;
 			switch (IrpCode)
 			{
-				case Test_Code:
+				case ProtectProcess_Code:
 				{
 					PVOID buffer = (PVOID)irp->AssociatedIrp.SystemBuffer;
-					DWORD64 data = 0xFF;
-					*(DWORD64*)buffer = (DWORD64)data;
-					info = sizeof(DWORD64);
+					*(LONG*)buffer = bac->ProcessProtect::ProtectProcess(((PProtectProcessStruct)buffer)->file_path);
+					info = sizeof(LONG);
 					break;
 				}
 			}

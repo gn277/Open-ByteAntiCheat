@@ -35,5 +35,8 @@ public:
 	bool UnInstallDriver();
 	bool OpenDriverHandle();
 
+public:
+	bool ProtectProcessByName(const wchar_t* process_name);
+
 };
 

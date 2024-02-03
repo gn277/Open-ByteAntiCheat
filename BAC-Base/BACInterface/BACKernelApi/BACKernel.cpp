@@ -126,7 +126,8 @@ bool BACKernel::InstiallDriver()
 
 	baclog->FunctionLog(__FUNCTION__, "Leave");
 
-	return true;
+	//完成后打开驱动句柄
+	return this->OpenDriverHandle();
 }
 
 bool BACKernel::UnInstallDriver()
@@ -233,6 +234,22 @@ bool BACKernel::OpenDriverHandle()
 
 	baclog->FunctionLog(__FUNCTION__, "Leave");
 	return TRUE;
+}
+
+bool BACKernel::ProtectProcessByName(const wchar_t* process_name)
+{
+	ULONG dw_write;
+	PVOID return_buffer = NULL;
+	ProtectProcessStruct data = { NULL };
+
+	wcscpy(data.file_path, process_name);
+
+	DeviceIoControl(this->_driver_handle, ProtectProcess_Code, (PVOID)&data, sizeof(data), &return_buffer, sizeof(return_buffer), &dw_write, NULL);
+
+	if (NT_SUCCESS(return_buffer))
+		return true;
+	else
+		return false;
 }
 
 
