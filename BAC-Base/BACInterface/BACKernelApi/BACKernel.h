@@ -31,7 +31,7 @@ private:
 	void DriverEventLogUninstall(const wchar_t* service_name);
 
 public:
-	bool InstiallDriver();
+	bool InstiallDriver(const wchar_t* driver_name, const wchar_t* driver_path);
 	bool UnInstallDriver();
 	bool OpenDriverHandle();
 

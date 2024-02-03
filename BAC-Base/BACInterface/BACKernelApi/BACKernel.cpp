@@ -4,16 +4,6 @@
 
 BACKernel::BACKernel()
 {
-	//获取模块路径
-	TCHAR module_path[MAX_PATH] = { 0 };
-	GetModuleFileNameW(self_module, module_path, _countof(module_path));
-	PathRemoveFileSpecW(module_path);
-	_stprintf_s(this->_driver_full_path, _countof(this->_driver_full_path), _T("%s\\%s"), module_path, DRIVER_FILE_NAME);
-
-	//获取驱动文件名称
-	_tcscpy_s(this->_driver_name, _countof(this->_driver_name), this->_driver_full_path);
-	PathStripPath(this->_driver_name);
-
 }
 
 BACKernel::~BACKernel()
@@ -72,9 +62,12 @@ void BACKernel::DriverEventLogUninstall(const wchar_t* service_name)
 #endif
 }
 
-bool BACKernel::InstiallDriver()
+bool BACKernel::InstiallDriver(const wchar_t* driver_name, const wchar_t* driver_path)
 {
 	baclog->FunctionLog(__FUNCTION__, "Enter");
+
+	wcscpy(this->_driver_name, driver_name);
+	wcscpy(this->_driver_full_path, driver_path);
 
 	//加载前先尝试卸载驱动
 	this->UnInstallDriver();
@@ -246,10 +239,8 @@ bool BACKernel::ProtectProcessByName(const wchar_t* process_name)
 
 	DeviceIoControl(this->_driver_handle, ProtectProcess_Code, (PVOID)&data, sizeof(data), &return_buffer, sizeof(return_buffer), &dw_write, NULL);
 
-	if (NT_SUCCESS(return_buffer))
-		return true;
-	else
-		return false;
+	if (NT_SUCCESS(return_buffer)) return true;
+	else return false;
 }
 
 

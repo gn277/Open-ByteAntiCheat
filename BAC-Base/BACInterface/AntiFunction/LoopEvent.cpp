@@ -20,7 +20,7 @@ void BAC::LoopEvent()
 		//É¨ÃèÄÚ´æ
 
 
-		::Sleep(10000);
+		::Sleep(120000);
 	}
 
 	baclog->FunctionLog(__FUNCTION__, "Leave");

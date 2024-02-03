@@ -30,8 +30,21 @@ bool BACBaseInitialize()
 	//设置顶层异常过滤函数
 	::SetUnhandledExceptionFilter(&UnHandleException);
 
+	TCHAR module_path[MAX_PATH] = { NULL };
+	TCHAR driver_name[MAX_PATH] = { NULL };
+	TCHAR driver_full_path[MAX_PATH] = { NULL };
+
+	//获取模块路径
+	GetModuleFileNameW(self_module, module_path, _countof(module_path));
+	PathRemoveFileSpecW(module_path);
+	_stprintf_s(driver_full_path, _countof(driver_full_path), _T("%s\\%s"), module_path, DRIVER_FILE_NAME);
+
+	//获取驱动文件名称
+	_tcscpy_s(driver_name, _countof(driver_name), driver_full_path);
+	PathStripPath(driver_name);
+
 	//加载驱动 如驱动未签名此处会触发异常断下，请检查驱动签名
-	if (!bac->BACKernel::InstiallDriver())
+	if (!bac->BACKernel::InstiallDriver(driver_name, driver_full_path))
 		throw "initialize bac kernel error!";
 
 	//应用层隐藏hook
@@ -46,10 +59,14 @@ bool BACBaseInitialize()
 	bac->MonitorCreateWindow();
 
 	//测试保护自己进程
-	if (!bac->BACKernel::ProtectProcessByName(L"TestGame.exe"))
-		printf("error\nerror\nerror\nerror\nerror\n");
-	else
-		printf("!!!!!!!!!!!\n!!!!!!!!!!!\n!!!!!!!!!!!\n!!!!!!!!!!!\n");
+	//if (!bac->BACKernel::ProtectProcessByName(L"TestGame.exe"))
+	if (!bac->BACKernel::ProtectProcessByName(L"ShadowVolume.exe"))
+	{
+		if (MessageBoxA(NULL, "driver load error,please check!", "BAC:Error", MB_OK))
+			ExitProcess(-1);
+		else
+			ExitProcess(-2);
+	}
 
 	//处理循环事件
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BAC::LoopEvent, NULL, NULL, NULL);
@@ -96,8 +113,9 @@ BOOL APIENTRY DllMain(HMODULE h_module, DWORD ul_reason_for_call, LPVOID lpReser
 		{
 			self_module = h_module;
 
-			if (!BACBaseInitialize())
-				MessageBoxA(NULL, "BAC load error, please check!", "Error", MB_OK);
+			//if (!BACBaseInitialize())
+			//	MessageBoxA(NULL, "BAC load error, please check!", "Error", MB_OK);
+			::CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BACBaseInitialize, NULL, NULL, NULL);
 
 			break;
 		}
