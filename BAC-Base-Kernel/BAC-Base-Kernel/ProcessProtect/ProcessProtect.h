@@ -46,9 +46,8 @@ typedef struct _SYSTEM_PROCESSES
 
 typedef struct _ProtectProcessList
 {
-	wchar_t protect_process_name[260];
-	HANDLE protect_process_id;
 	LIST_ENTRY list_entry;
+	HANDLE protect_process_id;
 }ProtectProcessList, * PProtectProcessList;
 
 
@@ -89,6 +88,7 @@ public:
 
 	//添加保护进程到链表
 	void AddProtectProcess(const wchar_t* process_name);
+	PLIST_ENTRY GetProtectProcessList();
 
 public:
 	NTSTATUS ProtectProcess(const wchar_t* process_name);

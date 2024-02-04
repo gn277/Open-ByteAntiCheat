@@ -59,6 +59,7 @@ bool BACBaseInitialize()
 	bac->MonitorCreateWindow();
 
 	//测试保护自己进程
+	printf("当前进程名：%S\n", current_process_name);
 	if (!bac->BACKernel::ProtectProcessByName(L"TestGame.exe"))
 	//if (!bac->BACKernel::ProtectProcessByName(L"ShadowVolume.exe"))
 	{
@@ -113,9 +114,9 @@ BOOL APIENTRY DllMain(HMODULE h_module, DWORD ul_reason_for_call, LPVOID lpReser
 		{
 			self_module = h_module;
 
-			//if (!BACBaseInitialize())
-			//	MessageBoxA(NULL, "BAC load error, please check!", "Error", MB_OK);
-			::CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BACBaseInitialize, NULL, NULL, NULL);
+			if (!BACBaseInitialize())
+				MessageBoxA(NULL, "BAC load error, please check!", "Error", MB_OK);
+			//::CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BACBaseInitialize, NULL, NULL, NULL);
 
 			break;
 		}

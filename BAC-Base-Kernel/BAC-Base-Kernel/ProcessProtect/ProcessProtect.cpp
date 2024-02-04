@@ -252,12 +252,11 @@ bool ProcessProtect::GetProcessIDByNameToList(const wchar_t* process_name)
 				if (!p_list)
 					return false;
 
-				//保存进程名
-				wcscpy(p_list->protect_process_name, p_proc_index->ProcessName.Buffer);
 				//保存进程id
 				p_list->protect_process_id = pid;
 				//添加到保存链表中
-				InsertHeadList(&this->_protect_process_list, (PLIST_ENTRY)p_list);
+				//InsertHeadList(&this->_protect_process_list, (PLIST_ENTRY)p_list);
+				InsertTailList(&this->_protect_process_list, &p_list->list_entry);
 			}
 		} while (p_proc_index->NextEntryDelta != 0);
 	}
@@ -276,23 +275,29 @@ OB_PREOP_CALLBACK_STATUS ProcessProtect::ProcessHandlePreCallback(PVOID registra
 
 	PEPROCESS opened_process = (PEPROCESS)operation_information->Object;
 	PEPROCESS current_process = PsGetCurrentProcess();
-
-	HANDLE ul_process_id = (HANDLE)PsGetProcessId(opened_process);
-	HANDLE my_process_id = (HANDLE)PsGetProcessId(current_process);
-
-	//判断是否需要保护的进程id
-	HANDLE protect_pid = bac->ProcessProtect::GetProcessIDByName(bac->ProcessProtect::GetProtectProcessName());
-	if (protect_pid)
-	{
-		if (PsGetProcessId((PEPROCESS)operation_information->Object) == protect_pid)
-		{
-			//striping handle
-			if (operation_information->Operation == OB_OPERATION_HANDLE_CREATE)
-				operation_information->Parameters->CreateHandleInformation.DesiredAccess = (SYNCHRONIZE);
-			else
-				operation_information->Parameters->DuplicateHandleInformation.DesiredAccess = (SYNCHRONIZE);
+	//HANDLE ul_process_id = (HANDLE)PsGetProcessId(opened_process);
+	//HANDLE my_process_id = (HANDLE)PsGetProcessId(current_process);
 	
-			return OB_PREOP_SUCCESS;
+	//遍历保护进程列表
+	PLIST_ENTRY protect_process_list = bac->ProcessProtect::GetProtectProcessList();
+	if (!IsListEmpty(protect_process_list))
+	{
+		PLIST_ENTRY p_current_list = protect_process_list->Flink;
+		while (p_current_list != protect_process_list)
+		{
+			PProtectProcessList node = (PProtectProcessList)p_current_list;
+			if (PsGetProcessId((PEPROCESS)operation_information->Object) == node->protect_process_id)
+			{
+				//striping handle
+				if (operation_information->Operation == OB_OPERATION_HANDLE_CREATE)
+					operation_information->Parameters->CreateHandleInformation.DesiredAccess = (SYNCHRONIZE);
+				else
+					operation_information->Parameters->DuplicateHandleInformation.DesiredAccess = (SYNCHRONIZE);
+			
+				return OB_PREOP_SUCCESS;
+			}
+	
+			p_current_list = p_current_list->Flink;
 		}
 	}
 
@@ -304,21 +309,45 @@ OB_PREOP_CALLBACK_STATUS ProcessProtect::ThreadHandlePreCallback(PVOID registrat
 	if (operation_information->KernelHandle)
 		return OB_PREOP_SUCCESS;
 
-	HANDLE protect_pid = bac->ProcessProtect::GetProcessIDByName(bac->ProcessProtect::GetProtectProcessName());
-	
-	//放走进程自己线程的权限访问
-	if (PsGetCurrentProcessId() == protect_pid)
-		return OB_PREOP_SUCCESS;
-	
-	if (PsGetThreadProcessId((PETHREAD)operation_information->Object) == protect_pid)
+	//遍历保护进程列表
+	PLIST_ENTRY protect_process_list = bac->ProcessProtect::GetProtectProcessList();
+	if (!IsListEmpty(protect_process_list))
 	{
-		if (operation_information->Operation == OB_OPERATION_HANDLE_CREATE)
-			operation_information->Parameters->CreateHandleInformation.DesiredAccess = (SYNCHRONIZE | THREAD_QUERY_LIMITED_INFORMATION);
-		else
-			operation_information->Parameters->DuplicateHandleInformation.DesiredAccess = (SYNCHRONIZE | THREAD_QUERY_LIMITED_INFORMATION);
+		PLIST_ENTRY p_current_list = protect_process_list->Flink;
+		while (p_current_list != protect_process_list)
+		{
+			PProtectProcessList node = (PProtectProcessList)p_current_list;
+
+			//放走进程自己线程的权限访问
+			if (PsGetCurrentProcessId() == node->protect_process_id)
+				return OB_PREOP_SUCCESS;
+
+			if (PsGetProcessId((PEPROCESS)operation_information->Object) == node->protect_process_id)
+			{
+				//striping handle
+				if (operation_information->Operation == OB_OPERATION_HANDLE_CREATE)
+					operation_information->Parameters->CreateHandleInformation.DesiredAccess = (SYNCHRONIZE | THREAD_QUERY_LIMITED_INFORMATION);
+				else
+					operation_information->Parameters->DuplicateHandleInformation.DesiredAccess = (SYNCHRONIZE | THREAD_QUERY_LIMITED_INFORMATION);
+
+				return OB_PREOP_SUCCESS;
+			}
+
+			p_current_list = p_current_list->Flink;
+		}
 	}
 
 	return OB_PREOP_SUCCESS;
+}
+
+void ProcessProtect::AddProtectProcess(const wchar_t* process_name)
+{
+
+}
+
+PLIST_ENTRY ProcessProtect::GetProtectProcessList()
+{
+	return &this->_protect_process_list;
 }
 
 NTSTATUS ProcessProtect::ProtectProcess(const wchar_t* process_name)
@@ -332,15 +361,8 @@ NTSTATUS ProcessProtect::ProtectProcess(const wchar_t* process_name)
 	//遍历所有同名的进程
 	if (!this->GetProcessIDByNameToList(process_name))
 	{
-		DbgPrint("[BAC]:遍历进程id到链表失败！");
+		DbgPrint("[BAC]:GetProcessIDByNameToList error!");
 		return STATUS_UNSUCCESSFUL;
-	}
-	else
-		DbgPrint("[BAC]:遍历进程到链表成功！");
-
-	for (PLIST_ENTRY p = this->_protect_process_list.Flink; p != &this->_protect_process_list; p = p->Flink)
-	{
-		DbgPrint("[BAC]:进程名：%S,进程ID：%d\n", ((PProtectProcessList)p)->protect_process_name, ((PProtectProcessList)p)->protect_process_id);
 	}
 
 	//注册回调
