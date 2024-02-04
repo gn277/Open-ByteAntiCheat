@@ -20,6 +20,9 @@ ProcessProtect::ProcessProtect(PDRIVER_OBJECT p_driver_object)
 {
 	this->_p_driver_object = p_driver_object;
 
+	//初始化链表头
+	InitializeListHead(&this->_protect_process_list);
+
 }
 
 ProcessProtect::~ProcessProtect()
@@ -27,6 +30,9 @@ ProcessProtect::~ProcessProtect()
 	//析构时释放回调
 	if (this->_callbacks_handle)
 		ObUnRegisterCallbacks(this->_callbacks_handle);
+
+	//释放链表
+	this->RemoveAllProtectProcessList();
 
 }
 
@@ -106,6 +112,20 @@ NTSTATUS ProcessProtect::RegisterProtectProcessCallbacks()
 	}
 
 	return STATUS_SUCCESS;
+}
+
+void ProcessProtect::RemoveAllProtectProcessList()
+{
+	PLIST_ENTRY p_list = nullptr;
+
+	while (!IsListEmpty(&this->_protect_process_list))
+	{
+		//移除链表
+		p_list = RemoveHeadList(&this->_protect_process_list);
+
+		//释放内存
+		ExFreePool((PProtectProcessList)p_list);
+	}
 }
 
 wchar_t* ProcessProtect::GetProtectProcessName()
@@ -190,6 +210,65 @@ HANDLE ProcessProtect::GetProcessIDByName(const wchar_t* process_name)
 	return 0;
 }
 
+bool ProcessProtect::GetProcessIDByNameToList(const wchar_t* process_name)
+{
+	NTSTATUS status = STATUS_SUCCESS;
+	ULONG ret_length = 0;
+	PVOID p_proc_info = 0;
+	PSYSTEM_PROCESSES p_proc_index = { NULL };
+
+	//调用函数，获取进程信息
+	status = ZwQuerySystemInformation(5/*获取进程信息,宏定义为5*/, NULL, 0, &ret_length);
+	if (!ret_length)
+	{
+		DbgPrint("[BAC]:ZwQuerySystemInformation error!\n");
+		return 0;
+	}
+
+	//申请空间
+	p_proc_info = ExAllocatePool(NonPagedPool, ret_length);
+	if (!p_proc_info)
+	{
+		DbgPrint("[BAC]:ExAllocatePool error!\n");
+		return 0;
+	}
+
+	status = ZwQuerySystemInformation(5/*获取进程信息,宏定义为5*/, p_proc_info, ret_length, &ret_length);
+	if (NT_SUCCESS(status))
+	{
+		p_proc_index = (PSYSTEM_PROCESSES)p_proc_info;
+
+		//循环打印所有进程信息,因为最后一个进程的NextEntryDelta值为0,所以先打印后判断
+		do
+		{
+			p_proc_index = (PSYSTEM_PROCESSES)((char*)p_proc_index + p_proc_index->NextEntryDelta);
+
+			if (_wcsicmp(p_proc_index->ProcessName.Buffer, process_name) == 0)
+			{
+				HANDLE pid = p_proc_index->ProcessId;
+				//DbgPrint("[BAC]:ProcName:  %-20ws     pid:  %u\n", p_proc_index->ProcessName.Buffer, pid);
+
+				PProtectProcessList p_list = (PProtectProcessList)ExAllocatePoolWithTag(NonPagedPool, sizeof(ProtectProcessList), 'list');
+				if (!p_list)
+					return false;
+
+				//保存进程名
+				wcscpy(p_list->protect_process_name, p_proc_index->ProcessName.Buffer);
+				//保存进程id
+				p_list->protect_process_id = pid;
+				//添加到保存链表中
+				InsertHeadList(&this->_protect_process_list, (PLIST_ENTRY)p_list);
+			}
+		} while (p_proc_index->NextEntryDelta != 0);
+	}
+	else
+		return false;
+
+	ExFreePool(p_proc_info);
+
+	return true;
+}
+
 OB_PREOP_CALLBACK_STATUS ProcessProtect::ProcessHandlePreCallback(PVOID registration_context, POB_PRE_OPERATION_INFORMATION operation_information)
 {
 	if (operation_information->KernelHandle)
@@ -212,7 +291,7 @@ OB_PREOP_CALLBACK_STATUS ProcessProtect::ProcessHandlePreCallback(PVOID registra
 				operation_information->Parameters->CreateHandleInformation.DesiredAccess = (SYNCHRONIZE);
 			else
 				operation_information->Parameters->DuplicateHandleInformation.DesiredAccess = (SYNCHRONIZE);
-
+	
 			return OB_PREOP_SUCCESS;
 		}
 	}
@@ -226,11 +305,11 @@ OB_PREOP_CALLBACK_STATUS ProcessProtect::ThreadHandlePreCallback(PVOID registrat
 		return OB_PREOP_SUCCESS;
 
 	HANDLE protect_pid = bac->ProcessProtect::GetProcessIDByName(bac->ProcessProtect::GetProtectProcessName());
-
+	
 	//放走进程自己线程的权限访问
 	if (PsGetCurrentProcessId() == protect_pid)
 		return OB_PREOP_SUCCESS;
-
+	
 	if (PsGetThreadProcessId((PETHREAD)operation_information->Object) == protect_pid)
 	{
 		if (operation_information->Operation == OB_OPERATION_HANDLE_CREATE)
@@ -249,6 +328,20 @@ NTSTATUS ProcessProtect::ProtectProcess(const wchar_t* process_name)
 
 	//DbgPrint("[BAC]:需要保护的进程：%S", this->_protect_process_name);
 	this->_protect_pid = this->GetProcessIDByName(this->_protect_process_name);
+
+	//遍历所有同名的进程
+	if (!this->GetProcessIDByNameToList(process_name))
+	{
+		DbgPrint("[BAC]:遍历进程id到链表失败！");
+		return STATUS_UNSUCCESSFUL;
+	}
+	else
+		DbgPrint("[BAC]:遍历进程到链表成功！");
+
+	for (PLIST_ENTRY p = this->_protect_process_list.Flink; p != &this->_protect_process_list; p = p->Flink)
+	{
+		DbgPrint("[BAC]:进程名：%S,进程ID：%d\n", ((PProtectProcessList)p)->protect_process_name, ((PProtectProcessList)p)->protect_process_id);
+	}
 
 	//注册回调
 	return this->RegisterProtectProcessCallbacks();

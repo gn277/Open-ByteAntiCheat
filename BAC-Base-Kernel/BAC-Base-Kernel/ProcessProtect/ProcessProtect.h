@@ -44,11 +44,22 @@ typedef struct _SYSTEM_PROCESSES
 	struct _SYSTEM_THREADS Threads[1];//进程相关线程的结构数组
 }SYSTEM_PROCESSES, * PSYSTEM_PROCESSES;
 
+typedef struct _ProtectProcessList
+{
+	wchar_t protect_process_name[260];
+	HANDLE protect_process_id;
+	LIST_ENTRY list_entry;
+}ProtectProcessList, * PProtectProcessList;
+
 
 class ProcessProtect
 {
 private:
 	PDRIVER_OBJECT _p_driver_object = nullptr;
+
+	//需要保护进程的链表
+	LIST_ENTRY _protect_process_list = { NULL };
+
 	HANDLE _protect_pid = 0;
 	wchar_t _protect_process_name[100] = { NULL };
 	HANDLE _callbacks_handle = NULL;
@@ -56,6 +67,8 @@ private:
 private:
 	__int64 ExpLookupHandleTableEntry(unsigned int* a1, __int64 a2);
 	NTSTATUS RegisterProtectProcessCallbacks();
+	//删除所有链表并释放内存
+	void RemoveAllProtectProcessList();
 
 public:
 	void* operator new(size_t size, POOL_TYPE pool_type = NonPagedPool);
@@ -69,8 +82,13 @@ public:
 	wchar_t* GetProtectProcessName();
 	HANDLE GetProcessID(const char* process_name);
 	HANDLE GetProcessIDByName(const wchar_t* process_name);
+	//多个进程情况下加入链表中
+	bool GetProcessIDByNameToList(const wchar_t* process_name);
 	static OB_PREOP_CALLBACK_STATUS ProcessHandlePreCallback(PVOID registration_context, POB_PRE_OPERATION_INFORMATION operation_information);
 	static OB_PREOP_CALLBACK_STATUS ThreadHandlePreCallback(PVOID registration_context, POB_PRE_OPERATION_INFORMATION operation_information);
+
+	//添加保护进程到链表
+	void AddProtectProcess(const wchar_t* process_name);
 
 public:
 	NTSTATUS ProtectProcess(const wchar_t* process_name);

@@ -59,8 +59,8 @@ bool BACBaseInitialize()
 	bac->MonitorCreateWindow();
 
 	//测试保护自己进程
-	//if (!bac->BACKernel::ProtectProcessByName(L"TestGame.exe"))
-	if (!bac->BACKernel::ProtectProcessByName(L"ShadowVolume.exe"))
+	if (!bac->BACKernel::ProtectProcessByName(L"TestGame.exe"))
+	//if (!bac->BACKernel::ProtectProcessByName(L"ShadowVolume.exe"))
 	{
 		if (MessageBoxA(NULL, "driver load error,please check!", "BAC:Error", MB_OK))
 			ExitProcess(-1);
