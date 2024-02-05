@@ -23,6 +23,13 @@ NTSTATUS BACDispatchRoutine(PDEVICE_OBJECT device_object, PIRP irp)
 					info = sizeof(LONG);
 					break;
 				}
+				case MemoryProtect_Code:
+				{
+					PVOID buffer = (PVOID)irp->AssociatedIrp.SystemBuffer;
+					*(LONG*)buffer = bac->MemoryProtect::RemapImage(((PProtectMemoryStruct)buffer)->module_name, ((PProtectMemoryStruct)buffer)->memory_address);
+					info = sizeof(LONG);
+					break;
+				}
 			}
 		}
 		case IRP_MJ_CREATE:

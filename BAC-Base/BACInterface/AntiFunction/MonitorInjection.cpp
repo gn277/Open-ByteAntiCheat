@@ -1,10 +1,12 @@
 #include "../BAC.h"
 #include "../../BAC-Base.h"
 
-typedef NTSTATUS(WINAPI* fpLdrLoadDll)(IN PWCHAR PathToFile OPTIONAL, IN PULONG Flags OPTIONAL,
-	IN PUNICODE_STRING ModuleFileName, OUT PHANDLE ModuleHandle);
+typedef NTSTATUS(WINAPI* fpLdrLoadDll)(IN PWCHAR PathToFile OPTIONAL, IN PULONG Flags OPTIONAL, IN PUNICODE_STRING ModuleFileName, OUT PHANDLE ModuleHandle);
+typedef void(* fpLdrInitializeThunk)(PCONTEXT NormalContext, PVOID SystemArgument1, PVOID SystemArgument2);
 
 fpLdrLoadDll pfnLdrLoadDll = NULL;
+fpLdrInitializeThunk pfnLdrInitializeThunk = NULL;
+
 
 typedef BOOL(__stdcall* fpImmGetHotKey)(DWORD dwHotKeyID, LPUINT lpuModifiers, LPUINT lpuVKey, LPHKL lphKL);
 typedef int(__stdcall* fpImmActivateLayout)(LPARAM);
@@ -51,6 +53,21 @@ NTSTATUS WINAPI BACLdrLoadDll(IN PWCHAR PathToFile OPTIONAL, IN PULONG Flags OPT
 #endif
 }
 
+void BACLdrInitializeThunk(PCONTEXT NormalContext, PVOID SystemArgument1, PVOID SystemArgument2)
+{
+#if NDEBUG
+	VMProtectBeginUltra("BACLdrInitializeThunk");
+#endif
+
+
+
+	return pfnLdrInitializeThunk(NormalContext, SystemArgument1, SystemArgument2);
+
+#if NDEBUG
+	VMProtectEnd();
+#endif
+}
+
 void BAC::MonitorLdrLoadDll()
 {
 #if NDEBUG
@@ -64,18 +81,24 @@ void BAC::MonitorLdrLoadDll()
 
 	//获取相关函数地址
 	pfnLdrLoadDll = (fpLdrLoadDll)::GetProcAddress(ntdll, "LdrLoadDll");
+	pfnLdrInitializeThunk = (fpLdrInitializeThunk)::GetProcAddress(ntdll, "LdrInitializeThunk");
 
 	//记录hook点
 #if _WIN64
-	std::map<std::string, DWORD64> hook_address = { {"LdrLoadDll", (DWORD64)pfnLdrLoadDll} };
+	std::map<std::string, DWORD64> hook_address = {
+		{"LdrLoadDll", (DWORD64)pfnLdrLoadDll},
+		{"LdrInitializeThunk", (DWORD64)pfnLdrInitializeThunk} };
 #else
-	std::map<std::string, DWORD> hook_address = { {"LdrLoadDll", (DWORD)pfnLdrLoadDll} };
+	std::map<std::string, DWORD> hook_address = {
+		{"LdrLoadDll", (DWORD)pfnLdrLoadDll},
+		{"LdrInitializeThunk", (DWORD)pfnLdrInitializeThunk} };
 #endif
 
 	DetourTransactionBegin();
 	DetourUpdateThread(GetCurrentThread());
 
 	DetourAttach((PVOID*)&pfnLdrLoadDll, BACLdrLoadDll);
+	DetourAttach((PVOID*)&pfnLdrInitializeThunk, BACLdrInitializeThunk);
 
 	DetourTransactionCommit();
 

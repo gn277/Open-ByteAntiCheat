@@ -243,5 +243,21 @@ bool BACKernel::ProtectProcessByName(const wchar_t* process_name)
 	else return false;
 }
 
+bool BACKernel::RemapImage(const char* module_name, HANDLE pid, DWORD64 memory_address)
+{
+	ULONG dw_write;
+	PVOID return_buffer = NULL;
+	ProtectMemoryStruct data = { NULL };
+
+	strcpy(data.module_name, module_name);
+	data.process_id = pid;
+	data.memory_address = memory_address;
+
+	DeviceIoControl(this->_driver_handle, MemoryProtect_Code, (PVOID)&data, sizeof(data), &return_buffer, sizeof(return_buffer), &dw_write, NULL);
+
+	if (NT_SUCCESS(return_buffer)) return true;
+	else return false;
+}
+
 
 

@@ -13,11 +13,12 @@
 #include "../../BAC-Base/ProtectSDK/VMProtectSDK/VMProtectDDK.h"
 
 #include "ProcessProtect/ProcessProtect.h"
+#include "MemoryProtect/MemoryProtect.h"
 
 
 void OutPutBACLog(IN const char* function, IN const char* data);
 
-class BACBase : public ProcessProtect
+class BACBase : public ProcessProtect, public MemoryProtect
 {
 private:
 

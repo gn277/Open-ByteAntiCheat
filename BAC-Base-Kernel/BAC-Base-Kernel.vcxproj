@@ -201,12 +201,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BAC-Base-Kernel\BAC-Base-Kernel.cpp" />
+    <ClCompile Include="BAC-Base-Kernel\MemoryProtect\MemoryProtect.cpp" />
     <ClCompile Include="BAC-Base-Kernel\ProcessProtect\ProcessProtect.cpp" />
     <ClCompile Include="DriverEntry.cpp" />
     <ClCompile Include="IRPControl\IRPControl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BAC-Base-Kernel\BAC-Base-Kernel.h" />
+    <ClInclude Include="BAC-Base-Kernel\MemoryProtect\MemoryProtect.h" />
     <ClInclude Include="BAC-Base-Kernel\ProcessProtect\ProcessProtect.h" />
     <ClInclude Include="DriverEntry.h" />
     <ClInclude Include="IRPControl\BAC-DataStruct.h" />

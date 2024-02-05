@@ -75,8 +75,12 @@ bool BACBaseInitialize()
 	//处理循环事件
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BAC::LoopEvent, NULL, NULL, NULL);
 
-	//内存操作完成后映射内存达到代码不被修改
-	bac->RemapImage((ULONG_PTR)self_module);
+	////内存操作完成后映射内存达到代码不被修改
+	//if (!bac->RemapImage((ULONG_PTR)self_module))
+	//	MessageBoxA(NULL, "BAC Initialize error!", "ERROR", MB_OK);
+	if (!bac->BACKernel::RemapImage("BAC-Base64.dll", (HANDLE)::GetCurrentProcessId(), 0x1122334455667788))
+		MessageBoxA(NULL, "BAC Initialize error!", "ERROR", MB_OK);
+
 
 #if NDEBUG
 	VMProtectEnd();

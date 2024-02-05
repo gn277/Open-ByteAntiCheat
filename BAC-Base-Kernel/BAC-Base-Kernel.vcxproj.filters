@@ -17,6 +17,9 @@
     <Filter Include="DriverEntry">
       <UniqueIdentifier>{3dc54b56-cbe0-4564-aa61-7612fbb266b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BAC-Base-Kernel\MemoryProtect">
+      <UniqueIdentifier>{dbefd492-03ec-4292-90f4-29f6ae27c75f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BAC-Base-Kernel\BAC-Base-Kernel.cpp">
@@ -30,6 +33,9 @@
     </ClCompile>
     <ClCompile Include="DriverEntry.cpp">
       <Filter>DriverEntry</Filter>
+    </ClCompile>
+    <ClCompile Include="BAC-Base-Kernel\MemoryProtect\MemoryProtect.cpp">
+      <Filter>BAC-Base-Kernel\MemoryProtect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +56,9 @@
     </ClInclude>
     <ClInclude Include="DriverEntry.h">
       <Filter>DriverEntry</Filter>
+    </ClInclude>
+    <ClInclude Include="BAC-Base-Kernel\MemoryProtect\MemoryProtect.h">
+      <Filter>BAC-Base-Kernel\MemoryProtect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

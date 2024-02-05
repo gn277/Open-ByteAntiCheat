@@ -26,6 +26,7 @@ BACLog::BACLog()
 	strrchr(current_path, '\\')[0] = 0;					//去掉exe名称
 	this->_log_path.append(current_path);
 	this->_log_path.append("\ByteAntiCheat\\BACLog\\");
+	//this->_log_path.append("\BACLog\\");
 
 	//判断BACLog文件夹是否存在并创建
 	if (!std::filesystem::exists(this->_log_path))
