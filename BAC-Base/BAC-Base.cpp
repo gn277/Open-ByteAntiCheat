@@ -42,7 +42,7 @@ bool BACBaseInitialize()
 	PathRemoveFileSpecW(module_path);
 	_stprintf_s(driver_full_path, _countof(driver_full_path), _T("%s\\%s"), module_path, DRIVER_FILE_NAME);
 	//获取进程名
-	GetModuleFileNameW(::GetModuleHandleA(NULL), process_path, _countof(process_path));
+	GetModuleFileNameW(::GetModuleHandleW(NULL), process_path, _countof(process_path));
 	wcscpy(process_name, wcsrchr(process_path, '\\') + 1);
 	//获取驱动文件名称
 	_tcscpy_s(driver_name, _countof(driver_name), driver_full_path);
