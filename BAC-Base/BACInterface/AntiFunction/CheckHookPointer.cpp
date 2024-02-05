@@ -35,7 +35,22 @@ bool BAC::JudgmentHookModule(PVOID hook_address)
 		return false;
 	}
 #else
-	//WIN32
+	if ((this->Tools::ReadByte((PVOID)target_address) == 0xE9))
+	{
+		target_address = ((DWORD64)target_address + 5) + this->Tools::ReadInt((PVOID)((DWORD64)target_address + 1));
+		if ((target_address >= (DWORD64)self_module) && (target_address <= bac_module_end))
+			return true;
+		else
+		{
+			//std::cout << "[LOG]:" << __FUNCTION__ << " send to server detours hook had been changed" << std::endl;
+			return false;
+		}
+	}
+	else
+	{
+		//std::cout << "[LOG]:" << __FUNCTION__ << " send to server is not BAC's detours lib hook" << std::endl;
+		return false;
+	}
 #endif
 
 	return true;

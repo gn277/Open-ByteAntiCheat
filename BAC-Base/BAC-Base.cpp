@@ -63,14 +63,14 @@ bool BACBaseInitialize()
 	//监视窗口创建的相关函数
 	bac->MonitorCreateWindow();
 
-	//测试保护自己进程
-	if (!bac->BACKernel::ProtectProcessByName(process_name))
-	{
-		if (MessageBoxA(NULL, "driver load error,please check!", "BAC:Error", MB_OK))
-			ExitProcess(-1);
-		else
-			ExitProcess(-2);
-	}
+	////测试保护自己进程
+	//if (!bac->BACKernel::ProtectProcessByName(process_name))
+	//{
+	//	if (MessageBoxA(NULL, "driver load error,please check!", "BAC:Error", MB_OK))
+	//		ExitProcess(-1);
+	//	else
+	//		ExitProcess(-2);
+	//}
 
 	//处理循环事件
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BAC::LoopEvent, NULL, NULL, NULL);
