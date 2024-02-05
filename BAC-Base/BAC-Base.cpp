@@ -30,15 +30,20 @@ bool BACBaseInitialize()
 	//设置顶层异常过滤函数
 	::SetUnhandledExceptionFilter(&UnHandleException);
 
-	TCHAR module_path[MAX_PATH] = { NULL };
 	TCHAR driver_name[MAX_PATH] = { NULL };
+	TCHAR module_path[MAX_PATH] = { NULL };
+	TCHAR process_path[MAX_PATH] = { NULL };
+	TCHAR process_name[MAX_PATH] = { NULL };
 	TCHAR driver_full_path[MAX_PATH] = { NULL };
 
-	//获取模块路径
+	//获取BAC-Base模块完整路径
 	GetModuleFileNameW(self_module, module_path, _countof(module_path));
+	//获取驱动路径
 	PathRemoveFileSpecW(module_path);
 	_stprintf_s(driver_full_path, _countof(driver_full_path), _T("%s\\%s"), module_path, DRIVER_FILE_NAME);
-
+	//获取进程名
+	GetModuleFileNameW(::GetModuleHandleA(NULL), process_path, _countof(process_path));
+	wcscpy(process_name, wcsrchr(process_path, '\\') + 1);
 	//获取驱动文件名称
 	_tcscpy_s(driver_name, _countof(driver_name), driver_full_path);
 	PathStripPath(driver_name);
@@ -59,9 +64,7 @@ bool BACBaseInitialize()
 	bac->MonitorCreateWindow();
 
 	//测试保护自己进程
-	printf("当前进程名：%S\n", current_process_name);
-	if (!bac->BACKernel::ProtectProcessByName(L"TestGame.exe"))
-	//if (!bac->BACKernel::ProtectProcessByName(L"ShadowVolume.exe"))
+	if (!bac->BACKernel::ProtectProcessByName(process_name))
 	{
 		if (MessageBoxA(NULL, "driver load error,please check!", "BAC:Error", MB_OK))
 			ExitProcess(-1);
