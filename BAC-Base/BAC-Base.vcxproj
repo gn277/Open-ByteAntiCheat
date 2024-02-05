@@ -177,6 +177,7 @@
     <ClCompile Include="BACInterface\AntiFunction\MonitorCallbacks.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\MonitorInjection.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\ProtectMemory.cpp" />
+    <ClCompile Include="BACInterface\AntiFunction\RemapImage.cpp" />
     <ClCompile Include="BACInterface\BAC.cpp" />
     <ClCompile Include="BACInterface\BACKernelApi\BACKernel.cpp" />
     <ClCompile Include="BACLog\BACLog.cpp" />

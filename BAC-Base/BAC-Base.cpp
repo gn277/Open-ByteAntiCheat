@@ -75,6 +75,9 @@ bool BACBaseInitialize()
 	//处理循环事件
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BAC::LoopEvent, NULL, NULL, NULL);
 
+	//内存操作完成后映射内存达到代码不被修改
+	bac->RemapImage((ULONG_PTR)self_module);
+
 #if NDEBUG
 	VMProtectEnd();
 #endif

@@ -822,8 +822,10 @@
 #define NT_SUCCESS(Status) ((NTSTATUS)(Status) >= 0)
 #define STATUS_SUCCESS     ((NTSTATUS) 0x00000000)
 
-typedef NTSTATUS(WINAPI* PfnZwQueryInformationProcess)(HANDLE ProcessHandle,
+typedef NTSTATUS(WINAPI* PfnZwQueryInformationProcess)(
+	HANDLE ProcessHandle,
 	ULONG ProcessInformationClass,
 	PVOID ProcessInformation,
 	ULONG ProcessInformationLength,
 	PULONG ReturnLength);
+

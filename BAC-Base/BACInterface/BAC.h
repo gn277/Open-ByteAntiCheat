@@ -47,6 +47,8 @@ public:
 	void MonitorImm();
 	//监视内存读写操作
 	void MonitorMemoryOption();
+	//重新映射内存
+	bool RemapImage(ULONG_PTR image_base);
 	
 	//处理循环事件
 	static void LoopEvent();

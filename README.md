@@ -17,11 +17,13 @@ R3:
 * Monitor read/write related functions
 * Monitoring window create related functions
 * Monitor hook pointer CRC32 check
+* Remapping module image base to protect memory can't be change
 * Complete game launcher
 * to be later add
 ----
 R0:
 ----
+* Kernel callbacks protect process
 * to be later add
 ----
 
@@ -30,15 +32,16 @@ Planned features for development:
 R3:
 ----
 * Remote thread injection detection
+* Create thread Monitor
 * Enumerating abnormal threads
 * Enumerating abnormal virtual memory without modules
 * to be later add
 ----
 R0:
 ----
-* Communicate with R3's heartbeat
-* PspCidTable protect game process
 * Game process memory crc32
+* enum vritual memory in vadroot
+* Communicate with R3's heartbeat
 * Simple anti vt
 * to be later add
 ----
