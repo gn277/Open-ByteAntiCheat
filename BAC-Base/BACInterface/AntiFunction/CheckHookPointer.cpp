@@ -16,6 +16,7 @@ bool BAC::JudgmentHookModule(PVOID hook_address)
 	//计算jmp跳转到的地址
 	DWORD64 target_address = ((DWORD64)hook_address + 5) + this->Tools::ReadInt((PVOID)((DWORD64)hook_address + 1));
 
+#if _WIN64
 	//判断是否有跳板
 	if ((this->Tools::ReadByte((PVOID)target_address) == 0xFF) && (this->Tools::ReadByte((PVOID)(target_address + 1)) == 0x25))
 	{
@@ -33,6 +34,9 @@ bool BAC::JudgmentHookModule(PVOID hook_address)
 		std::cout << "[LOG]:" << __FUNCTION__ << " send to server is not BAC's detours lib hook" << std::endl;
 		return false;
 	}
+#else
+	//WIN32
+#endif
 
 	return true;
 #if NDEBUG
