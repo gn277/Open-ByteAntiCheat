@@ -91,7 +91,7 @@ HANDLE MemoryProtect::GetProcessIDByName(const wchar_t* process_name)
 	return 0;
 }
 
-NTSTATUS MemoryProtect::RemapImage(const char* module_name, HANDLE pid, DWORD64 memory_address)
+NTSTATUS MemoryProtect::RemapImage(const char* module_name, HANDLE pid, DWORD64 memory_address, DWORD memory_size)
 {
     NTSTATUS status = STATUS_SUCCESS;
 
@@ -99,18 +99,45 @@ NTSTATUS MemoryProtect::RemapImage(const char* module_name, HANDLE pid, DWORD64 
 	if (!pid)
 		return STATUS_UNSUCCESSFUL;
 
-	//再判断是否需要遍历模块
-	if (module_name)
+	//打开进程
+	HANDLE proc_handle = NULL;
+	OBJECT_ATTRIBUTES obj = { NULL };
+	CLIENT_ID cid = { NULL };
+	cid.UniqueProcess = pid;
+
+	status = ZwOpenProcess(&proc_handle, PROCESS_ALL_ACCESS, &obj, &cid);
+	if (!NT_SUCCESS(status))
 	{
-		wchar_t w_module_name[] = { NULL };
-		this->CHAR2TCHAR(module_name, strlen(module_name), w_module_name);
-
+		DbgPrint("[BAC]:Open process error:%p", status);
+		return status;
 	}
-	
 
+	//告诉系统想要memory_size大小的内存
+	HANDLE section_handle = NULL;
+	LARGE_INTEGER max;
+	max.QuadPart = memory_size;
+	ZwCreateSection(&section_handle, SECTION_ALL_ACCESS, NULL, &max, PAGE_EXECUTE_READ, SEC_COMMIT, NULL);
 
+	//映射内存
+	SIZE_T view_size = 0;
+	PVOID view_base = (PVOID)memory_address;
+	LARGE_INTEGER section_offset = { NULL };
+	status = ZwMapViewOfSection(section_handle, proc_handle, &view_base, 0,
+		memory_size, &section_offset, &view_size, (SECTION_INHERIT)2, 0x00400000, PAGE_EXECUTE_READ);
+	DbgPrint("[BAC]:base address:%p,base size:%d, section_handle:%p\n", memory_address, memory_size, section_handle);
+	if (!NT_SUCCESS(status))
+	{
+		DbgPrint("[BAC]:ZwMapViewOfSection error:%p", status);
 
+		ZwClose(proc_handle);
+		return status;
+	}
 
+	//释放映射内存，因为不再需要使用
+	ZwUnmapViewOfSection(section_handle, (PVOID)memory_address);
+
+	//关闭进程
+	ZwClose(proc_handle);
 
     return status;
 }

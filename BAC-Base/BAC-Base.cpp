@@ -63,7 +63,18 @@ bool BACBaseInitialize()
 	//监视窗口创建的相关函数
 	bac->MonitorCreateWindow();
 
-	////测试保护自己进程
+
+
+	////内存操作完成后映射内存达到代码不被修改
+	//if (!bac->RemapImage((ULONG_PTR)self_module))
+	//	MessageBoxA(NULL, "BAC Initialize error!", "ERROR", MB_OK);
+	//
+	//MODULEINFO module_info = { NULL };
+	//::GetModuleInformation(::GetCurrentProcess(), self_module, &module_info, sizeof(module_info));
+	//if (!bac->BACKernel::RemapImage("BAC-Base64.dll", (HANDLE)::GetCurrentProcessId(), (DWORD64)self_module, module_info.SizeOfImage))
+	//	MessageBoxA(NULL, "BAC Initialize error!", "ERROR", MB_OK);
+
+	////内核测试保护进程
 	//if (!bac->BACKernel::ProtectProcessByName(process_name))
 	//{
 	//	if (MessageBoxA(NULL, "driver load error,please check!", "BAC:Error", MB_OK))
@@ -74,12 +85,6 @@ bool BACBaseInitialize()
 
 	//处理循环事件
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BAC::LoopEvent, NULL, NULL, NULL);
-
-	////内存操作完成后映射内存达到代码不被修改
-	//if (!bac->RemapImage((ULONG_PTR)self_module))
-	//	MessageBoxA(NULL, "BAC Initialize error!", "ERROR", MB_OK);
-	if (!bac->BACKernel::RemapImage("BAC-Base64.dll", (HANDLE)::GetCurrentProcessId(), 0x1122334455667788))
-		MessageBoxA(NULL, "BAC Initialize error!", "ERROR", MB_OK);
 
 
 #if NDEBUG

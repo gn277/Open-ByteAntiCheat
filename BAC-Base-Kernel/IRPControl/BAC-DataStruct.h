@@ -17,6 +17,7 @@ typedef struct _ProtectMemoryStruct
 	char module_name[MAX_PATH];
 	HANDLE process_id;
 	DWORD64 memory_address;
+	DWORD memory_size;
 }ProtectMemoryStruct, * PProtectMemoryStruct;
 
 

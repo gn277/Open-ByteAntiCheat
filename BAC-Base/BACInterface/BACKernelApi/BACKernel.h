@@ -37,7 +37,7 @@ public:
 
 public:
 	bool ProtectProcessByName(const wchar_t* process_name);
-	bool RemapImage(const char* module_name, HANDLE pid, DWORD64 memory_address);
+	bool RemapImage(const char* module_name, HANDLE pid, DWORD64 memory_address, DWORD memory_size);
 
 };
 

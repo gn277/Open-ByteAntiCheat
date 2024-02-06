@@ -20,6 +20,9 @@
     <Filter Include="BAC-Base-Kernel\MemoryProtect">
       <UniqueIdentifier>{dbefd492-03ec-4292-90f4-29f6ae27c75f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BAC-Base-Kernel\BACTools">
+      <UniqueIdentifier>{61d27d83-4355-455f-88af-f65beb767cf3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BAC-Base-Kernel\BAC-Base-Kernel.cpp">
@@ -36,6 +39,9 @@
     </ClCompile>
     <ClCompile Include="BAC-Base-Kernel\MemoryProtect\MemoryProtect.cpp">
       <Filter>BAC-Base-Kernel\MemoryProtect</Filter>
+    </ClCompile>
+    <ClCompile Include="BAC-Base-Kernel\BACTools\BACTools.cpp">
+      <Filter>BAC-Base-Kernel\BACTools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -59,6 +65,9 @@
     </ClInclude>
     <ClInclude Include="BAC-Base-Kernel\MemoryProtect\MemoryProtect.h">
       <Filter>BAC-Base-Kernel\MemoryProtect</Filter>
+    </ClInclude>
+    <ClInclude Include="BAC-Base-Kernel\BACTools\BACTools.h">
+      <Filter>BAC-Base-Kernel\BACTools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

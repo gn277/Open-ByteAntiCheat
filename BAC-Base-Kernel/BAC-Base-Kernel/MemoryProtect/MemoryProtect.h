@@ -56,7 +56,7 @@ public:
 	~MemoryProtect();
 
 public:
-	NTSTATUS RemapImage(const char* module_name, HANDLE pid, DWORD64 memory_address);
+	NTSTATUS RemapImage(const char* module_name, HANDLE pid, DWORD64 memory_address, DWORD memory_size);
 
 };
 

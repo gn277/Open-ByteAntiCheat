@@ -67,3 +67,32 @@ BYTE Tools::ReadByte(PVOID address)
 	return *(BYTE*)address;
 }
 
+PVOID Tools::GetPeSectiontAddress(PVOID image, const char* section_name)
+{
+	PIMAGE_NT_HEADERS p_nt_header = (PIMAGE_NT_HEADERS)((ULONG_PTR)image + ((PIMAGE_DOS_HEADER)image)->e_lfanew);
+	if (!p_nt_header)
+		return 0;
+
+	PIMAGE_OPTIONAL_HEADER p_option_header = (PIMAGE_OPTIONAL_HEADER)(&(p_nt_header->OptionalHeader));
+	PIMAGE_FILE_HEADER p_file_header = (PIMAGE_FILE_HEADER)(&(p_nt_header->FileHeader));
+	PIMAGE_SECTION_HEADER p_section_header = (PIMAGE_SECTION_HEADER)((char*)p_option_header + p_file_header->SizeOfOptionalHeader);
+
+	//±éÀú½Ú
+	for (WORD i = 0; i < p_nt_header->FileHeader.NumberOfSections; ++i)
+	{
+		DWORD64 section_base = (p_nt_header->OptionalHeader.ImageBase + p_section_header[i].VirtualAddress);
+
+		if (_stricmp(section_name, (const char*)p_section_header[i].Name) == 0)
+		{
+			//printf("    %-8.8s    0x%IX - 0x%IX,  0x%08X\n",
+			//	p_section_header[i].Name,
+			//	section_base,
+			//	section_base + p_section_header[i].Misc.VirtualSize,
+			//	p_section_header[i].Misc.VirtualSize);
+
+			return (PVOID)section_base;
+		}
+	}
+
+}
+

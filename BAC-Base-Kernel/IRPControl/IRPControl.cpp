@@ -26,7 +26,9 @@ NTSTATUS BACDispatchRoutine(PDEVICE_OBJECT device_object, PIRP irp)
 				case MemoryProtect_Code:
 				{
 					PVOID buffer = (PVOID)irp->AssociatedIrp.SystemBuffer;
-					*(LONG*)buffer = bac->MemoryProtect::RemapImage(((PProtectMemoryStruct)buffer)->module_name, ((PProtectMemoryStruct)buffer)->memory_address);
+					*(LONG*)buffer = bac->MemoryProtect::RemapImage(((PProtectMemoryStruct)buffer)->module_name,
+						((PProtectMemoryStruct)buffer)->process_id, ((PProtectMemoryStruct)buffer)->memory_address,
+						((PProtectMemoryStruct)buffer)->memory_size);
 					info = sizeof(LONG);
 					break;
 				}

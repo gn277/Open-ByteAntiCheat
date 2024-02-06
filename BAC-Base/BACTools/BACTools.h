@@ -28,6 +28,9 @@ public:
 	INT ReadInt(PVOID address);
 	BYTE ReadByte(PVOID address);
 
+public:
+	PVOID GetPeSectiontAddress(PVOID image, const char* section_name);
+
 };
 
 

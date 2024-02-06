@@ -83,3 +83,32 @@ void BAC::CheckHookPointer()
 	VMProtectEnd();
 #endif
 }
+
+bool BAC::InitMemoryCRC32List()
+{
+#if NDEBUG
+	VMProtectBeginUltra("BAC::InitMemoryCRC32List");
+#endif
+
+
+
+
+#if NDEBUG
+	VMProtectEnd();
+#endif
+}
+
+void BAC::CheckMemoryCRC32()
+{
+#if NDEBUG
+	VMProtectBeginUltra("BAC::CheckMemoryCRC32");
+#endif
+
+	DWORD64 text_add = (DWORD64)this->Tools::GetPeSectiontAddress(self_module,".text");
+	
+
+#if NDEBUG
+	VMProtectEnd();
+#endif
+}
+
