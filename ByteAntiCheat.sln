@@ -13,7 +13,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BAC-Helper", "BAC-Helper\BA
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BAC-Server", "BAC-Server\BAC-Server.vcxproj", "{16AF8254-FD0D-467B-8A0C-6A147DE60C71}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决方案项", "{BABB3CF2-65D1-43B0-9771-60C95FBFD425}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NOTE", "NOTE", "{BABB3CF2-65D1-43B0-9771-60C95FBFD425}"
 	ProjectSection(SolutionItems) = preProject
 		BAC product usage documentation.md = BAC product usage documentation.md
 		README.md = README.md
