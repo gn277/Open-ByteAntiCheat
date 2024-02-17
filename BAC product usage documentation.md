@@ -25,3 +25,5 @@
 ----
 2.游戏主进程源码中使用LoadLibrary加载ByteAntiCheat\BAC-Base64.dll(具体见ByteAntiCheat项目中的加载Demo)
 ----
+3.以管理员权限运行游戏即可主动加载BAC反作弊(管理员权限防止驱动加载失败，如有正规签名可另行处理)
+----
