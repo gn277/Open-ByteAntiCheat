@@ -21,7 +21,7 @@
 
 有游戏项目源码时使用方法：
 ====
-1.执行1-2步骤
+1.执行上面的1-2步骤
 ----
 2.游戏主进程源码中使用LoadLibrary加载ByteAntiCheat\BAC-Base64.dll(具体见ByteAntiCheat项目中的加载Demo)
 ----
