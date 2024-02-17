@@ -19,7 +19,7 @@ NTSTATUS NTAPI BACNtProtectVirtualMemory(IN HANDLE ProcessHandle, IN OUT PVOID* 
 	VMProtectBeginUltra("BACNtProtectVirtualMemory");
 #endif
 
-	std::cout << "[LOG]:" << __FUNCTION__ << " address:" << BaseAddress << " newprotect:" << NewProtect << std::endl;
+	printf("%s-> new attribute:%p,old attribute:%p\n", __FUNCTION__, NewProtect, *(ULONG*)OldProtect);
 
 	return pfnNtProtectVirtualMemory(ProcessHandle, BaseAddress, ProtectSize, NewProtect, OldProtect);
 
@@ -34,7 +34,7 @@ BOOL WINAPI BACIsBadReadPtr(_In_opt_ CONST VOID* lp, _In_ UINT_PTR ucb)
 	VMProtectBeginUltra("BACIsBadReadPtr");
 #endif
 
-	std::cout << "[LOG]:" << __FUNCTION__ << " address:" << lp << std::endl;
+	printf("%s-> lp:%p,ucb:%d\n", __FUNCTION__, lp, ucb);
 
 	return pfnIsBadReadPtr(lp, ucb);
 
@@ -49,7 +49,7 @@ BOOL WINAPI BACIsBadWritePtr(_In_opt_ LPVOID lp, _In_ UINT_PTR ucb)
 	VMProtectBeginUltra("BACIsBadWritePtr");
 #endif
 
-	std::cout << "[LOG]:" << __FUNCTION__ << " address:" << lp << std::endl;
+	printf("%s-> lp:%p,ucb:%d\n", __FUNCTION__, lp, ucb);
 
 	return pfnIsBadWritePtr(lp, ucb);
 

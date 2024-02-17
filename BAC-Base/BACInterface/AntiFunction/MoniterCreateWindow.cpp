@@ -43,9 +43,8 @@ DWORD WINAPI BACRegisterClassExA(WNDCLASSEXA* lpWndCls)
 		CHAR szNewClassName[MAX_PATH];
 		DWORD dwOld;
 
-		OutputDebugStringA(lpWndCls->lpszClassName);
+		printf("%s-> lpWndCls->lpszClassName:%s\n", __FUNCTION__, lpWndCls->lpszClassName);
 
-		//std::cout<<"[LOG]"<<__FUNCTION__<<lpWndCls->lpszClassName <<std::endl;
 
 		VirtualProtect((LPVOID)lpWndCls->lpszClassName, strlen(lpWndCls->lpszClassName) + 1, PAGE_EXECUTE_READWRITE, &dwOld);
 		wsprintfA(szNewClassName, "%d_%d", GetTickCount(), GetCurrentProcessId());
@@ -70,7 +69,7 @@ DWORD WINAPI BACRegisterClassA(WNDCLASSA* lpWndClass)
 		CHAR szNewClassName[MAX_PATH];
 		DWORD dwOld;
 
-		OutputDebugStringA(lpWndClass->lpszClassName);
+		printf("%s-> lpWndCls->lpszClassName:%s\n", __FUNCTION__, lpWndClass->lpszClassName);
 
 		VirtualProtect((LPVOID)lpWndClass->lpszClassName, strlen(lpWndClass->lpszClassName) + 1, PAGE_EXECUTE_READWRITE, &dwOld);
 		wsprintfA(szNewClassName, "%d_%d", GetTickCount(), GetCurrentProcessId());
@@ -95,7 +94,7 @@ DWORD WINAPI BACRegisterClassExW(WNDCLASSEXW* lpWndCls)
 		WCHAR szNewClassName[MAX_PATH];
 		DWORD dwOld;
 
-		OutputDebugStringW(lpWndCls->lpszClassName);
+		printf("%s-> lpWndCls->lpszClassName:%S\n", __FUNCTION__, lpWndCls->lpszClassName);
 
 		VirtualProtect((LPVOID)lpWndCls->lpszClassName, wcslen(lpWndCls->lpszClassName) + 1, PAGE_EXECUTE_READWRITE, &dwOld);
 		wsprintfW(szNewClassName, L"%d_%d", GetTickCount(), GetCurrentProcessId());
@@ -120,7 +119,7 @@ DWORD WINAPI BACRegisterClassW(WNDCLASSW* lpWndClass)
 		WCHAR szNewClassName[MAX_PATH];
 		DWORD dwOld;
 
-		OutputDebugStringW(lpWndClass->lpszClassName);
+		printf("%s-> lpWndCls->lpszClassName:%S\n", __FUNCTION__, lpWndClass->lpszClassName);
 
 		VirtualProtect((LPVOID)lpWndClass->lpszClassName, wcslen(lpWndClass->lpszClassName) + 1, PAGE_EXECUTE_READWRITE, &dwOld);
 		wsprintfW(szNewClassName, L"%d_%d", GetTickCount(), GetCurrentProcessId());

@@ -51,9 +51,9 @@ void BACKernel::DriverEventLogUninstall(const wchar_t* service_name)
 
 	HKEY key;
 
-	if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"System\\CurrentControlSet\\Services\\EventLog\\System", 0, KEY_ALL_ACCESS, &key) != ERROR_SUCCESS)
+	if (RegOpenKeyExW(HKEY_LOCAL_MACHINE, L"System\\CurrentControlSet\\Services\\EventLog\\System", 0, KEY_ALL_ACCESS, &key) != ERROR_SUCCESS)
 		return;
-	RegDeleteKey(key, service_name);
+	RegDeleteKeyW(key, service_name);
 
 	RegCloseKey(key);
 
@@ -90,7 +90,7 @@ bool BACKernel::InstiallDriver(const wchar_t* driver_name, const wchar_t* driver
 		return FALSE;
 	}
 
-	h_service_ddk = CreateService(h_service_mgr,
+	h_service_ddk = CreateServiceW(h_service_mgr,
 		this->_driver_name,						// 驱动程序的在注册表中的名字    
 		this->_driver_name,						// 注册表驱动程序的 DisplayName 值    
 		SERVICE_ALL_ACCESS,						// 加载驱动程序的访问权限    
@@ -105,10 +105,10 @@ bool BACKernel::InstiallDriver(const wchar_t* driver_name, const wchar_t* driver
 		NULL);
 
 	//打开服务
-	h_service_ddk = OpenService(h_service_mgr, this->_driver_name, SERVICE_ALL_ACCESS);
+	h_service_ddk = OpenServiceW(h_service_mgr, this->_driver_name, SERVICE_ALL_ACCESS);
 
 	//开启服务
-	b_ret = StartService(h_service_ddk, NULL, NULL);
+	b_ret = StartServiceW(h_service_ddk, NULL, NULL);
 
 	if (NULL != h_service_mgr)
 		CloseServiceHandle(h_service_mgr);

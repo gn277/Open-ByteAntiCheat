@@ -24,14 +24,14 @@ NTSTATUS WINAPI BACLdrLoadDll(IN PWCHAR PathToFile OPTIONAL, IN PULONG Flags OPT
 #endif
 
 	bool is_hidemodle = false;
-	WCHAR szDllName[MAX_PATH];
-	ZeroMemory(szDllName, sizeof(szDllName));
-	memcpy(szDllName, ModuleFileName->Buffer, ModuleFileName->Length);
+	WCHAR dll_name[MAX_PATH];
+	ZeroMemory(dll_name, sizeof(dll_name));
+	memcpy(dll_name, ModuleFileName->Buffer, ModuleFileName->Length);
 
-	printf("[LOG]:%s dll name:%S\n", __FUNCTION__, szDllName);
+	printf("%s-> ldrloaddll name:%S\n", __FUNCTION__, dll_name);
 
 	//在加载之前判断下该模块是否被加载过
-	HMODULE hPreMod = GetModuleHandleW(szDllName);
+	HMODULE hPreMod = GetModuleHandleW(dll_name);
 	NTSTATUS ntStatus = pfnLdrLoadDll(PathToFile, Flags, ModuleFileName, ModuleHandle);
 	DWORD dwLastError = GetLastError();
 
@@ -39,7 +39,7 @@ NTSTATUS WINAPI BACLdrLoadDll(IN PWCHAR PathToFile OPTIONAL, IN PULONG Flags OPT
 	if (STATUS_SUCCESS == ntStatus && NULL == hPreMod)
 	{
 		//GetModuleHandleW其实是读取peb的消息,没必要再遍历一遍了
-		HMODULE hNowMod = GetModuleHandleW(szDllName);
+		HMODULE hNowMod = GetModuleHandleW(dll_name);
 		if (NULL == hNowMod) 
 			is_hidemodle = true;
 	}
@@ -59,6 +59,7 @@ void BACLdrInitializeThunk(PCONTEXT NormalContext, PVOID SystemArgument1, PVOID 
 	VMProtectBeginUltra("BACLdrInitializeThunk");
 #endif
 
+	//可以进行回溯检查
 
 
 	return pfnLdrInitializeThunk(NormalContext, SystemArgument1, SystemArgument2);

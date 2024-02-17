@@ -50,8 +50,8 @@ bool BACBaseInitialize()
 	GetModuleFileNameW(::GetModuleHandleW(NULL), process_path, _countof(process_path));
 	wcscpy(process_name, wcsrchr(process_path, '\\') + 1);
 	//获取驱动文件名称
-	_tcscpy_s(driver_name, _countof(driver_name), driver_full_path);
-	PathStripPath(driver_name);
+	wcscpy_s(driver_name, _countof(driver_name), driver_full_path);
+	PathStripPathW(driver_name);
 
 	//加载驱动 如驱动未签名此处会触发异常断下，请检查驱动签名
 	if (!bac->BACKernel::InstiallDriver(driver_name, driver_full_path))
