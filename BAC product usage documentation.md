@@ -13,17 +13,14 @@
 * x64\Release\ByteAntiCheat
 
 3.将游戏主进程拷贝到\ByteAntiCheat目录下(防止文件损坏)
-----
-4.运行BAC-Helper64.exe，等待生成注入PE后的游戏主进程，完成后将写到游戏原来的目录中
-----
-5.以管理员权限运行游戏即可主动加载BAC反作弊(管理员权限防止驱动加载失败，如有正规签名可另行处理)
+4.在ByteAntiCheat目录下创建BACConfig.ini文件，写入：GameFullName=TestGame.exe (进程名修改为游戏主进程名)
+5.运行BAC-Helper64.exe，等待生成注入PE后的游戏主进程，完成后将写到游戏原来的目录中
+6.以管理员权限运行游戏即可主动加载BAC反作弊(管理员权限防止驱动加载失败，如有正规签名可另行处理)
 ----
 
 有游戏项目源码时使用方法：
 ====
 1.执行上面的1-2步骤
-----
 2.游戏主进程源码中使用LoadLibrary加载ByteAntiCheat\BAC-Base64.dll(具体见ByteAntiCheat项目中的加载Demo)
-----
 3.以管理员权限运行游戏即可主动加载BAC反作弊(管理员权限防止驱动加载失败，如有正规签名可另行处理)
 ----
