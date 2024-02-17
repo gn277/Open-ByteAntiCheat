@@ -86,9 +86,6 @@ void BAC::CheckHookPointer()
 
 bool BAC::InitMemoryCRC32List()
 {
-#if NDEBUG
-	VMProtectBeginUltra("BAC::InitMemoryCRC32List");
-#endif
 	baclog->FunctionLog(__FUNCTION__, "Enter");
 
 	//等待程序模块加载完成
@@ -118,9 +115,6 @@ bool BAC::InitMemoryCRC32List()
 
 	baclog->FunctionLog(__FUNCTION__, "Leave");
 	return true;
-#if NDEBUG
-	VMProtectEnd();
-#endif
 }
 
 void BAC::CheckMemoryCRC32()
