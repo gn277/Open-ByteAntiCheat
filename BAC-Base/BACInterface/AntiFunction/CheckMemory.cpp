@@ -157,8 +157,8 @@ void BAC::CheckMemoryCRC32()
 			//printf("地址：%p,CRC32值：%p\n", tpair.first, crc32_value);
 			if (crc32_value != crc32_value_list[tpair.first])
 			{
-				//检测到当前模块被修改，可以dump并上传服务器做数据回溯
-				printf("检查到此模块内存被修改！\n");
+				//检测到当前模块被修改，可以dump并和本地文件一起上传服务器做数据回溯
+				printf("检查到模块内存被修改：%s\n", pair.first.c_str());
 			}
 		}
 	}

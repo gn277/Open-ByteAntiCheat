@@ -17,6 +17,11 @@ LONG CALLBACK UnHandleException(EXCEPTION_POINTERS* p_exception)
 
 bool BACBaseInitialize()
 {
+#if _DEBUG
+	AllocConsole();
+	freopen("CONOUT$", "w", stdout);
+#endif
+
 	//实例化BAC日志对象
 	baclog = new BACLog();
 	//实例化BAC对象
@@ -74,7 +79,7 @@ bool BACBaseInitialize()
 	//if (!bac->BACKernel::RemapImage("BAC-Base64.dll", (HANDLE)::GetCurrentProcessId(), (DWORD64)self_module, module_info.SizeOfImage))
 	//	MessageBoxA(NULL, "BAC Initialize error!", "ERROR", MB_OK);
 
-	////内核测试保护进程
+	////内核保护进程
 	//if (!bac->BACKernel::ProtectProcessByName(process_name))
 	//{
 	//	if (MessageBoxA(NULL, "driver load error,please check!", "BAC:Error", MB_OK))
