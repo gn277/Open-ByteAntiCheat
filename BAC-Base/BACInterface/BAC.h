@@ -30,7 +30,7 @@ private:
 	std::map<const std::string/*Api名*/, std::map<DWORD/*地址*/, unsigned int/*Hook后CRC32值*/>> _hook_list;
 #endif
 
-	//CRC32List结构：std::map<模块名,<内存起始地址,内存大小>>
+	//CRC32List结构：std::map<模块路径,<内存起始地址,内存大小>>
 	std::map<std::string, std::map<DWORD64, SIZE_T>> _crc32_list;
 
 	//内存白名单结构：std::map<模块名,<内存大小,<内存起始地址,内存结束地址>>>
@@ -60,14 +60,17 @@ public:
 	
 	//处理循环事件
 	static void LoopEvent();
+	void InitializeLoopEnvent();
+
+private:
+	//获取内存CRC32列表
+	bool InitMemoryCRC32List();
 
 public:
 	//对内存数据做CRC32效验
 	unsigned int CRC32(void* pdata, size_t data_len);
 	//检查Hook点状态
 	void CheckHookPointer();
-	//获取内存CRC32列表
-	bool InitMemoryCRC32List();
 	//检查进程模块内存
 	void CheckMemoryCRC32();
 

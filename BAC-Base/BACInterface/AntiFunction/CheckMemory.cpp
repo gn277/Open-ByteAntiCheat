@@ -89,10 +89,35 @@ bool BAC::InitMemoryCRC32List()
 #if NDEBUG
 	VMProtectBeginUltra("BAC::InitMemoryCRC32List");
 #endif
+	baclog->FunctionLog(__FUNCTION__, "Enter");
 
+	//等待程序模块加载完成
+	//::Sleep(180000);
+	::Sleep(5000);
 
+	//枚举进程模块信息<模块路径,模块地址>
+	std::map<std::string, DWORD64> process_module_list;
+	if (this->BAC::Tools::GetProcessModule(&process_module_list))
+	{
+		for (auto& pair : process_module_list)
+		{
+			PVOID image_handle = (PVOID)pair.second;
 
+			DWORD64 text_address = (DWORD64)this->Tools::GetPeSectiontAddress(image_handle, ".text");
+			DWORD text_size = this->Tools::GetPeSectionSize(image_handle, ".text");
 
+			//向CRC32列表中插入元素
+			this->_crc32_list[pair.first].emplace(text_address, text_size);
+		}
+	}
+	else
+	{
+		//告诉服务器获取进程模块列表失败，或做一些其他处理
+		baclog->FileLog("get process module list error!");
+	}
+
+	baclog->FunctionLog(__FUNCTION__, "Leave");
+	return true;
 #if NDEBUG
 	VMProtectEnd();
 #endif
@@ -103,10 +128,42 @@ void BAC::CheckMemoryCRC32()
 #if NDEBUG
 	VMProtectBeginUltra("BAC::CheckMemoryCRC32");
 #endif
-
-	DWORD64 text_add = (DWORD64)this->Tools::GetPeSectiontAddress(self_module,".text");
+	baclog->FunctionLog(__FUNCTION__, "Enter");
 	
+	//初始化时的CRC32值列表<内存起始地址,CRC32值>
+	static std::map<DWORD64, unsigned int> crc32_value_list;
 
+	//初始化进程模块列表
+	static bool first_call = false;
+	if (!first_call)
+	{
+		this->InitMemoryCRC32List();
+
+		//计算CRC32并保存初始值
+		for (auto& pair : this->_crc32_list)
+			for (auto& p : pair.second)
+				crc32_value_list.insert(std::make_pair(p.first, this->CRC32((PVOID)p.first, p.second)));
+
+		first_call = true;
+	}
+
+	//计算CRC32值并检查
+	for (auto& pair : this->_crc32_list)
+	{
+		//printf("当前检查的模块：%s,", pair.first.c_str());
+		for (auto& tpair : pair.second)
+		{
+			unsigned int crc32_value = this->CRC32((PVOID)tpair.first, tpair.second);
+			//printf("地址：%p,CRC32值：%p\n", tpair.first, crc32_value);
+			if (crc32_value != crc32_value_list[tpair.first])
+			{
+				//检测到当前模块被修改，可以dump并上传服务器做数据回溯
+				printf("检查到此模块内存被修改！\n");
+			}
+		}
+	}
+
+	baclog->FunctionLog(__FUNCTION__, "Leave");
 #if NDEBUG
 	VMProtectEnd();
 #endif

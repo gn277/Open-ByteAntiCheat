@@ -100,7 +100,7 @@
     <ClCompile Include="BACInterface\BACKernelApi\BACKernel.cpp">
       <Filter>BACInterface\BACKernelApi</Filter>
     </ClCompile>
-    <ClCompile Include="BACInterface\AntiFunction\CheckHookPointer.cpp">
+    <ClCompile Include="BACInterface\AntiFunction\CheckMemory.cpp">
       <Filter>BACInterface\AntiFunction</Filter>
     </ClCompile>
     <ClCompile Include="BACTools\BACTools.cpp">

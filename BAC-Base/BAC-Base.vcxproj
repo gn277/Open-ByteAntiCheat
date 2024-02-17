@@ -174,7 +174,7 @@
   <ItemGroup>
     <ClCompile Include="BAC-Base.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\CheckCRC.cpp" />
-    <ClCompile Include="BACInterface\AntiFunction\CheckHookPointer.cpp" />
+    <ClCompile Include="BACInterface\AntiFunction\CheckMemory.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\HideHook.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\LoopEvent.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\MoniterCreateWindow.cpp" />

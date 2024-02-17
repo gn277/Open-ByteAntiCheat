@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <winternl.h>
+#include <map>
 #include <Psapi.h>
 #include <DbgHelp.h>
 #pragma comment(lib, "dbghelp.lib")
@@ -30,6 +31,8 @@ public:
 
 public:
 	PVOID GetPeSectiontAddress(PVOID image, const char* section_name);
+	DWORD GetPeSectionSize(PVOID image, const char* section_name);
+	bool GetProcessModule(std::map<std::string, DWORD64>* p_process_module_list);
 
 };
 

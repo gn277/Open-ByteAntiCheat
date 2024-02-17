@@ -86,12 +86,12 @@ bool BACBaseInitialize()
 	//处理循环事件
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BAC::LoopEvent, NULL, NULL, NULL);
 
+	baclog->FileLogf("%s-> %s: %s", "[BAC]", __FUNCTION__, "Leave");
+	return true;
 
 #if NDEBUG
 	VMProtectEnd();
 #endif
-	baclog->FileLogf("%s-> %s: %s", "[BAC]", __FUNCTION__, "Leave");
-	return true;
 }
 
 bool BACBaseUnInitialize()
