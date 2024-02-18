@@ -17,7 +17,6 @@ R3:
 * Monitor read/write related functions
 * Monitoring window create related functions
 * Monitor hook pointer CRC32 check
-* Remapping module image base to protect memory can't be change
 * Complete game launcher
 * to be later add
 ----
@@ -31,6 +30,7 @@ Planned features for development:
 ====
 R3:
 ----
+* Remapping module image base to protect memory can't be change
 * Remote thread injection detection
 * Create thread Monitor
 * Enumerating abnormal threads
