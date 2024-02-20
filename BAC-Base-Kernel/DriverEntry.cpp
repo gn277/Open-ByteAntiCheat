@@ -52,11 +52,9 @@ extern "C" NTSTATUS DriverEntry(PDRIVER_OBJECT p_driver_object, PUNICODE_STRING 
 	NTSTATUS status = STATUS_SUCCESS;
 
 	//注册派遣函数
-	p_driver_object->MajorFunction[IRP_MJ_CREATE] = BACDispatchRoutine;
-	p_driver_object->MajorFunction[IRP_MJ_CLOSE] = BACDispatchRoutine;
-	p_driver_object->MajorFunction[IRP_MJ_READ] = BACDispatchRoutine;
-	p_driver_object->MajorFunction[IRP_MJ_WRITE] = BACDispatchRoutine;
-	p_driver_object->MajorFunction[IRP_MJ_DEVICE_CONTROL] = BACDispatchRoutine;
+	for (int i = 0; i < IRP_MJ_MAXIMUM_FUNCTION; i++)
+		p_driver_object->MajorFunction[i] = BACDispatchRoutine;
+	p_driver_object->DriverUnload = DriverUnload;
 
 	//创建驱动设备
 	PDEVICE_OBJECT p_device;
@@ -86,7 +84,6 @@ extern "C" NTSTATUS DriverEntry(PDRIVER_OBJECT p_driver_object, PUNICODE_STRING 
 		OutPutBACLog(__FUNCTION__, "设备创建失败后删除设备成功");
 		return status;
 	}
-	p_driver_object->DriverUnload = DriverUnload;
 
 	//未签名验证，解决ObRegisterCallbacks返回：0xC0000022 ->未签名
 	*(PULONG)((ULONG64)p_driver_object->DriverSection + 0x68) |= 0x20;

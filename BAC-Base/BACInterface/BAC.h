@@ -62,6 +62,11 @@ public:
 	static void LoopEvent();
 	void InitializeLoopEnvent();
 
+	//处理内核消息的线程
+	static void RecvKernelMessage();
+	//驱动消息派遣函数
+	void KernelMessageDispathcer(void* message);
+
 private:
 	//获取内存CRC32列表
 	bool InitMemoryCRC32List();

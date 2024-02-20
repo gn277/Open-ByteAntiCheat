@@ -18,9 +18,16 @@ class BACKernel
 private:
 	//驱动文件句柄
 	HANDLE _driver_handle = NULL;
+	//应用层文件句柄(用于内核的文件读写通讯)
+	HANDLE _file_handle = NULL;
+
 	//驱动文件路径
 	TCHAR _driver_full_path[MAX_PATH] = { NULL };
 	TCHAR _driver_name[MAX_PATH] = { NULL };
+
+private:
+	//发送数据包到内核
+	bool SendPacketToKernel(int message_number, void* buffer, int buffer_len);
 
 public:
 	BACKernel();

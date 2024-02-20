@@ -16,6 +16,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NOTE", "NOTE", "{BABB3CF2-65D1-43B0-9771-60C95FBFD425}"
 	ProjectSection(SolutionItems) = preProject
 		BAC product usage documentation.md = BAC product usage documentation.md
+		Function introduction.md = Function introduction.md
 		README.md = README.md
 	EndProjectSection
 EndProject

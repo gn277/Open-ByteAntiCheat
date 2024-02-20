@@ -203,11 +203,18 @@ bool BACKernel::UnInstallDriver()
 #endif
 }
 
+typedef struct _send_event_handle
+{
+	int event_handle;
+}send_read_able_event_to_driver;
+
 bool BACKernel::OpenDriverHandle()
 {
 	baclog->FunctionLog(__FUNCTION__, "Enter");
 
-	//read_able_event = CreateEvent(NULL, FALSE, FALSE, NULL);
+	//应用层文件读写句柄
+	this->_file_handle = CreateEventW(NULL, FALSE, FALSE, NULL);
+	//驱动文件句柄
 	this->_driver_handle = CreateFileW(
 		DRIVER_LINKER_NAME,
 		GENERIC_ALL,
@@ -225,8 +232,38 @@ bool BACKernel::OpenDriverHandle()
 		return FALSE;
 	}
 
+	////将应用层文件读写句柄发到内核层
+	//printf("file_handle 句柄：%p\n", this->_file_handle);
+	//send_read_able_event_to_driver st = { (int)this->_file_handle };
+	//this->SendPacketToKernel(SEND_FILE_EVENT_HANDLE, &st, sizeof(send_read_able_event_to_driver));
+	////this->SendPacketToKernel(SEND_FILE_EVENT_HANDLE, &this->_file_handle, sizeof(this->_file_handle));
+	
+	char test[] = "test message";
+	this->SendPacketToKernel(SEND_FILE_EVENT_HANDLE, test, sizeof(test));
+
 	baclog->FunctionLog(__FUNCTION__, "Leave");
 	return TRUE;
+}
+
+bool BACKernel::SendPacketToKernel(int message_number, void* buffer, int buffer_len)
+{
+	int new_packet_len = sizeof(message_number) * 2 + buffer_len;
+	char* new_packet = new char[new_packet_len];
+	//memset(new_packet, 0, new_packet_len);
+
+	//将消息号加入数据包中
+	*(int*)new_packet = message_number;
+	//将数据长度加入数据包中
+	*(int*)(new_packet + 4) = buffer_len;
+	//将消息写入消息号后
+	memcpy(new_packet + (sizeof(message_number) * 2), &buffer, buffer_len);
+
+	DWORD real_write = NULL;
+	bool ret = WriteFile(this->_driver_handle, new_packet, new_packet_len, &real_write, NULL);
+	printf("实际写入字节：%d\n", real_write);
+
+	delete[] new_packet;
+	return ret;
 }
 
 bool BACKernel::ProtectProcessByName(const wchar_t* process_name)
