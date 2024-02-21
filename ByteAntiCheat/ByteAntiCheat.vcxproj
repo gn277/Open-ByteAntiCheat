@@ -75,7 +75,7 @@
     <OutDir>..\Debug\ByteAntiCheat\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>..\x64\Debug\ByteAntiCheat\</OutDir>
+    <OutDir>..\x64\Debug\</OutDir>
     <TargetName>TestGame</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
