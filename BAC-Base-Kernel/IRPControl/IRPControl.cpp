@@ -39,31 +39,35 @@ NTSTATUS BACDispatchRoutine(PDEVICE_OBJECT device_object, PIRP irp)
 		case IRP_MJ_CLOSE:
 			break;
 		case IRP_MJ_READ:
+		{
+			DbgPrint("[BAC]:MJ_READ\n");
 			break;
+		}
 		case IRP_MJ_WRITE:
 		{
-			PVOID buffer = nullptr;
-			buffer = irp->AssociatedIrp.SystemBuffer;
-
-			//if (irp->AssociatedIrp.SystemBuffer != NULL)
-			//{
-			//	DbgPrint("[BAC]:有数据\n");
-			//	buffer = irp->AssociatedIrp.SystemBuffer;
-			//}
-			//else if (irp->MdlAddress != NULL)
-			//{
-			//	DbgPrint("[BAC]:无数据\n");
-			//	buffer = MmGetSystemAddressForMdlSafe(irp->MdlAddress, NormalPagePriority);
-			//}
-
+			PPacketStruct p_packet = nullptr;
+			if (irp->AssociatedIrp.SystemBuffer != NULL)
+			{
+				DbgPrint("[BAC]:SystemBuffer有数据\n");
+				p_packet = (PPacketStruct)irp->AssociatedIrp.SystemBuffer;
+			}
+			else if (irp->MdlAddress != NULL)
+			{
+				DbgPrint("[BAC]:MdlAddress有数据\n");
+				p_packet = (PPacketStruct)MmGetSystemAddressForMdlSafe(irp->MdlAddress, NormalPagePriority);
+			}
+			else
+				DbgPrint("[BAC]:缓冲区没有数据\n");
 			DbgPrint("[BAC]:irp 写入,大小：%d", stack->Parameters.Write.Length);
 
-			//判断消息编号
-			int message_number = (int)buffer;
-			DbgPrint("[BAC]:内核消息编号：%d\n", message_number);
-			DbgPrint("[BAC]:数据:");
-			DbgPrint("[BAC]:%s\n", ((char*)buffer + 8));
-
+			//p_packet = (PPacketStruct)&irp->AssociatedIrp.SystemBuffer;
+			//////判断消息编号
+			//DbgPrint("[BAC]:内核消息编号：%d\n", p_packet->packet_number);
+			//DbgPrint("[BAC]:数据包大小：%d\n", p_packet->buffer_len);
+			//DbgPrint("[BAC]:数据：%s", (char*)p_packet->buffer);
+			//////DbgPrint("[BAC]:数据:");
+			//////DbgPrint("[BAC]:%s\n", ((char*)buffer + 8));
+			
 			//if (message_number > 0)
 			//{
 			//	switch (message_number)
@@ -93,5 +97,4 @@ NTSTATUS BACDispatchRoutine(PDEVICE_OBJECT device_object, PIRP irp)
 	IoCompleteRequest(irp, IO_NO_INCREMENT);
 	return status;
 }
-
 

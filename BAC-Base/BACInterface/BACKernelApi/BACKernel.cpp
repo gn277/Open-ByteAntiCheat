@@ -215,14 +215,7 @@ bool BACKernel::OpenDriverHandle()
 	//应用层文件读写句柄
 	this->_file_handle = CreateEventW(NULL, FALSE, FALSE, NULL);
 	//驱动文件句柄
-	this->_driver_handle = CreateFileW(
-		DRIVER_LINKER_NAME,
-		GENERIC_ALL,
-		FILE_SHARE_READ,
-		NULL,
-		OPEN_EXISTING,
-		0,
-		NULL);
+	this->_driver_handle = CreateFileW(DRIVER_LINKER_NAME, GENERIC_ALL, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 
 	if (NULL == this->_driver_handle || INVALID_HANDLE_VALUE == this->_driver_handle)
 	{
@@ -238,8 +231,8 @@ bool BACKernel::OpenDriverHandle()
 	//this->SendPacketToKernel(SEND_FILE_EVENT_HANDLE, &st, sizeof(send_read_able_event_to_driver));
 	////this->SendPacketToKernel(SEND_FILE_EVENT_HANDLE, &this->_file_handle, sizeof(this->_file_handle));
 	
-	char test[] = "test message";
-	this->SendPacketToKernel(SEND_FILE_EVENT_HANDLE, test, sizeof(test));
+	char test[13] = "test message";
+	this->SendPacketToKernel(SEND_FILE_EVENT_HANDLE, &test, sizeof(test));
 
 	baclog->FunctionLog(__FUNCTION__, "Leave");
 	return TRUE;
@@ -247,23 +240,25 @@ bool BACKernel::OpenDriverHandle()
 
 bool BACKernel::SendPacketToKernel(int message_number, void* buffer, int buffer_len)
 {
-	int new_packet_len = sizeof(message_number) * 2 + buffer_len;
-	char* new_packet = new char[new_packet_len];
-	//memset(new_packet, 0, new_packet_len);
+	int new_packet_len = (sizeof(int) * 2) + buffer_len;
+	PPacketStruct p_packet = (PPacketStruct)new char[new_packet_len];
+	memset(p_packet, 0, new_packet_len);
 
 	//将消息号加入数据包中
-	*(int*)new_packet = message_number;
+	p_packet->packet_number = message_number;
 	//将数据长度加入数据包中
-	*(int*)(new_packet + 4) = buffer_len;
+	p_packet->buffer_len = buffer_len;
 	//将消息写入消息号后
-	memcpy(new_packet + (sizeof(message_number) * 2), &buffer, buffer_len);
+	memcpy(&p_packet->buffer, buffer, buffer_len);
 
+	char data[] = "Test data!!!";
 	DWORD real_write = NULL;
-	bool ret = WriteFile(this->_driver_handle, new_packet, new_packet_len, &real_write, NULL);
-	printf("实际写入字节：%d\n", real_write);
+	bool ret = WriteFile(this->_driver_handle, (PVOID)data, strlen(data), &real_write, NULL);
+	//bool ret = WriteFile(this->_driver_handle, (PVOID)p_packet, new_packet_len, &real_write, NULL);
 
-	delete[] new_packet;
-	return ret;
+	delete[] p_packet;
+	//return ret;
+	return true;
 }
 
 bool BACKernel::ProtectProcessByName(const wchar_t* process_name)
