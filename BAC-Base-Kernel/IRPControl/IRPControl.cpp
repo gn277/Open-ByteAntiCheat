@@ -45,48 +45,28 @@ NTSTATUS BACDispatchRoutine(PDEVICE_OBJECT device_object, PIRP irp)
 		}
 		case IRP_MJ_WRITE:
 		{
-			PPacketStruct p_packet = nullptr;
-			if (irp->AssociatedIrp.SystemBuffer != NULL)
+			PPacketStruct p_packet = (PPacketStruct)irp->AssociatedIrp.SystemBuffer;
+
+			//判断消息编号
+			int message_number = p_packet->packet_number;
+			if (message_number > 0)
 			{
-				DbgPrint("[BAC]:SystemBuffer有数据\n");
-				p_packet = (PPacketStruct)irp->AssociatedIrp.SystemBuffer;
-			}
-			else if (irp->MdlAddress != NULL)
-			{
-				DbgPrint("[BAC]:MdlAddress有数据\n");
-				p_packet = (PPacketStruct)MmGetSystemAddressForMdlSafe(irp->MdlAddress, NormalPagePriority);
+				switch (message_number)
+				{
+					case SEND_FILE_EVENT_HANDLE:
+					{
+						DbgPrint("[BAC]:内核收到消息同步事件\n");
+						break;
+					}
+					default:
+						break;
+				}
 			}
 			else
-				DbgPrint("[BAC]:缓冲区没有数据\n");
-			DbgPrint("[BAC]:irp 写入,大小：%d", stack->Parameters.Write.Length);
-
-			//p_packet = (PPacketStruct)&irp->AssociatedIrp.SystemBuffer;
-			//////判断消息编号
-			//DbgPrint("[BAC]:内核消息编号：%d\n", p_packet->packet_number);
-			//DbgPrint("[BAC]:数据包大小：%d\n", p_packet->buffer_len);
-			//DbgPrint("[BAC]:数据：%s", (char*)p_packet->buffer);
-			//////DbgPrint("[BAC]:数据:");
-			//////DbgPrint("[BAC]:%s\n", ((char*)buffer + 8));
-			
-			//if (message_number > 0)
-			//{
-			//	switch (message_number)
-			//	{
-			//		case SEND_FILE_EVENT_HANDLE:
-			//		{
-			//			DbgPrint("[BAC]:内核收到消息同步事件\n");
-			//			break;
-			//		}
-			//		default:
-			//			break;
-			//	}
-			//}
-			//else
-			//{
-			//	//消息编号小于等于0为心跳
-			//	status = STATUS_UNSUCCESSFUL;
-			//}
-
+			{
+				//消息编号小于等于0
+				status = STATUS_UNSUCCESSFUL;
+			}
 
 			info = stack->Parameters.Write.Length;
 			break;

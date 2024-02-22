@@ -75,6 +75,7 @@ extern "C" NTSTATUS DriverEntry(PDRIVER_OBJECT p_driver_object, PUNICODE_STRING 
 
 	//´´½¨·ûºÅÁ´½Ó
 	p_driver_object->Flags |= DO_BUFFERED_IO;
+	p_device->Flags |= DO_BUFFERED_IO;
 	UNICODE_STRING link_name;
 	RtlInitUnicodeString(&link_name, DRIVER_LINKER_NAME);
 	status = IoCreateSymbolicLink(&link_name, &device_name);

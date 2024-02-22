@@ -203,11 +203,6 @@ bool BACKernel::UnInstallDriver()
 #endif
 }
 
-typedef struct _send_event_handle
-{
-	int event_handle;
-}send_read_able_event_to_driver;
-
 bool BACKernel::OpenDriverHandle()
 {
 	baclog->FunctionLog(__FUNCTION__, "Enter");
@@ -225,14 +220,9 @@ bool BACKernel::OpenDriverHandle()
 		return FALSE;
 	}
 
-	////将应用层文件读写句柄发到内核层
-	//printf("file_handle 句柄：%p\n", this->_file_handle);
-	//send_read_able_event_to_driver st = { (int)this->_file_handle };
-	//this->SendPacketToKernel(SEND_FILE_EVENT_HANDLE, &st, sizeof(send_read_able_event_to_driver));
-	////this->SendPacketToKernel(SEND_FILE_EVENT_HANDLE, &this->_file_handle, sizeof(this->_file_handle));
-	
-	char test[13] = "test message";
-	this->SendPacketToKernel(SEND_FILE_EVENT_HANDLE, &test, sizeof(test));
+	//将应用层文件读写句柄发到内核层
+	printf("file_handle 句柄：%p\n", this->_file_handle);
+	this->SendPacketToKernel(SEND_FILE_EVENT_HANDLE, &this->_file_handle, sizeof(this->_file_handle));
 
 	baclog->FunctionLog(__FUNCTION__, "Leave");
 	return TRUE;
@@ -251,14 +241,11 @@ bool BACKernel::SendPacketToKernel(int message_number, void* buffer, int buffer_
 	//将消息写入消息号后
 	memcpy(&p_packet->buffer, buffer, buffer_len);
 
-	char data[] = "Test data!!!";
 	DWORD real_write = NULL;
-	bool ret = WriteFile(this->_driver_handle, (PVOID)data, strlen(data), &real_write, NULL);
-	//bool ret = WriteFile(this->_driver_handle, (PVOID)p_packet, new_packet_len, &real_write, NULL);
+	bool ret = WriteFile(this->_driver_handle, (PVOID)p_packet, new_packet_len, &real_write, NULL);
 
 	delete[] p_packet;
-	//return ret;
-	return true;
+	return ret;
 }
 
 bool BACKernel::ProtectProcessByName(const wchar_t* process_name)
