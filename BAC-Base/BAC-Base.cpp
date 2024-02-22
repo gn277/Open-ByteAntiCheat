@@ -67,7 +67,7 @@ bool BACBaseInitialize()
 	bac->MonitorMemoryOption();
 	//监视窗口创建的相关函数
 	bac->MonitorCreateWindow();
-
+	//
 
 
 	////内存操作完成后映射内存达到代码不被修改
