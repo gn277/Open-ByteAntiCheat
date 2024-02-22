@@ -1,6 +1,9 @@
 #pragma once
 #include <ntifs.h>
 
+#define WIN7_X86_DEBUGPORT_OFFSET 0xEC
+#define WIN11_X64_DEBUGPORT_OFFSET 0x578
+
 typedef struct _OB_REG_CONTEXT
 {
 	USHORT Version;
@@ -89,9 +92,11 @@ public:
 	//添加保护进程到链表
 	void AddProtectProcess(const wchar_t* process_name);
 	PLIST_ENTRY GetProtectProcessList();
+	NTSTATUS ProtectProcess(const wchar_t* process_name);
 
 public:
-	NTSTATUS ProtectProcess(const wchar_t* process_name);
+	//清空进程调试端口
+	NTSTATUS ClearDebugPort(IN HANDLE pid);
 
 };
 

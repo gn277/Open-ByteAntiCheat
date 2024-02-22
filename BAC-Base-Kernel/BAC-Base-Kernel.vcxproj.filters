@@ -69,6 +69,9 @@
     <ClInclude Include="BAC-Base-Kernel\BACTools\BACTools.h">
       <Filter>BAC-Base-Kernel\BACTools</Filter>
     </ClInclude>
+    <ClInclude Include="BAC-Base-Kernel\UnDocumentedApi.h">
+      <Filter>BAC-Base-Kernel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

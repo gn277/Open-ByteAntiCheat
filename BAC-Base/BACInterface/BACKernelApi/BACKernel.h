@@ -43,7 +43,10 @@ public:
 	bool OpenDriverHandle();
 
 public:
+	//内核回调保护进程
 	bool ProtectProcessByName(const wchar_t* process_name);
+	//清空进程调试端口
+	bool ClearProcessDebugPort(IN HANDLE pid);
 	bool RemapImage(const char* module_name, HANDLE pid, DWORD64 memory_address, DWORD memory_size);
 
 };

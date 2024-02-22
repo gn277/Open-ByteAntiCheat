@@ -2,18 +2,18 @@
 #include "../../DriverEntry.h"
 
 //申明函数
-extern "C" PCHAR PsGetProcessImageFileName(IN PEPROCESS p_process);
-extern "C" NTSYSAPI NTSTATUS NTAPI ZwQueryInformationProcess(
-	IN HANDLE ProcessHandle,
-	IN PROCESSINFOCLASS ProcessInformationClass,
-	OUT PVOID ProcessInformation,
-	IN ULONG ProcessInformationLength,
-	IN PULONG ReturnLength);
-extern "C" NTSYSAPI NTSTATUS NTAPI ZwQuerySystemInformation(
-	IN ULONG SystemInformationClass,
-	OUT PVOID SystemInformation,
-	IN ULONG SystemInformationLength,
-	OUT PULONG ReturnLength);
+//extern "C" PCHAR PsGetProcessImageFileName(IN PEPROCESS p_process);
+//extern "C" NTSYSAPI NTSTATUS NTAPI ZwQueryInformationProcess(
+//	IN HANDLE ProcessHandle,
+//	IN PROCESSINFOCLASS ProcessInformationClass,
+//	OUT PVOID ProcessInformation,
+//	IN ULONG ProcessInformationLength,
+//	IN PULONG ReturnLength);
+//extern "C" NTSYSAPI NTSTATUS NTAPI ZwQuerySystemInformation(
+//	IN ULONG SystemInformationClass,
+//	OUT PVOID SystemInformation,
+//	IN ULONG SystemInformationLength,
+//	OUT PULONG ReturnLength);
 
 
 ProcessProtect::ProcessProtect(PDRIVER_OBJECT p_driver_object)
@@ -367,5 +367,37 @@ NTSTATUS ProcessProtect::ProtectProcess(const wchar_t* process_name)
 
 	//注册回调
 	return this->RegisterProtectProcessCallbacks();
+}
+
+NTSTATUS ProcessProtect::ClearDebugPort(IN HANDLE pid)
+{
+	NTSTATUS status = STATUS_UNSUCCESSFUL;
+	PEPROCESS p_eprocess = nullptr;
+	PVOID p_debug_object = nullptr;
+
+	if (!pid)
+		return status;
+
+	status = PsLookupProcessByProcessId(pid, &p_eprocess);
+	if (!NT_SUCCESS(status) || !p_eprocess)
+		return status;
+	ObDereferenceObject(p_eprocess);
+
+	p_debug_object = PsGetProcessDebugPort(p_eprocess);
+	if (p_debug_object)
+	{
+		//剥离内核调试器，没有返回STATUS_DEBUGGER_INACTIVE，内核调试器处于阻塞状态返回STATUS_ACCESS_DENIED，成功返回STATUS_SUCCESS
+		KdDisableDebugger();
+
+		if (MmIsAddressValid((ULONG*)((PUCHAR)p_eprocess + WIN11_X64_DEBUGPORT_OFFSET)))
+		{
+			//发现调试器后可以进行剥离处理，这里直接不剥离置零后让系统崩溃
+			*(ULONG*)*(ULONG*)((PUCHAR)p_eprocess + WIN11_X64_DEBUGPORT_OFFSET) = 0;
+		}
+
+		status = STATUS_SUCCESS;
+	}
+
+	return status;
 }
 

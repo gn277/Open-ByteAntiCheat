@@ -32,6 +32,13 @@ NTSTATUS BACDispatchRoutine(PDEVICE_OBJECT device_object, PIRP irp)
 					info = sizeof(LONG);
 					break;
 				}
+				case ClearDebugPort_Code:
+				{
+					PVOID buffer = (PVOID)irp->AssociatedIrp.SystemBuffer;
+					*(LONG*)buffer = bac->ProcessProtect::ClearDebugPort(*(HANDLE*)buffer);
+					info = sizeof(LONG);
+					break;
+				}
 			}
 		}
 		case IRP_MJ_CREATE:
@@ -55,7 +62,7 @@ NTSTATUS BACDispatchRoutine(PDEVICE_OBJECT device_object, PIRP irp)
 				{
 					case SEND_FILE_EVENT_HANDLE:
 					{
-						DbgPrint("[BAC]:内核收到消息同步事件\n");
+						DbgPrint("[BAC]:into file event handle\n");
 						break;
 					}
 					default:

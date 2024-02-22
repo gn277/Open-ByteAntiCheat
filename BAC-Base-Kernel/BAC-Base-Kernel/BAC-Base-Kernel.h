@@ -12,6 +12,7 @@
 
 #include "../../BAC-Base/ProtectSDK/VMProtectSDK/VMProtectSDK.h"
 
+#include "UnDocumentedApi.h"
 #include "BACTools/BACTools.h"
 #include "ProcessProtect/ProcessProtect.h"
 #include "MemoryProtect/MemoryProtect.h"

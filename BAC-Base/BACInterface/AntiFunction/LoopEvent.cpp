@@ -31,7 +31,14 @@ void BAC::LoopEvent()
 		bac->CheckHookPointer();
 		//扫描进程内存CRC32
 		bac->CheckMemoryCRC32();
-
+#if NDEBUG
+		//清空游戏进程的调试端口
+		if (!bac->BACKernel::ClearProcessDebugPort((HANDLE)::GetCurrentProcessId()))
+		{
+			MessageBoxA(::GetActiveWindow(), "clear process debug port error", "BAC::Error", MB_OK);
+			ExitProcess(-1);
+		}
+#endif
 
 		::Sleep(120000);
 	}

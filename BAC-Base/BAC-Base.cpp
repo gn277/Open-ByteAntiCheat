@@ -79,14 +79,22 @@ bool BACBaseInitialize()
 	//if (!bac->BACKernel::RemapImage("BAC-Base64.dll", (HANDLE)::GetCurrentProcessId(), (DWORD64)self_module, module_info.SizeOfImage))
 	//	MessageBoxA(NULL, "BAC Initialize error!", "ERROR", MB_OK);
 
+#if NDEBUG
+	//清空游戏进程的调试端口
+	if (!bac->BACKernel::ClearProcessDebugPort((HANDLE)::GetCurrentProcessId()))
+	{
+		MessageBoxA(::GetActiveWindow(), "clear process debug port error", "BAC::Error", MB_OK);
+		ExitProcess(-1);
+	}
 	//内核保护进程
 	if (!bac->BACKernel::ProtectProcessByName(process_name))
 	{
-		if (MessageBoxA(NULL, "driver load error,please check!", "BAC:Error", MB_OK))
+		if (MessageBoxA(::GetActiveWindow(), "driver load error,please check!", "BAC:Error", MB_OK))
 			ExitProcess(-1);
 		else
 			ExitProcess(-2);
 	}
+#endif
 
 	//处理循环事件
 	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BAC::LoopEvent, NULL, NULL, NULL);

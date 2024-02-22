@@ -212,6 +212,7 @@
     <ClInclude Include="BAC-Base-Kernel\BACTools\BACTools.h" />
     <ClInclude Include="BAC-Base-Kernel\MemoryProtect\MemoryProtect.h" />
     <ClInclude Include="BAC-Base-Kernel\ProcessProtect\ProcessProtect.h" />
+    <ClInclude Include="BAC-Base-Kernel\UnDocumentedApi.h" />
     <ClInclude Include="DriverEntry.h" />
     <ClInclude Include="IRPControl\BAC-DataStruct.h" />
     <ClInclude Include="IRPControl\IRPControl.h" />

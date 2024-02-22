@@ -220,9 +220,9 @@ bool BACKernel::OpenDriverHandle()
 		return FALSE;
 	}
 
-	//½«Ó¦ÓÃ²ãÎÄ¼þ¶ÁÐ´¾ä±ú·¢µ½ÄÚºË²ã
-	printf("file_handle ¾ä±ú£º%p\n", this->_file_handle);
-	this->SendPacketToKernel(SEND_FILE_EVENT_HANDLE, &this->_file_handle, sizeof(this->_file_handle));
+	////½«Ó¦ÓÃ²ãÎÄ¼þ¶ÁÐ´¾ä±ú·¢µ½ÄÚºË²ã
+	//printf("file_handle ¾ä±ú£º%p\n", this->_file_handle);
+	//this->SendPacketToKernel(SEND_FILE_EVENT_HANDLE, &this->_file_handle, sizeof(this->_file_handle));
 
 	baclog->FunctionLog(__FUNCTION__, "Leave");
 	return TRUE;
@@ -257,6 +257,17 @@ bool BACKernel::ProtectProcessByName(const wchar_t* process_name)
 	wcscpy(data.file_path, process_name);
 
 	DeviceIoControl(this->_driver_handle, ProtectProcess_Code, (PVOID)&data, sizeof(data), &return_buffer, sizeof(return_buffer), &dw_write, NULL);
+
+	if (NT_SUCCESS(return_buffer)) return true;
+	else return false;
+}
+
+bool BACKernel::ClearProcessDebugPort(IN HANDLE pid)
+{
+	ULONG dw_write;
+	PVOID return_buffer = NULL;
+
+	DeviceIoControl(this->_driver_handle, ClearDebugPort_Code, (PVOID)&pid, sizeof(HANDLE), &return_buffer, sizeof(return_buffer), &dw_write, NULL);
 
 	if (NT_SUCCESS(return_buffer)) return true;
 	else return false;
