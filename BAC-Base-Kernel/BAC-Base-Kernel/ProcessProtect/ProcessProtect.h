@@ -91,7 +91,9 @@ public:
 
 	//添加保护进程到链表
 	void AddProtectProcess(const wchar_t* process_name);
+	//获取保护进程列表
 	PLIST_ENTRY GetProtectProcessList();
+	//注册回调保护进程
 	NTSTATUS ProtectProcess(const wchar_t* process_name);
 
 public:

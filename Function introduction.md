@@ -34,4 +34,6 @@
 	* 实现：ByteAntiCheat/BAC-Base-Kernel/BAC-Base-Kernel/ProcessProtect/ProcessProtect.cpp
 	* 回调降权保护（进程|线程）：NTSTATUS ProtectProcess(const wchar_t* process_name)
 	* 清空调试端口：ProcessProtect::ClearDebugPort(IN HANDLE pid)
-* 
+* 内核层循环事件：
+	* 实现：/ByteAntiCheat/BAC-Base-Kernel/BAC-Base-Kernel/KernelLoopEvent/KernelLoopEvent.cpp
+	* 

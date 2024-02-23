@@ -18,8 +18,8 @@ class BACKernel
 private:
 	//驱动文件句柄
 	HANDLE _driver_handle = NULL;
-	//应用层文件句柄(用于内核的文件读写通讯)
-	HANDLE _file_handle = NULL;
+	//应用层文件读写句柄(用于内核的文件读写通讯)
+	HANDLE _file_event_handle = NULL;
 
 	//驱动文件路径
 	TCHAR _driver_full_path[MAX_PATH] = { NULL };
@@ -43,6 +43,8 @@ public:
 	bool OpenDriverHandle();
 
 public:
+	//发送应用层文件读写句柄到内核
+	bool SendFileEventToKernel();
 	//内核回调保护进程
 	bool ProtectProcessByName(const wchar_t* process_name);
 	//清空进程调试端口

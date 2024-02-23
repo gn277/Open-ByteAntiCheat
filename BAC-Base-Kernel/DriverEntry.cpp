@@ -4,20 +4,35 @@
 BACBase* bac = nullptr;
 
 
-NTSTATUS InitializeBACKernel(PDRIVER_OBJECT p_driver_object, PUNICODE_STRING p_register_path)
+NTSTATUS InitializeBACKernel(PDRIVER_OBJECT p_driver_object, PDEVICE_OBJECT p_device, PUNICODE_STRING p_register_path)
 {
+#if NDEBUG
+	VMProtectBeginUltra("InitializeBACKernel");
+#endif
 #if _DEBUG
 	OutPutBACLog(__FUNCTION__, "Enter");
 #endif
 
+	NTSTATUS status = STATUS_SUCCESS;
+
 	//实例化BACBase
 	bac = new BACBase(p_driver_object);
 
+	//初始化IO定时器，用于启动内核心跳计数
+	status = bac->InitializeIoTimer(p_device);
+	if (!NT_SUCCESS(status))
+	{
+		OutPutBACLog(__FUNCTION__, "initialize io timer error");
+		return status;
+	}
 	
 #if _DEBUG
 	OutPutBACLog(__FUNCTION__, "Leave");
 #endif
-	return STATUS_SUCCESS;
+	return status;
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
 void DriverUnload(PDRIVER_OBJECT p_driver_object)
@@ -25,6 +40,13 @@ void DriverUnload(PDRIVER_OBJECT p_driver_object)
 #if _DEBUG
 	OutPutBACLog(__FUNCTION__, "Enter");
 #endif
+
+	//设置退出内核循环线程
+	if (bac->GetKernelThreadStatus())
+	{
+		bac->SetKernelThreadStatus(false);
+		bac->BACTools::Sleep(KERNEL_THREAD_SLEEP_TIME);
+	}
 
 	//删除设备对象
 	PDEVICE_OBJECT p_device = p_driver_object->DeviceObject;
@@ -45,6 +67,9 @@ void DriverUnload(PDRIVER_OBJECT p_driver_object)
 
 extern "C" NTSTATUS DriverEntry(PDRIVER_OBJECT p_driver_object, PUNICODE_STRING p_register_path)
 {
+#if NDEBUG
+	VMProtectBeginUltra("DriverEntry");
+#endif
 #if _DEBUG
 	OutPutBACLog(__FUNCTION__, "Enter");
 #endif
@@ -90,10 +115,13 @@ extern "C" NTSTATUS DriverEntry(PDRIVER_OBJECT p_driver_object, PUNICODE_STRING 
 	*(PULONG)((ULONG64)p_driver_object->DriverSection + 0x68) |= 0x20;
 
 	//初始化BACKernel
-	status = InitializeBACKernel(p_driver_object, p_register_path);
+	status = InitializeBACKernel(p_driver_object, p_device, p_register_path);
 
 #if _DEBUG
 	OutPutBACLog(__FUNCTION__, "Leave");
 #endif
 	return status;
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }

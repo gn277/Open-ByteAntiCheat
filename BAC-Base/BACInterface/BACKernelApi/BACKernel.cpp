@@ -207,8 +207,6 @@ bool BACKernel::OpenDriverHandle()
 {
 	baclog->FunctionLog(__FUNCTION__, "Enter");
 
-	//Ó¦ÓÃ²ãÎÄ¼þ¶ÁÐ´¾ä±ú
-	this->_file_handle = CreateEventW(NULL, FALSE, FALSE, NULL);
 	//Çý¶¯ÎÄ¼þ¾ä±ú
 	this->_driver_handle = CreateFileW(DRIVER_LINKER_NAME, GENERIC_ALL, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 
@@ -220,16 +218,16 @@ bool BACKernel::OpenDriverHandle()
 		return FALSE;
 	}
 
-	////½«Ó¦ÓÃ²ãÎÄ¼þ¶ÁÐ´¾ä±ú·¢µ½ÄÚºË²ã
-	//printf("file_handle ¾ä±ú£º%p\n", this->_file_handle);
-	//this->SendPacketToKernel(SEND_FILE_EVENT_HANDLE, &this->_file_handle, sizeof(this->_file_handle));
-
 	baclog->FunctionLog(__FUNCTION__, "Leave");
 	return TRUE;
 }
 
 bool BACKernel::SendPacketToKernel(int message_number, void* buffer, int buffer_len)
 {
+#if NDEBUG
+	VMProtectBeginUltra("BACKernel::SendPacketToKernel");
+#endif
+
 	int new_packet_len = (sizeof(int) * 2) + buffer_len;
 	PPacketStruct p_packet = (PPacketStruct)new char[new_packet_len];
 	memset(p_packet, 0, new_packet_len);
@@ -246,6 +244,20 @@ bool BACKernel::SendPacketToKernel(int message_number, void* buffer, int buffer_
 
 	delete[] p_packet;
 	return ret;
+
+#if NDEBUG
+	VMProtectEnd();
+#endif
+}
+
+bool BACKernel::SendFileEventToKernel()
+{
+	//Ó¦ÓÃ²ãÎÄ¼þ¶ÁÐ´¾ä±ú
+	this->_file_event_handle = CreateEventW(NULL, FALSE, FALSE, NULL);
+
+	//½«Ó¦ÓÃ²ãÎÄ¼þ¶ÁÐ´¾ä±ú·¢µ½ÄÚºË²ã
+	printf("file_handle ¾ä±ú£º%p\n", this->_file_event_handle);
+	return this->SendPacketToKernel(SEND_FILE_EVENT_HANDLE, &this->_file_event_handle, sizeof(this->_file_event_handle));
 }
 
 bool BACKernel::ProtectProcessByName(const wchar_t* process_name)

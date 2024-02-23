@@ -72,18 +72,18 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetName>TestGame</TargetName>
-    <OutDir>..\Debug\ByteAntiCheat\</OutDir>
+    <OutDir>..\Debug\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>..\x64\Debug\</OutDir>
     <TargetName>TestGame</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>..\Release\ByteAntiCheat\</OutDir>
+    <OutDir>..\Release\</OutDir>
     <TargetName>TestGame</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>..\x64\Release\ByteAntiCheat\</OutDir>
+    <OutDir>..\x64\Release\</OutDir>
     <TargetName>TestGame</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

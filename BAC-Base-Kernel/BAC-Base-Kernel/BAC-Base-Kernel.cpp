@@ -24,5 +24,24 @@ void BACBase::operator delete(void* pointer)
     ExFreePoolWithTag(pointer, 'bacb');
 }
 
+void BACBase::SetFileEventHandle(PKEVENT file_hanle)
+{
+    this->_file_event_handle = file_hanle;
+}
+
+PKEVENT BACBase::GetFileEventHandle()
+{ 
+    return this->_file_event_handle;
+}
+
+void BACBase::SetKernelThreadStatus(bool status)
+{
+    this->_kernel_loop_event_status = status;
+}
+
+bool BACBase::GetKernelThreadStatus()
+{
+    return this->_kernel_loop_event_status;
+}
 
 

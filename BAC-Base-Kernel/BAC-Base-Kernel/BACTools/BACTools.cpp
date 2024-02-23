@@ -19,3 +19,13 @@ void BACTools::operator delete(void* pointer)
     ExFreePoolWithTag(pointer, 'bact');
 }
 
+void BACTools::Sleep(unsigned long msec)
+{
+	LARGE_INTEGER my_interval;
+
+	my_interval.QuadPart = DELAY_ONE_MILLISECOND;
+	my_interval.QuadPart *= msec;
+
+	KeDelayExecutionThread(KernelMode, 0, &my_interval);
+}
+

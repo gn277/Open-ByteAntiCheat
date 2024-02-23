@@ -23,6 +23,9 @@
     <Filter Include="BAC-Base-Kernel\BACTools">
       <UniqueIdentifier>{61d27d83-4355-455f-88af-f65beb767cf3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BAC-Base-Kernel\KernelLoopEvent">
+      <UniqueIdentifier>{e2faa546-359c-4d57-862b-8de94a89bf3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BAC-Base-Kernel\BAC-Base-Kernel.cpp">
@@ -42,6 +45,9 @@
     </ClCompile>
     <ClCompile Include="BAC-Base-Kernel\BACTools\BACTools.cpp">
       <Filter>BAC-Base-Kernel\BACTools</Filter>
+    </ClCompile>
+    <ClCompile Include="BAC-Base-Kernel\KernelLoopEvent\KernelLoopEvent.cpp">
+      <Filter>BAC-Base-Kernel\KernelLoopEvent</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

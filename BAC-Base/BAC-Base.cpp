@@ -79,13 +79,7 @@ bool BACBaseInitialize()
 	//if (!bac->BACKernel::RemapImage("BAC-Base64.dll", (HANDLE)::GetCurrentProcessId(), (DWORD64)self_module, module_info.SizeOfImage))
 	//	MessageBoxA(NULL, "BAC Initialize error!", "ERROR", MB_OK);
 
-#if NDEBUG
-	//清空游戏进程的调试端口
-	if (!bac->BACKernel::ClearProcessDebugPort((HANDLE)::GetCurrentProcessId()))
-	{
-		MessageBoxA(::GetActiveWindow(), "clear process debug port error", "BAC::Error", MB_OK);
-		ExitProcess(-1);
-	}
+
 	//内核保护进程
 	if (!bac->BACKernel::ProtectProcessByName(process_name))
 	{
@@ -93,6 +87,19 @@ bool BACBaseInitialize()
 			ExitProcess(-1);
 		else
 			ExitProcess(-2);
+	}
+	//发送应用层文件读写事件句柄
+	if (!bac->BACKernel::SendFileEventToKernel())
+	{
+		MessageBoxA(::GetActiveWindow(), "send file event to kernel error", "BAC::Error", MB_OK);
+		ExitProcess(-1);
+	}
+#if NDEBUG
+	//清空游戏进程的调试端口
+	if (!bac->BACKernel::ClearProcessDebugPort((HANDLE)::GetCurrentProcessId()))
+	{
+		MessageBoxA(::GetActiveWindow(), "clear process debug port error", "BAC::Error", MB_OK);
+		ExitProcess(-1);
 	}
 #endif
 
@@ -123,15 +130,15 @@ bool BACBaseUnInitialize()
 	}
 
 	baclog->FunctionLog(__FUNCTION__, "Leave");
-#if NDEBUG
-	VMProtectEnd();
-#endif
 
 	//释放BAC日志对象
 	if (baclog)
 		delete baclog;
 
 	return true;
+#if NDEBUG
+	VMProtectEnd();
+#endif
 }
 
 BOOL APIENTRY DllMain(HMODULE h_module, DWORD ul_reason_for_call, LPVOID lpReserved)

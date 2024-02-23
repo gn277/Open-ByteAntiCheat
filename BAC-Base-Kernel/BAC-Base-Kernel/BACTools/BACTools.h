@@ -1,6 +1,9 @@
 #pragma once
 #include <ntifs.h>
 
+#define DELAY_ONE_MICROSECOND (-10)
+#define DELAY_ONE_MILLISECOND (DELAY_ONE_MICROSECOND*1000)
+
 
 class BACTools
 {
@@ -15,5 +18,6 @@ public:
 	~BACTools();
 
 public:
+	void Sleep(unsigned long msec);
 
 };

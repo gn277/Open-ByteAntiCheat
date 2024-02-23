@@ -47,14 +47,15 @@ NTSTATUS BACDispatchRoutine(PDEVICE_OBJECT device_object, PIRP irp)
 			break;
 		case IRP_MJ_READ:
 		{
+			//这里是应用层调用ReadFile后内核层发送数据到Ring3
 			DbgPrint("[BAC]:MJ_READ\n");
 			break;
 		}
 		case IRP_MJ_WRITE:
 		{
+			//这里是应用层调用WirteFile后内核层收到Ring3数据
 			PPacketStruct p_packet = (PPacketStruct)irp->AssociatedIrp.SystemBuffer;
 
-			//判断消息编号
 			int message_number = p_packet->packet_number;
 			if (message_number > 0)
 			{
@@ -62,7 +63,9 @@ NTSTATUS BACDispatchRoutine(PDEVICE_OBJECT device_object, PIRP irp)
 				{
 					case SEND_FILE_EVENT_HANDLE:
 					{
-						DbgPrint("[BAC]:into file event handle\n");
+						DbgPrint("[BAC]:handle:%p", (HANDLE)p_packet->buffer);
+						//初始化循环事件,在循环事件中调用KeSetEvent通知应用层来读取数据
+						status = bac->InitializeKernelLoopEvent((HANDLE)p_packet->buffer);
 						break;
 					}
 					default:

@@ -178,7 +178,7 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>VMProtectSDK64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>VMProtectDDK64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -202,6 +202,7 @@
   <ItemGroup>
     <ClCompile Include="BAC-Base-Kernel\BAC-Base-Kernel.cpp" />
     <ClCompile Include="BAC-Base-Kernel\BACTools\BACTools.cpp" />
+    <ClCompile Include="BAC-Base-Kernel\KernelLoopEvent\KernelLoopEvent.cpp" />
     <ClCompile Include="BAC-Base-Kernel\MemoryProtect\MemoryProtect.cpp" />
     <ClCompile Include="BAC-Base-Kernel\ProcessProtect\ProcessProtect.cpp" />
     <ClCompile Include="DriverEntry.cpp" />
