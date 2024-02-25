@@ -12,5 +12,6 @@ void BAC::RecvKernelMessage()
 
 void BAC::KernelMessageDispathcer(void* message)
 {
+	//´ıÊµÏÖ
 
 }

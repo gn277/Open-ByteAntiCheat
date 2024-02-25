@@ -102,8 +102,16 @@ bool BACBaseInitialize()
 	}
 #endif
 
+	//清除其他进程句柄
+	bac->AppendBACThreadHandle(
+		"BAC::ClearOtherProcessHandle",
+		CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BAC::ClearOtherProcessHandle, NULL, NULL, NULL));
+
 	//处理循环事件
-	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BAC::LoopEvent, NULL, NULL, NULL);
+	bac->AppendBACThreadHandle(
+		"BAC::LoopEvent", 
+		CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BAC::LoopEvent, NULL, NULL, NULL));
+	
 
 	baclog->FileLogf("%s-> %s: %s", "[BAC]", __FUNCTION__, "Leave");
 	return true;

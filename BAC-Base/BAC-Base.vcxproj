@@ -180,6 +180,7 @@
     <ClCompile Include="BACInterface\AntiFunction\LoopEvent.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\MoniterCreateWindow.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\MonitorCallbacks.cpp" />
+    <ClCompile Include="BACInterface\AntiFunction\MonitorCreateProcess.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\MonitorInjection.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\ProtectMemory.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\RemapImage.cpp" />

@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <iostream>
 #include <vector>
-#include <winternl.h>
 #include <map>
 #include <Psapi.h>
 #include <DbgHelp.h>

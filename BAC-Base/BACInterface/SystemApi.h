@@ -1,5 +1,7 @@
 #pragma once
 #include <windows.h>
+#include <winternl.h>
+#include <winnt.h>
 
 ////////////////////////////////////////////////////////
 /////////  NtQuerySystemInformation 函数用到的枚举常量
@@ -648,49 +650,9 @@
 //
 //extern "C"
 //{
-//	typedef struct _SYSTEM_HANDLE_TABLE_ENTRY_INFO {
-//		USHORT UniqueProcessId;
-//		USHORT CreatorBackTraceIndex;
-//		UCHAR ObjectTypeIndex;
-//		UCHAR HandleAttributes;
-//		USHORT HandleValue;
-//		PVOID Object;
-//		ULONG GrantedAccess;
-//	} SYSTEM_HANDLE_TABLE_ENTRY_INFO, * PSYSTEM_HANDLE_TABLE_ENTRY_INFO;
-//
-//	typedef struct _SYSTEM_HANDLE_INFORMATION {
-//		ULONG NumberOfHandles;
-//		SYSTEM_HANDLE_TABLE_ENTRY_INFO Handles[1];
-//	} SYSTEM_HANDLE_INFORMATION, * PSYSTEM_HANDLE_INFORMATION;
-//
-//
 //	typedef struct _OBJECT_NAME_INFORMATION {
 //		UNICODE_STRING Name;
 //	} OBJECT_NAME_INFORMATION, * POBJECT_NAME_INFORMATION;
-//
-//	typedef struct _OBJECT_TYPE_INFORMATION {
-//		UNICODE_STRING TypeName;
-//		ULONG TotalNumberOfObjects;
-//		ULONG TotalNumberOfHandles;
-//		ULONG TotalPagedPoolUsage;
-//		ULONG TotalNonPagedPoolUsage;
-//		ULONG TotalNamePoolUsage;
-//		ULONG TotalHandleTableUsage;
-//		ULONG HighWaterNumberOfObjects;
-//		ULONG HighWaterNumberOfHandles;
-//		ULONG HighWaterPagedPoolUsage;
-//		ULONG HighWaterNonPagedPoolUsage;
-//		ULONG HighWaterNamePoolUsage;
-//		ULONG HighWaterHandleTableUsage;
-//		ULONG InvalidAttributes;
-//		GENERIC_MAPPING GenericMapping;
-//		ULONG ValidAccessMask;
-//		BOOLEAN SecurityRequired;
-//		BOOLEAN MaintainHandleCount;
-//		ULONG PoolType;
-//		ULONG DefaultPagedPoolCharge;
-//		ULONG DefaultNonPagedPoolCharge;
-//	} OBJECT_TYPE_INFORMATION, * POBJECT_TYPE_INFORMATION;
 //
 //	typedef struct _OBJECT_ATTRIBUTES {
 //		ULONG Length;
@@ -704,53 +666,12 @@
 //
 //	NTSTATUS
 //		NTAPI
-//		ZwQuerySystemInformation(
-//			__in LONG SystemInformationClass,
-//			__out_bcount_opt(SystemInformationLength) PVOID SystemInformation,
-//			__in ULONG SystemInformationLength,
-//			__out_opt PULONG ReturnLength
-//		);
-//
-//	NTSTATUS
-//		NTAPI
 //		RtlAdjustPrivilege(
 //			ULONG Privilege,
 //			BOOLEAN Enable,
 //			BOOLEAN Client,
 //			PBOOLEAN WasEnabled
 //		);
-//
-//	NTSTATUS
-//		NTAPI
-//		ZwOpenProcess(
-//			__out PHANDLE ProcessHandle,
-//			__in ACCESS_MASK DesiredAccess,
-//			__in POBJECT_ATTRIBUTES ObjectAttributes,
-//			__in_opt PCLIENT_ID ClientId
-//		);
-//
-//	NTSTATUS
-//		NTAPI
-//		ZwDuplicateObject(
-//			__in HANDLE SourceProcessHandle,
-//			__in HANDLE SourceHandle,
-//			__in_opt HANDLE TargetProcessHandle,
-//			__out_opt PHANDLE TargetHandle,
-//			__in ACCESS_MASK DesiredAccess,
-//			__in ULONG HandleAttributes,
-//			__in ULONG Options
-//		);
-//
-//	NTSTATUS
-//		NTAPI
-//		ZwQueryObject(
-//			__in HANDLE Handle,
-//			__in LONG ObjectInformationClass,
-//			__out_bcount_opt(ObjectInformationLength) PVOID ObjectInformation,
-//			__in ULONG ObjectInformationLength,
-//			__out_opt PULONG ReturnLength
-//		);
-//};
 //
 //typedef enum _OBJECT_INFORMATION_CLASS {
 //	ObjectBasicInformation = 0,
@@ -822,10 +743,88 @@
 #define NT_SUCCESS(Status) ((NTSTATUS)(Status) >= 0)
 #define STATUS_SUCCESS     ((NTSTATUS) 0x00000000)
 
+#define DUPLICATE_SAME_ATTRIBUTES   0x00000004
+#define SystemHandleInformation 16
+
+typedef struct _OBJECT_NAME_INFORMATION {
+	UNICODE_STRING Name;
+} OBJECT_NAME_INFORMATION, * POBJECT_NAME_INFORMATION;
+typedef struct _OBJECT_TYPE_INFORMATION {
+	UNICODE_STRING TypeName;
+	ULONG TotalNumberOfObjects;
+	ULONG TotalNumberOfHandles;
+	ULONG TotalPagedPoolUsage;
+	ULONG TotalNonPagedPoolUsage;
+	ULONG TotalNamePoolUsage;
+	ULONG TotalHandleTableUsage;
+	ULONG HighWaterNumberOfObjects;
+	ULONG HighWaterNumberOfHandles;
+	ULONG HighWaterPagedPoolUsage;
+	ULONG HighWaterNonPagedPoolUsage;
+	ULONG HighWaterNamePoolUsage;
+	ULONG HighWaterHandleTableUsage;
+	ULONG InvalidAttributes;
+	GENERIC_MAPPING GenericMapping;
+	ULONG ValidAccessMask;
+	BOOLEAN SecurityRequired;
+	BOOLEAN MaintainHandleCount;
+	ULONG PoolType;
+	ULONG DefaultPagedPoolCharge;
+	ULONG DefaultNonPagedPoolCharge;
+} OBJECT_TYPE_INFORMATION, * POBJECT_TYPE_INFORMATION;
+
+typedef struct _SYSTEM_HANDLE_TABLE_ENTRY_INFO {
+	USHORT UniqueProcessId;
+	USHORT CreatorBackTraceIndex;
+	UCHAR ObjectTypeIndex;
+	UCHAR HandleAttributes;
+	USHORT HandleValue;
+	PVOID Object;
+	ULONG GrantedAccess;
+} SYSTEM_HANDLE_TABLE_ENTRY_INFO, * PSYSTEM_HANDLE_TABLE_ENTRY_INFO;
+
+typedef struct _SYSTEM_HANDLE_INFORMATION {
+	ULONG NumberOfHandles;
+	SYSTEM_HANDLE_TABLE_ENTRY_INFO Handles[1];
+} SYSTEM_HANDLE_INFORMATION, * PSYSTEM_HANDLE_INFORMATION;
+
 typedef NTSTATUS(WINAPI* PfnZwQueryInformationProcess)(
 	HANDLE ProcessHandle,
 	ULONG ProcessInformationClass,
 	PVOID ProcessInformation,
 	ULONG ProcessInformationLength,
 	PULONG ReturnLength);
+
+extern "C"
+{
+	NTSTATUS NTAPI ZwOpenProcess(
+		__out PHANDLE ProcessHandle,
+		__in ACCESS_MASK DesiredAccess,
+		__in POBJECT_ATTRIBUTES ObjectAttributes,
+		__in_opt CLIENT_ID* ClientId);
+
+	NTSTATUS NTAPI ZwQueryObject(
+		__in HANDLE Handle,
+		__in LONG ObjectInformationClass,
+		__out_bcount_opt(ObjectInformationLength) PVOID ObjectInformation,
+		__in ULONG ObjectInformationLength,
+		__out_opt PULONG ReturnLength);
+
+	NTSTATUS NTAPI ZwDuplicateObject(
+		__in HANDLE SourceProcessHandle,
+		__in HANDLE SourceHandle,
+		__in_opt HANDLE TargetProcessHandle,
+		__out_opt PHANDLE TargetHandle,
+		__in ACCESS_MASK DesiredAccess,
+		__in ULONG HandleAttributes,
+		__in ULONG Options);
+
+	NTSTATUS NTAPI ZwQuerySystemInformation(
+		__in LONG SystemInformationClass,
+		__out_bcount_opt(SystemInformationLength) PVOID SystemInformation,
+		__in ULONG SystemInformationLength,
+		__out_opt PULONG ReturnLength);
+
+}
+
 

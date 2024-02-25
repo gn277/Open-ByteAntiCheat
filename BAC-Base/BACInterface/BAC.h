@@ -23,6 +23,9 @@ using namespace std;
 class BAC : public BACKernel, public Tools
 {
 private:
+	//BAC线程列表<线程函数名,线程句柄>
+	std::map<std::string, HANDLE> bac_thread_list;
+
 	//Hook点容器，记录成功Hook地址后续循环效验是否被恢复
 #if _WIN64
 	std::map<const std::string/*Api名*/, std::map<DWORD64/*地址*/, unsigned int/*Hook后CRC32值*/>> _hook_list;
@@ -62,6 +65,9 @@ public:
 	static void LoopEvent();
 	void InitializeLoopEnvent();
 
+	//清除匿名进程句柄
+	static void ClearOtherProcessHandle();
+
 	//处理内核消息的线程
 	static void RecvKernelMessage();
 	//驱动消息派遣函数
@@ -78,6 +84,8 @@ public:
 	void CheckHookPointer();
 	//检查进程模块内存
 	void CheckMemoryCRC32();
+	//添加BAC线程句柄
+	void AppendBACThreadHandle(std::string function_name, HANDLE thread_handle);
 
 public:
 	BAC();

@@ -112,6 +112,9 @@
     <ClCompile Include="BACInterface\AntiFunction\KernelMessageDispatch.cpp">
       <Filter>BACInterface\AntiFunction</Filter>
     </ClCompile>
+    <ClCompile Include="BACInterface\AntiFunction\MonitorCreateProcess.cpp">
+      <Filter>BACInterface\AntiFunction</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
