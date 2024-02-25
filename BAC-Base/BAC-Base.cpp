@@ -100,12 +100,12 @@ bool BACBaseInitialize()
 		MessageBoxA(::GetActiveWindow(), "clear process debug port error", "BAC::Error", MB_OK);
 		ExitProcess(-1);
 	}
-#endif
 
 	//清除其他进程句柄
 	bac->AppendBACThreadHandle(
 		"BAC::ClearOtherProcessHandle",
 		CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BAC::ClearOtherProcessHandle, NULL, NULL, NULL));
+#endif
 
 	//处理循环事件
 	bac->AppendBACThreadHandle(

@@ -224,10 +224,6 @@ bool BACKernel::OpenDriverHandle()
 
 bool BACKernel::SendPacketToKernel(int message_number, void* buffer, int buffer_len)
 {
-#if NDEBUG
-	VMProtectBeginUltra("BACKernel::SendPacketToKernel");
-#endif
-
 	int new_packet_len = (sizeof(int) * 2) + buffer_len;
 	PPacketStruct p_packet = (PPacketStruct)new char[new_packet_len];
 	memset(p_packet, 0, new_packet_len);
@@ -244,10 +240,6 @@ bool BACKernel::SendPacketToKernel(int message_number, void* buffer, int buffer_
 
 	delete[] p_packet;
 	return ret;
-
-#if NDEBUG
-	VMProtectEnd();
-#endif
 }
 
 bool BACKernel::SendFileEventToKernel()
