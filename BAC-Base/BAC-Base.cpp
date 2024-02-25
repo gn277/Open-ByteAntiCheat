@@ -79,7 +79,7 @@ bool BACBaseInitialize()
 	//if (!bac->BACKernel::RemapImage("BAC-Base64.dll", (HANDLE)::GetCurrentProcessId(), (DWORD64)self_module, module_info.SizeOfImage))
 	//	MessageBoxA(NULL, "BAC Initialize error!", "ERROR", MB_OK);
 
-
+#if NDEBUG
 	//内核保护进程
 	if (!bac->BACKernel::ProtectProcessByName(process_name))
 	{
@@ -94,7 +94,6 @@ bool BACBaseInitialize()
 		MessageBoxA(::GetActiveWindow(), "send file event to kernel error", "BAC::Error", MB_OK);
 		ExitProcess(-1);
 	}
-#if NDEBUG
 	//清空游戏进程的调试端口
 	if (!bac->BACKernel::ClearProcessDebugPort((HANDLE)::GetCurrentProcessId()))
 	{

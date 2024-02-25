@@ -20,6 +20,14 @@
 //内核线程循环等待时间
 #define KERNEL_THREAD_SLEEP_TIME 1000
 
+//内核消息队列结构
+typedef struct _MessageQueue
+{
+	LIST_ENTRY list_entry;
+	bool sended = false;
+	PVOID buffer;
+};
+
 
 void OutPutBACLog(IN const char* function, IN const char* data);
 
