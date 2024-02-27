@@ -5,9 +5,9 @@
 * 窗口监视：
 	* 实现：ByteAntiCheat/BAC-Base/BACInterface/AntiFunction/MoniterCreateWindow.cpp
 * 内存监视：
-	* 实现：ByteAntiCheat/BAC-Base/BACInterface/AntiFunction/ProtectMemory.cpp
+	* 实现：ByteAntiCheat/BAC-Base/BACInterface/AntiFunction/MonitorMemoryOperation.cpp
 * 线程监视：
-	* 实现：待实现
+	* 实现：ByteAntiCheat/BAC-Base/BACInterface/AntiFunction/MonitorThreadOperation.cpp
 * 注入监视：
 	* 实现：ByteAntiCheat/BAC-Base/BACInterface/AntiFunction/MonitorInjection.cpp
 * 内核消息派遣机制：

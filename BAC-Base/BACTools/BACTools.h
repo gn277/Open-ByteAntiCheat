@@ -32,6 +32,7 @@ public:
 	PVOID GetPeSectiontAddress(PVOID image, const char* section_name);
 	DWORD GetPeSectionSize(PVOID image, const char* section_name);
 	bool GetProcessModule(std::map<std::string, DWORD64>* p_process_module_list);
+	bool StackTrace64();
 
 };
 

@@ -25,6 +25,7 @@ typedef struct _MessageQueue
 {
 	LIST_ENTRY list_entry;
 	bool sended = false;
+	int buffer_len;
 	PVOID buffer;
 };
 

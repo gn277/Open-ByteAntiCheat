@@ -167,3 +167,63 @@ bool Tools::GetProcessModule(std::map<std::string, DWORD64>* p_process_module_li
 #endif
 }
 
+bool Tools::StackTrace64()
+{
+	CONTEXT                       context;
+	KNONVOLATILE_CONTEXT_POINTERS nt_context;
+	UNWIND_HISTORY_TABLE          unwind_history_table;
+	PRUNTIME_FUNCTION             runtime_function;
+	PVOID                         handler_data;
+	ULONG64                       establisher_frame;
+	ULONG64                       image_base;
+
+	//首先得到当前context
+	RtlCaptureContext(&context);
+
+	//初始化 unwind_history_table，这个结构体主要用于多次查找RUNTIME_FUNCTION时加快查找效率
+	RtlZeroMemory(&unwind_history_table, sizeof(UNWIND_HISTORY_TABLE));
+
+	//循环得到调用堆栈
+	for (ULONG Frame = 0; ; Frame++)
+	{
+		//在PE+ 的.pdata 段中找到函数对应的runtime_function 结构
+		//只有叶函数没有此结构
+		//既不调用函数、又没有修改栈指针，也没有使用 SEH 的函数就叫做“叶函数”。
+		runtime_function = RtlLookupFunctionEntry(context.Rip, &image_base, &unwind_history_table);
+
+		RtlZeroMemory(&nt_context, sizeof(KNONVOLATILE_CONTEXT_POINTERS));
+
+		if (!runtime_function)
+		{
+			//没有得到结构体，我们当前得到了一个叶函数
+			//此时Rsp 直接指向Rip，调用叶函数只包含Call 操作，即只包含push eip 操作，Rsp += 8即可
+			context.Rip = (ULONG64)(*(PULONG64)context.Rsp);
+			context.Rsp += 8;
+		}
+		else
+		{
+			//虚拟展开，得到调用堆栈
+			//第一个参数表示Rip 所在函数没有过滤和处理函数
+			//仅仅进行虚拟展开得到上层调用堆栈
+			RtlVirtualUnwind(
+				UNW_FLAG_NHANDLER,
+				image_base,
+				context.Rip,
+				runtime_function,
+				&context,
+				&handler_data,
+				&establisher_frame,
+				&nt_context);
+		}
+
+		//没有得到Rip 即是调用失败
+		if (!context.Rip)
+			break;
+
+		//展示相关信息
+		printf("FRAME %02x: CallAddress=%p\r\n\n", Frame, context.Rip);
+	}
+
+	return true;
+}
+

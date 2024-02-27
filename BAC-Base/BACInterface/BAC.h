@@ -46,16 +46,18 @@ private:
 public:
 	//隐藏应用层的hook
 	void HideHook();
-	//监视窗口创建相关函数
-	void MonitorCreateWindow();
 	//监视LdrLoadDll注入
 	void MonitorLdrLoadDll();
+	//监视线程操作
+	void MonitorThreadOperation();
 	//监视APC注入
 	void MonitorApc();
 	//监视输入法注入
 	void MonitorImm();
 	//监视内存读写操作
-	void MonitorMemoryOption();
+	void MonitorMemoryOperation();
+	//监视窗口创建相关函数
+	void MonitorCreateWindow();
 
 
 	//重新映射内存

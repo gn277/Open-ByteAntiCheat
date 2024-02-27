@@ -82,7 +82,7 @@
     <ClCompile Include="BACInterface\AntiFunction\MonitorInjection.cpp">
       <Filter>BACInterface\AntiFunction</Filter>
     </ClCompile>
-    <ClCompile Include="BACInterface\AntiFunction\ProtectMemory.cpp">
+    <ClCompile Include="BACInterface\AntiFunction\MonitorMemoryOperation.cpp">
       <Filter>BACInterface\AntiFunction</Filter>
     </ClCompile>
     <ClCompile Include="BACInterface\AntiFunction\CheckCRC.cpp">
@@ -113,6 +113,9 @@
       <Filter>BACInterface\AntiFunction</Filter>
     </ClCompile>
     <ClCompile Include="BACInterface\AntiFunction\MonitorCreateProcess.cpp">
+      <Filter>BACInterface\AntiFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="BACInterface\AntiFunction\MonitorThreadOperation.cpp">
       <Filter>BACInterface\AntiFunction</Filter>
     </ClCompile>
   </ItemGroup>

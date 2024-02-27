@@ -61,10 +61,12 @@ bool BACBaseInitialize()
 	bac->HideHook();
 	//监视LdrLoadDll注入
 	bac->MonitorLdrLoadDll();
+	//监视线程操作
+	bac->MonitorThreadOperation();
 	//监视输入法注入
 	bac->MonitorImm();
 	//监视内存读写操作
-	bac->MonitorMemoryOption();
+	bac->MonitorMemoryOperation();
 	//监视窗口创建的相关函数
 	bac->MonitorCreateWindow();
 
