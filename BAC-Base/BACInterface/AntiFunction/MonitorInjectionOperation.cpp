@@ -59,8 +59,9 @@ void BACLdrInitializeThunk(PCONTEXT NormalContext, PVOID SystemArgument1, PVOID 
 	VMProtectBeginUltra("BACLdrInitializeThunk");
 #endif
 
-	//可以进行回溯检查
-
+	//进行回溯检查
+	printf("%s stack info:\n", __FUNCTION__);
+	bac->Tools::GetStackInfoList();
 
 	return pfnLdrInitializeThunk(NormalContext, SystemArgument1, SystemArgument2);
 
@@ -69,10 +70,10 @@ void BACLdrInitializeThunk(PCONTEXT NormalContext, PVOID SystemArgument1, PVOID 
 #endif
 }
 
-void BAC::MonitorLdrLoadDll()
+void BAC::MonitorInjecterOperation()
 {
 #if NDEBUG
-	VMProtectBeginUltra("BAC::MonitorLdrLoadDll");
+	VMProtectBeginUltra("BAC::MonitorInjecterOperation");
 #endif
 	baclog->FunctionLog(__FUNCTION__, "Enter");
 

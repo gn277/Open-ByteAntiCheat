@@ -223,10 +223,10 @@ BOOL WINAPI BACSetWindowTextA(_In_ HWND hWnd, _In_opt_ LPCSTR lpString)
 #endif
 }
 
-void BAC::MonitorCreateWindow()
+void BAC::MonitorWindowOperation()
 {
 #if NDEBUG
-	VMProtectBeginUltra("BAC::MonitorCreateWindow");
+	VMProtectBeginUltra("BAC::MonitorWindowOperation");
 #endif
 	baclog->FunctionLog(__FUNCTION__, "Enter");
 
@@ -255,7 +255,7 @@ void BAC::MonitorCreateWindow()
 		{ "SetWindowTextW",(DWORD64)pfnSetWindowTextW },
 		{ "SetWindowTextA",(DWORD64)pfnSetWindowTextA } };
 #else
-	std::map<std::string, DWORD64> hook_address = {
+	std::map<std::string, DWORD> hook_address = {
 		{ "RegisterClassExA", (DWORD)pfnRegisterClassExA },
 		{ "RegisterClassA",(DWORD)pfnRegisterClassA },
 		{ "RegisterClassExW",(DWORD)pfnRegisterClassExW },

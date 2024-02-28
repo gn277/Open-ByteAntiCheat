@@ -27,7 +27,7 @@ typedef struct _MessageQueue
 	bool sended = false;
 	int buffer_len;
 	PVOID buffer;
-};
+}MessageQueue, * PMessageQueue;
 
 
 void OutPutBACLog(IN const char* function, IN const char* data);

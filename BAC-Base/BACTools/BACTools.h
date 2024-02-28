@@ -8,6 +8,14 @@
 #include <DbgHelp.h>
 #pragma comment(lib, "dbghelp.lib")
 
+typedef struct _CallerStackInfo
+{
+	std::string caller_module_name;
+	HMODULE caller_module_handle;
+	PVOID caller_address;
+	SIZE_T caller_offset;
+}CallerStackInfo, * PCallerStackInfo;
+
 
 class Tools
 {
@@ -32,7 +40,12 @@ public:
 	PVOID GetPeSectiontAddress(PVOID image, const char* section_name);
 	DWORD GetPeSectionSize(PVOID image, const char* section_name);
 	bool GetProcessModule(std::map<std::string, DWORD64>* p_process_module_list);
-	bool StackTrace64();
+
+private:
+	CallerStackInfo GetMemoryModuleInfo(PVOID address);
+
+public:
+	void GetStackInfoList();
 
 };
 

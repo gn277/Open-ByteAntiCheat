@@ -167,63 +167,86 @@ bool Tools::GetProcessModule(std::map<std::string, DWORD64>* p_process_module_li
 #endif
 }
 
-bool Tools::StackTrace64()
+CallerStackInfo Tools::GetMemoryModuleInfo(PVOID address)
 {
-	CONTEXT                       context;
-	KNONVOLATILE_CONTEXT_POINTERS nt_context;
-	UNWIND_HISTORY_TABLE          unwind_history_table;
-	PRUNTIME_FUNCTION             runtime_function;
-	PVOID                         handler_data;
-	ULONG64                       establisher_frame;
-	ULONG64                       image_base;
+	MODULEINFO module_info = { NULL };
+	MEMORY_BASIC_INFORMATION memory_info = { NULL };
+	CallerStackInfo caller_info;
 
-	//首先得到当前context
-	RtlCaptureContext(&context);
+	//记录调用者地址
+	caller_info.caller_address = address;
 
-	//初始化 unwind_history_table，这个结构体主要用于多次查找RUNTIME_FUNCTION时加快查找效率
-	RtlZeroMemory(&unwind_history_table, sizeof(UNWIND_HISTORY_TABLE));
+	//获取调用者所在模块
+	VirtualQuery(address, &memory_info, sizeof(MEMORY_BASIC_INFORMATION));
+	caller_info.caller_module_handle = (HMODULE)memory_info.AllocationBase;
 
-	//循环得到调用堆栈
-	for (ULONG Frame = 0; ; Frame++)
+	//计算调用者所在模块偏移
+#if _WIN64
+	caller_info.caller_offset = ((DWORD64)caller_info.caller_address - (DWORD64)caller_info.caller_module_handle);
+#else
+	caller_info.caller_offset = ((DWORD)caller_info.caller_address - (DWORD)caller_info.caller_module_handle);
+#endif
+
+	//保存调用者模块名称
+	char module_name[MAX_PATH] = { NULL };
+	GetModuleBaseNameA(::GetCurrentProcess(), (HMODULE)memory_info.AllocationBase, module_name, MAX_PATH);
+	caller_info.caller_module_name.append(module_name);
+
+	return caller_info;
+}
+
+void Tools::GetStackInfoList()
+{
+	//// Quote from Microsoft Documentation:
+	//// ## Windows Server 2003 and Windows XP:  
+	//// ## The sum of the FramesToSkip and FramesToCapture parameters must be less than 63.
+	//const int max_callers = 62;
+	//void* callers_stack[max_callers];
+	//
+	//unsigned short frames;
+	//SYMBOL_INFO* symbol;
+	//HANDLE process = GetCurrentProcess();
+	//SymInitialize(process, NULL, TRUE);
+	//
+	//frames = RtlCaptureStackBackTrace(0, max_callers, callers_stack, NULL);
+	//symbol = (SYMBOL_INFO*)calloc(sizeof(SYMBOL_INFO) + 256 * sizeof(char), 1);
+	//symbol->MaxNameLen = 255;
+	//symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+	//
+	//const unsigned short  MAX_CALLERS_SHOWN = 6;
+	//frames = frames < MAX_CALLERS_SHOWN ? frames : MAX_CALLERS_SHOWN;
+	//for (unsigned int i = 0; i < frames; i++)
+	//{
+	//	SymFromAddr(process, (DWORD64)(callers_stack[i]), 0, symbol);
+	//	//printf("*** %d: callers_stack:%p function_name:%s - function_address:%p\n",
+	//	//	i, callers_stack[i], symbol->Name, symbol->Address);
+	//	CallerStackInfo caller_info = GetMemoryModuleInfo(callers_stack[i]);
+	//	printf("***%d: caller_module_name:%s caller_module_handle:%p caller_offset:%p caller_add:%p \n",
+	//		i, caller_info.caller_module_name.c_str(), caller_info.caller_module_handle,
+	//		caller_info.caller_offset, caller_info.caller_address);
+	//}
+	//
+	//free(symbol);
+
+	// Quote from Microsoft Documentation:
+	// ## Windows Server 2003 and Windows XP:  
+	// ## The sum of the FramesToSkip and FramesToCapture parameters must be less than 63.
+	const int max_callers = 62;
+	void* callers_stack[max_callers];
+
+	unsigned short frames;
+
+	frames = RtlCaptureStackBackTrace(0, max_callers, callers_stack, NULL);
+
+	const unsigned short  MAX_CALLERS_SHOWN = 6;
+	frames = frames < MAX_CALLERS_SHOWN ? frames : MAX_CALLERS_SHOWN;
+	for (unsigned int i = 0; i < frames; i++)
 	{
-		//在PE+ 的.pdata 段中找到函数对应的runtime_function 结构
-		//只有叶函数没有此结构
-		//既不调用函数、又没有修改栈指针，也没有使用 SEH 的函数就叫做“叶函数”。
-		runtime_function = RtlLookupFunctionEntry(context.Rip, &image_base, &unwind_history_table);
-
-		RtlZeroMemory(&nt_context, sizeof(KNONVOLATILE_CONTEXT_POINTERS));
-
-		if (!runtime_function)
-		{
-			//没有得到结构体，我们当前得到了一个叶函数
-			//此时Rsp 直接指向Rip，调用叶函数只包含Call 操作，即只包含push eip 操作，Rsp += 8即可
-			context.Rip = (ULONG64)(*(PULONG64)context.Rsp);
-			context.Rsp += 8;
-		}
-		else
-		{
-			//虚拟展开，得到调用堆栈
-			//第一个参数表示Rip 所在函数没有过滤和处理函数
-			//仅仅进行虚拟展开得到上层调用堆栈
-			RtlVirtualUnwind(
-				UNW_FLAG_NHANDLER,
-				image_base,
-				context.Rip,
-				runtime_function,
-				&context,
-				&handler_data,
-				&establisher_frame,
-				&nt_context);
-		}
-
-		//没有得到Rip 即是调用失败
-		if (!context.Rip)
-			break;
-
-		//展示相关信息
-		printf("FRAME %02x: CallAddress=%p\r\n\n", Frame, context.Rip);
+		CallerStackInfo caller_info = GetMemoryModuleInfo(callers_stack[i]);
+		printf("*** %d: caller: \"%s\"+%p\n", i, caller_info.caller_module_name.c_str(), caller_info.caller_offset);
+		//printf("***%d: caller_module_name:%s caller_module_handle:%p caller_offset:%p caller_add:%p \n",
+		//	i, caller_info.caller_module_name.c_str(), caller_info.caller_module_handle,
+		//	caller_info.caller_offset, caller_info.caller_address);
 	}
-
-	return true;
 }
 

@@ -76,10 +76,10 @@
     <ClCompile Include="BACInterface\AntiFunction\HideHook.cpp">
       <Filter>BACInterface\AntiFunction</Filter>
     </ClCompile>
-    <ClCompile Include="BACInterface\AntiFunction\MoniterCreateWindow.cpp">
+    <ClCompile Include="BACInterface\AntiFunction\MoniterWindowOperation.cpp">
       <Filter>BACInterface\AntiFunction</Filter>
     </ClCompile>
-    <ClCompile Include="BACInterface\AntiFunction\MonitorInjection.cpp">
+    <ClCompile Include="BACInterface\AntiFunction\MonitorInjectionOperation.cpp">
       <Filter>BACInterface\AntiFunction</Filter>
     </ClCompile>
     <ClCompile Include="BACInterface\AntiFunction\MonitorMemoryOperation.cpp">

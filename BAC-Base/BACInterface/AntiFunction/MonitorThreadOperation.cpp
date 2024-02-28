@@ -95,7 +95,7 @@ void BAC::MonitorThreadOperation()
 		{ "NtSetContextThread", (DWORD64)pfnNtSetContextThread },
 		{ "NtGetContextThread",(DWORD64)pfnNtGetContextThread } };
 #else
-	std::map<std::string, DWORD64> hook_address = {
+	std::map<std::string, DWORD> hook_address = {
 		{ "NtSuspendThread", (DWORD)pfnNtSuspendThread },
 		{ "NtResumeThread", (DWORD)pfnNtResumeThread },
 		{ "NtSetContextThread", (DWORD)pfnNtSetContextThread },

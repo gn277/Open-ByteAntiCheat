@@ -19,7 +19,8 @@ NTSTATUS NTAPI BACNtProtectVirtualMemory(IN HANDLE ProcessHandle, IN OUT PVOID* 
 	VMProtectBeginUltra("BACNtProtectVirtualMemory");
 #endif
 
-	bac->Tools::StackTrace64();
+	printf("%s stack info:\n", __FUNCTION__);
+	bac->Tools::GetStackInfoList();
 
 	//printf("%s-> new attribute:%p,old attribute:%p\n", __FUNCTION__, NewProtect, *(ULONG*)OldProtect);
 
@@ -36,7 +37,8 @@ BOOL WINAPI BACIsBadReadPtr(_In_opt_ CONST VOID* lp, _In_ UINT_PTR ucb)
 	VMProtectBeginUltra("BACIsBadReadPtr");
 #endif
 
-	//printf("%s-> lp:%p,ucb:%d\n", __FUNCTION__, lp, ucb);
+	//printf("%s stack info:\n", __FUNCTION__);
+	//bac->Tools::GetStackInfoList();
 
 	return pfnIsBadReadPtr(lp, ucb);
 

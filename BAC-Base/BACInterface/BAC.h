@@ -47,7 +47,7 @@ public:
 	//隐藏应用层的hook
 	void HideHook();
 	//监视LdrLoadDll注入
-	void MonitorLdrLoadDll();
+	void MonitorInjecterOperation();
 	//监视线程操作
 	void MonitorThreadOperation();
 	//监视APC注入
@@ -57,7 +57,7 @@ public:
 	//监视内存读写操作
 	void MonitorMemoryOperation();
 	//监视窗口创建相关函数
-	void MonitorCreateWindow();
+	void MonitorWindowOperation();
 
 
 	//重新映射内存
