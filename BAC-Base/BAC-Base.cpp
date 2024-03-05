@@ -67,8 +67,8 @@ bool BACBaseInitialize()
 	bac->MonitorImm();
 	//监视内存读写操作
 	bac->MonitorMemoryOperation();
-	////监视窗口创建的相关函数
-	//bac->MonitorWindowOperation();
+	//监视窗口创建的相关函数
+	bac->MonitorWindowOperation();
 
 
 
