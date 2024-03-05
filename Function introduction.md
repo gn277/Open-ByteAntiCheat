@@ -3,6 +3,7 @@
 服务端：
 ----
 * 待开发与BAC-Base.dll通讯、传输数据等功能
+----
 
 应用层：
 ----
@@ -27,6 +28,7 @@
 			* 1.在各个监控初始化函数下hook时将hook点的内存信息和CRC32值加入到BAC::_hook_list变量中。
 			* 2.BAC::CheckHookPointer函数对BAC::_hook_list变量中的hook点内存信息做CRC32的校验，发现异常时可进行上报。
 * 
+----
 
 内核层：
 ----
