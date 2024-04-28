@@ -2,7 +2,6 @@
 //						在此监视线程状态
 ////////////////////////////////////////////////////////////////
 #include "../BAC.h"
-#include "../../BAC-Base.h"
 
 typedef NTSTATUS(WINAPI* pfNtSuspendThread)(_In_ HANDLE ThreadHandle, _Out_opt_ PULONG PreviousSuspendCount);
 typedef NTSTATUS(WINAPI* pfNtResumeThread)(_In_ HANDLE ThreadHandle, _Out_opt_ PULONG PreviousSuspendCount);

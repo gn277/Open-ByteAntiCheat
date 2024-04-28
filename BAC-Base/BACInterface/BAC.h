@@ -1,23 +1,18 @@
 #pragma once
-#include <Windows.h>
 #include <stdio.h>
 #include <iostream>
 #include <vector>
 #include <map>
 #include <utility>
 
-#include "../Detours/include/detours.h"
-#if _WIN64
-#pragma comment(lib,"Detours/lib.X64/detours.lib")
-#elif _WIN32
-#pragma comment(lib,"Detours/lib.X86/detours.lib")
-#endif
-
-#include "SystemApi.h"
+#include "BACError.h"
+#include "BACClient/BACClient.h"
 #include "BACKernelApi/BACKernel.h"
+#include "../BACLog/BACLog.h"
 #include "../BACTools/BACTools.h"
 
-using namespace std;
+#include <detours.h>
+#include <VMProtectSDK/VMProtectSDK.h>
 
 
 class BACError :public std::exception
@@ -36,9 +31,12 @@ public:
 };
 
 
-class BAC : public BACKernel, public BACTools
+class BAC :public BACKernel, public BACTools
 {
 private:
+	//BAC-Base模块句柄
+	HMODULE _self_module = NULL;
+
 	//BAC线程列表<线程函数名,线程句柄>
 	std::map<std::string, HANDLE> bac_thread_list;
 
@@ -75,7 +73,6 @@ public:
 	//监视窗口创建相关函数
 	void MonitorWindowOperation();
 
-
 	//重新映射内存
 	bool RemapImage(ULONG_PTR image_base);
 	
@@ -106,7 +103,15 @@ public:
 	void AppendBACThreadHandle(std::string function_name, HANDLE thread_handle);
 
 public:
-	BAC();
+	HMODULE GetSelfModuleHandle();
+
+public:
+	BAC(HMODULE self_module_handle);
 	~BAC();
 
 };
+
+
+extern "C" std::shared_ptr<BAC> bac;
+extern "C" std::shared_ptr<BACClient> client;
+extern "C" std::shared_ptr<BACLog> baclog;

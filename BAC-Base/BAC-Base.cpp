@@ -2,10 +2,7 @@
 //						实现对外调用的接口
 ////////////////////////////////////////////////////////////////
 #include "BAC-Base.h"
-
-std::shared_ptr<BAC> bac = nullptr;
-std::shared_ptr<BACLog> baclog = nullptr;
-HMODULE self_module = NULL;
+#include "BACInterface/BAC.h"
 
 
 LONG CALLBACK UnHandleException(EXCEPTION_POINTERS* p_exception)
@@ -15,7 +12,7 @@ LONG CALLBACK UnHandleException(EXCEPTION_POINTERS* p_exception)
 	return EXCEPTION_CONTINUE_SEARCH;
 }
 
-bool BACBaseInitialize()
+bool BACBaseInitialize(HMODULE module_handle)
 {
 #if _DEBUG
 	AllocConsole();
@@ -27,7 +24,7 @@ bool BACBaseInitialize()
 	try
 	{
 		//实例化BAC对象
-		bac = std::make_shared<BAC>();
+		bac = std::make_shared<BAC>(module_handle);
 
 #if NDEBUG
 		VMProtectBeginUltra("BACBaseInitialize");
@@ -44,7 +41,7 @@ bool BACBaseInitialize()
 		TCHAR driver_full_path[MAX_PATH] = { NULL };
 
 		//获取BAC-Base模块完整路径
-		GetModuleFileNameW(self_module, module_path, _countof(module_path));
+		GetModuleFileNameW(module_handle, module_path, _countof(module_path));
 		//获取驱动路径
 		PathRemoveFileSpecW(module_path);
 		_stprintf_s(driver_full_path, _countof(driver_full_path), _T("%s\\%s"), module_path, DRIVER_FILE_NAME);
@@ -71,8 +68,6 @@ bool BACBaseInitialize()
 		bac->MonitorMemoryOperation();
 		//监视窗口创建的相关函数
 		bac->MonitorWindowOperation();
-
-
 
 		////内存操作完成后映射内存达到代码不被修改
 		//if (!bac->RemapImage((ULONG_PTR)self_module))
@@ -116,6 +111,8 @@ bool BACBaseInitialize()
 			"BAC::LoopEvent",
 			CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BAC::LoopEvent, NULL, NULL, NULL));
 
+		//连接服务器
+		client = std::make_shared<BACClient>();
 
 		baclog->FileLogf("%s-> %s: %s", "[BAC]", __FUNCTION__, "Leave");
 		return true;
@@ -123,6 +120,11 @@ bool BACBaseInitialize()
 	catch (const std::shared_ptr<BACError>& e)
 	{
 		baclog->FileLog(std::string(__FUNCTION__) + "had exception: " + e->what());
+		return false;
+	}
+	catch (const std::shared_ptr<BACClientError>& e)
+	{
+		baclog->FileLog(e->what());
 		return false;
 	}
 	catch (const std::exception& e)
@@ -143,19 +145,14 @@ bool BACBaseUnInitialize()
 #endif
 	baclog->FunctionLog(__FUNCTION__, "Enter");
 
-	//释放BAC对象
+	//如果BAC实例化成功则卸载驱动
 	if (bac)
 	{
 		if(!bac->BACKernel::UnInstallDriver())
 			throw "uninitialize bac kernel error";
-		bac.~shared_ptr();
 	}
 
 	baclog->FunctionLog(__FUNCTION__, "Leave");
-
-	//释放BAC日志对象
-	if (baclog)
-		baclog.~shared_ptr();
 
 	return true;
 #if NDEBUG
@@ -169,12 +166,8 @@ BOOL APIENTRY DllMain(HMODULE h_module, DWORD ul_reason_for_call, LPVOID lpReser
 	{
 		case DLL_PROCESS_ATTACH:
 		{
-			self_module = h_module;
-
-			if (!BACBaseInitialize())
+			if (!BACBaseInitialize(h_module))
 				MessageBoxA(NULL, "BAC load error, please check!", "Error", MB_OK);
-			//::CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BACBaseInitialize, NULL, NULL, NULL);
-
 			break;
 		}
 		case DLL_THREAD_ATTACH:

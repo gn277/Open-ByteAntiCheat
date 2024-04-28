@@ -2,7 +2,6 @@
 //						¼àÊÓÄÚ´æ¶ÁÐ´º¯Êý
 ////////////////////////////////////////////////////////////////
 #include "../BAC.h"
-#include "../../BAC-Base.h"
 
 typedef NTSTATUS(NTAPI* fpNtProtectVirtualMemory)(IN HANDLE ProcessHandle, IN OUT PVOID* BaseAddress, IN OUT PULONG ProtectSize, IN ULONG NewProtect, OUT PULONG OldProtect);
 typedef BOOL(WINAPI* fpIsBadReadPtr)(_In_opt_ CONST VOID* lp, _In_ UINT_PTR ucb);

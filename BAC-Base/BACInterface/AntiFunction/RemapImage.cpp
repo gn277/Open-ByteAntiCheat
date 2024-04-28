@@ -2,7 +2,7 @@
 //						ƒ⁄¥Ê÷ÿ”≥…‰
 ////////////////////////////////////////////////////////////////
 #include "../BAC.h"
-#include "../../BAC-Base.h"
+#include "../SystemApi.h"
 
 
 #pragma comment(lib,"ntdll.lib")

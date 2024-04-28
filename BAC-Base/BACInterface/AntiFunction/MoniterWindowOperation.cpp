@@ -1,5 +1,4 @@
 #include "../BAC.h"
-#include "../../BAC-Base.h"
 
 //创建窗口函数
 typedef WORD(WINAPI* fpRegisterClassExA)(WNDCLASSEXA* lpWndCls);

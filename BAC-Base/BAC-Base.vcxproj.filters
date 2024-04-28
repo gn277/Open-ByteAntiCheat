@@ -32,6 +32,12 @@
     <Filter Include="BACTools">
       <UniqueIdentifier>{7d6c753b-82f8-4347-a091-41cee69fe720}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BACInterface\BACClient">
+      <UniqueIdentifier>{fcf2c986-fe83-43c8-a5b2-6dee69b85996}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BACInterface\BACClient\BACSocket">
+      <UniqueIdentifier>{42aa2dd8-3707-45b4-ae6e-47536426b0e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BAC-Base.h">
@@ -64,6 +70,15 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="BACTools\BACTools.h">
       <Filter>BACTools</Filter>
+    </ClInclude>
+    <ClInclude Include="BACInterface\BACClient\BACClient.h">
+      <Filter>BACInterface\BACClient</Filter>
+    </ClInclude>
+    <ClInclude Include="BACInterface\BACClient\BACSocket\BACSocket.h">
+      <Filter>BACInterface\BACClient\BACSocket</Filter>
+    </ClInclude>
+    <ClInclude Include="BACInterface\BACError.h">
+      <Filter>BACInterface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -117,6 +132,12 @@
     </ClCompile>
     <ClCompile Include="BACInterface\AntiFunction\MonitorThreadOperation.cpp">
       <Filter>BACInterface\AntiFunction</Filter>
+    </ClCompile>
+    <ClCompile Include="BACInterface\BACClient\BACClient.cpp">
+      <Filter>BACInterface\BACClient</Filter>
+    </ClCompile>
+    <ClCompile Include="BACInterface\BACClient\BACSocket\BACSocket.cpp">
+      <Filter>BACInterface\BACClient\BACSocket</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

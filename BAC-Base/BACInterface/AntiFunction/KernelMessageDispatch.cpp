@@ -2,7 +2,6 @@
 //						在此处理内核消息
 ////////////////////////////////////////////////////////////////
 #include "../BAC.h"
-#include "../../BAC-Base.h"
 
 
 void BAC::RecvKernelMessage()

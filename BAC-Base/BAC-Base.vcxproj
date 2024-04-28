@@ -95,11 +95,14 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>Detours\include;ProtectSDK;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);ws2_32.lib;VMProtectSDK32.lib;detours.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>Detours\lib.X86;ProtectSDK\VMProtectSDK;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -113,6 +116,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>Detours\include;ProtectSDK;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -120,6 +124,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);ws2_32.lib;VMProtectSDK32.lib;detours.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>Detours\lib.X86;ProtectSDK\VMProtectSDK;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -131,6 +137,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>Detours\include;ProtectSDK;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -139,7 +146,8 @@
       <OptimizeReferences>false</OptimizeReferences>
       <EnableCOMDATFolding>false</EnableCOMDATFolding>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);ws2_32.lib;VMProtectSDK64.lib;detours.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>Detours\lib.X64;ProtectSDK\VMProtectSDK;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -153,6 +161,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <AdditionalIncludeDirectories>Detours\include;ProtectSDK;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -160,6 +169,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);ws2_32.lib;VMProtectSDK64.lib;detours.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>Detours\lib.X64;ProtectSDK\VMProtectSDK;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -167,6 +178,9 @@
     <ClInclude Include="..\BAC-Base-Kernel\IRPControl\IRPControlCode.h" />
     <ClInclude Include="BAC-Base.h" />
     <ClInclude Include="BACInterface\BAC.h" />
+    <ClInclude Include="BACInterface\BACClient\BACClient.h" />
+    <ClInclude Include="BACInterface\BACClient\BACSocket\BACSocket.h" />
+    <ClInclude Include="BACInterface\BACError.h" />
     <ClInclude Include="BACInterface\BACKernelApi\BACKernel.h" />
     <ClInclude Include="BACInterface\SystemApi.h" />
     <ClInclude Include="BACLog\BACLog.h" />
@@ -190,6 +204,8 @@
     <ClCompile Include="BACInterface\AntiFunction\MonitorMemoryOperation.cpp" />
     <ClCompile Include="BACInterface\AntiFunction\RemapImage.cpp" />
     <ClCompile Include="BACInterface\BAC.cpp" />
+    <ClCompile Include="BACInterface\BACClient\BACClient.cpp" />
+    <ClCompile Include="BACInterface\BACClient\BACSocket\BACSocket.cpp" />
     <ClCompile Include="BACInterface\BACKernelApi\BACKernel.cpp" />
     <ClCompile Include="BACLog\BACLog.cpp" />
     <ClCompile Include="BACTools\BACTools.cpp" />

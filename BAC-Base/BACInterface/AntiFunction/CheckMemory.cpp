@@ -2,7 +2,6 @@
 //						在此检查Hook点
 ////////////////////////////////////////////////////////////////
 #include "../BAC.h"
-#include "../../BAC-Base.h"
 
 
 bool BAC::JudgmentHookModule(PVOID hook_address)
@@ -11,7 +10,7 @@ bool BAC::JudgmentHookModule(PVOID hook_address)
 //	VMProtectBeginUltra("BAC::JudgmentHookModule");
 //#endif
 
-	DWORD64 bac_module_end = (DWORD64)this->BACTools::GetModuleEndAddress(self_module);
+	DWORD64 bac_module_end = (DWORD64)this->BACTools::GetModuleEndAddress(bac->GetSelfModuleHandle());
 
 	//计算jmp跳转到的地址
 	DWORD64 target_address = ((DWORD64)hook_address + 5) + this->BACTools::ReadInt((PVOID)((DWORD64)hook_address + 1));
@@ -21,7 +20,7 @@ bool BAC::JudgmentHookModule(PVOID hook_address)
 	if ((this->BACTools::ReadByte((PVOID)target_address) == 0xFF) && (this->BACTools::ReadByte((PVOID)(target_address + 1)) == 0x25))
 	{
 		target_address = this->BACTools::ReadULong64((PVOID)(((DWORD64)target_address + 6) + this->BACTools::ReadInt((PVOID)((DWORD64)target_address + 2))));
-		if ((target_address >= (DWORD64)self_module) && (target_address <= bac_module_end))
+		if ((target_address >= (DWORD64)bac->GetSelfModuleHandle()) && (target_address <= bac_module_end))
 			return true;
 		else
 		{
@@ -38,7 +37,7 @@ bool BAC::JudgmentHookModule(PVOID hook_address)
 	if ((this->BACTools::ReadByte((PVOID)target_address) == 0xE9))
 	{
 		target_address = ((DWORD64)target_address + 5) + this->BACTools::ReadInt((PVOID)((DWORD64)target_address + 1));
-		if ((target_address >= (DWORD64)self_module) && (target_address <= bac_module_end))
+		if ((target_address >= (DWORD64)bac->GetSelfModuleHandle()) && (target_address <= bac_module_end))
 			return true;
 		else
 		{

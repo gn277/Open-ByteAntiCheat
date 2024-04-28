@@ -1,5 +1,8 @@
+#include <Windows.h>
+
 #include "BACKernel.h"
-#include "../../BAC-Base.h"
+#include "../BAC.h"
+#include "../SystemApi.h"
 
 
 BACKernel::BACKernel()

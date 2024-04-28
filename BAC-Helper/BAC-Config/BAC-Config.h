@@ -6,8 +6,6 @@
 #include <ostream>
 #include <filesystem>
 
-using namespace std;
-
 
 class BACConfig
 {
