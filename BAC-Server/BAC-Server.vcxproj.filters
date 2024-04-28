@@ -21,6 +21,9 @@
     <ClCompile Include="BACServer\BACServer.cpp">
       <Filter>BACServer</Filter>
     </ClCompile>
+    <ClCompile Include="GraphicalUserInterface\GraphicalUserInterface.cpp">
+      <Filter>GraphicalUserInterface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BACServer\BACServer.h">
@@ -28,6 +31,9 @@
     </ClInclude>
     <ClInclude Include="BACServer\BACServerError.h">
       <Filter>BACServer</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicalUserInterface\GraphicalUserInterface.h">
+      <Filter>GraphicalUserInterface</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

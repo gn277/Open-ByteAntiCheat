@@ -1,40 +1,19 @@
-#include "BACServer/BACServer.h"
+#include "GraphicalUserInterface/GraphicalUserInterface.h"
 
-std::shared_ptr<BACServer> server = nullptr;
+std::shared_ptr<GraphicalUserInterface> gui = nullptr;
 
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpcmdLine, _In_ int nCmdShow)
 {
-	HACCEL acc_table = LoadAccelerators(hInstance, MAKEINTRESOURCE(NULL));
+	//实例化GraphicalUserInterface
+	gui = std::make_shared<GraphicalUserInterface>();
 
-	//实例化BACServer
-	server = std::make_shared<BACServer>();
-	//开启TCP服务
-	SERVER_ERROR status = server->StartTcpServer(L"0.0.0.0", 5999);
+	SERVER_ERROR status = gui->Running(hInstance, hPrevInstance, lpcmdLine, nCmdShow);
 	if (status != SERVER_SUCCESS)
-	{
-		::MessageBoxA(::GetActiveWindow(), "Start tcp server error", "BACServer error", MB_OK);
-		return 0;
-	}
-
-	//主消息循环:
-	MSG msg;
-	while (GetMessage(&msg, nullptr, 0, 0))
-	{
-		if (!TranslateAccelerator(msg.hwnd, acc_table, &msg))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-
-		//处理业务
-		{
-
-		}
-	}
+		::MessageBoxA(::GetActiveWindow(), std::string("gui run error status:" + status).c_str(), "BACServer Error:", MB_OK);
 
 	//处理退出事件
-	server.~shared_ptr();
+	gui.~shared_ptr();
 
-	return (int)msg.wParam;
+	return 1;
 }

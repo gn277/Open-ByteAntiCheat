@@ -4,6 +4,7 @@
 #include <string>
 
 #include <HPSocket/HPSocket.h>
+#include <cJSON.h>
 
 #include "BACServerError.h"
 
