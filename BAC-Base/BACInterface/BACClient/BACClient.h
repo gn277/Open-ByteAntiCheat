@@ -21,7 +21,7 @@ public:
 };
 
 
-class BACClient
+class BACClient :public TcpServer
 {
 private:
 
