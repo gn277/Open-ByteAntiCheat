@@ -3,15 +3,15 @@
 #include "../BAC-Base.h"
 
 
-Tools::Tools()
+BACTools::BACTools()
 {
 }
 
-Tools::~Tools()
+BACTools::~BACTools()
 {
 }
 
-PVOID64 Tools::GetModuleEndAddress(HMODULE module_handle)
+PVOID64 BACTools::GetModuleEndAddress(HMODULE module_handle)
 {
 	PVOID64 return_address = 0;
 	MODULEINFO moduleinfo = { 0 };
@@ -21,7 +21,7 @@ PVOID64 Tools::GetModuleEndAddress(HMODULE module_handle)
 	return return_address = (PVOID64)((__int64)moduleinfo.lpBaseOfDll + moduleinfo.SizeOfImage);
 }
 
-ULONG64 Tools::ReadULong64(PVOID address)
+ULONG64 BACTools::ReadULong64(PVOID address)
 {
 	if (IsBadReadPtr(address, 8))
 		return 0;
@@ -29,7 +29,7 @@ ULONG64 Tools::ReadULong64(PVOID address)
 	return *(ULONG64*)address;
 }
 
-LONG64 Tools::ReadLong64(PVOID address)
+LONG64 BACTools::ReadLong64(PVOID address)
 {
 	if (IsBadReadPtr(address, 8))
 		return 0;
@@ -37,7 +37,7 @@ LONG64 Tools::ReadLong64(PVOID address)
 	return *(LONG64*)address;
 }
 
-ULONG Tools::ReadULong(PVOID address)
+ULONG BACTools::ReadULong(PVOID address)
 {
 	if (IsBadReadPtr(address, 4))
 		return 0;
@@ -45,7 +45,7 @@ ULONG Tools::ReadULong(PVOID address)
 	return *(ULONG*)address;
 }
 
-UINT Tools::ReadUInt(PVOID address)
+UINT BACTools::ReadUInt(PVOID address)
 {
 	if (IsBadReadPtr(address, 4))
 		return 0;
@@ -53,7 +53,7 @@ UINT Tools::ReadUInt(PVOID address)
 	return *(UINT*)address;
 }
 
-INT Tools::ReadInt(PVOID address)
+INT BACTools::ReadInt(PVOID address)
 {
 	if (IsBadReadPtr(address, 4))
 		return 0;
@@ -61,7 +61,7 @@ INT Tools::ReadInt(PVOID address)
 	return *(INT*)address;
 }
 
-BYTE Tools::ReadByte(PVOID address)
+BYTE BACTools::ReadByte(PVOID address)
 {
 	if (IsBadReadPtr(address, sizeof(BYTE)))
 		return 0;
@@ -69,7 +69,7 @@ BYTE Tools::ReadByte(PVOID address)
 	return *(BYTE*)address;
 }
 
-PVOID Tools::GetPeSectiontAddress(PVOID image, const char* section_name)
+PVOID BACTools::GetPeSectiontAddress(PVOID image, const char* section_name)
 {
 	PIMAGE_NT_HEADERS p_nt_header = (PIMAGE_NT_HEADERS)((ULONG_PTR)image + ((PIMAGE_DOS_HEADER)image)->e_lfanew);
 	if (!p_nt_header)
@@ -99,7 +99,7 @@ PVOID Tools::GetPeSectiontAddress(PVOID image, const char* section_name)
 	return 0;
 }
 
-DWORD Tools::GetPeSectionSize(PVOID image, const char* section_name)
+DWORD BACTools::GetPeSectionSize(PVOID image, const char* section_name)
 {
 	PIMAGE_NT_HEADERS p_nt_header = (PIMAGE_NT_HEADERS)((ULONG_PTR)image + ((PIMAGE_DOS_HEADER)image)->e_lfanew);
 	if (!p_nt_header)
@@ -121,7 +121,7 @@ DWORD Tools::GetPeSectionSize(PVOID image, const char* section_name)
 	return 0;
 }
 
-bool Tools::GetProcessModule(std::map<std::string, DWORD64>* p_process_module_list)
+bool BACTools::GetProcessModule(std::map<std::string, DWORD64>* p_process_module_list)
 {
 #if NDEBUG
 	VMProtectBeginUltra("Tools::GetProcessModule");
@@ -167,7 +167,7 @@ bool Tools::GetProcessModule(std::map<std::string, DWORD64>* p_process_module_li
 #endif
 }
 
-CallerStackInfo Tools::GetMemoryModuleInfo(PVOID address)
+CallerStackInfo BACTools::GetMemoryModuleInfo(PVOID address)
 {
 	MODULEINFO module_info = { NULL };
 	MEMORY_BASIC_INFORMATION memory_info = { NULL };
@@ -195,7 +195,7 @@ CallerStackInfo Tools::GetMemoryModuleInfo(PVOID address)
 	return caller_info;
 }
 
-void Tools::GetStackInfoList()
+void BACTools::GetStackInfoList()
 {
 	//// Quote from Microsoft Documentation:
 	//// ## Windows Server 2003 and Windows XP:  

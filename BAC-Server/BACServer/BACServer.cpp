@@ -184,9 +184,19 @@ CUdpNodePtr* BACServer::GetUdpNodePtr()
 	return &this->_udp;
 }
 
-SERVER_ERROR BACServer::Running()
+SERVER_ERROR BACServer::StartTcpServer(const wchar_t* bind_address, unsigned short port)
 {
 	SERVER_ERROR status = SERVER_SUCCESS;
+
+	if (!this->_tcp->Start(bind_address, port))
+		return SERVER_START_TCP_ERROR;
+
+	return status;
+}
+
+SERVER_ERROR BACServer::StartUdpServer()
+{
+	SERVER_ERROR status = SERVER_UNSUCCESSFUL;
 
 
 

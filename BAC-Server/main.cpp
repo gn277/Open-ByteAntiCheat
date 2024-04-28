@@ -10,7 +10,12 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	//实例化BACServer
 	server = std::make_shared<BACServer>();
 	//开启TCP服务
-
+	SERVER_ERROR status = server->StartTcpServer(L"0.0.0.0", 5999);
+	if (status != SERVER_SUCCESS)
+	{
+		::MessageBoxA(::GetActiveWindow(), "Start tcp server error", "BACServer error", MB_OK);
+		return 0;
+	}
 
 	//主消息循环:
 	MSG msg;

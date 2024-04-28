@@ -11,16 +11,16 @@ bool BAC::JudgmentHookModule(PVOID hook_address)
 //	VMProtectBeginUltra("BAC::JudgmentHookModule");
 //#endif
 
-	DWORD64 bac_module_end = (DWORD64)this->Tools::GetModuleEndAddress(self_module);
+	DWORD64 bac_module_end = (DWORD64)this->BACTools::GetModuleEndAddress(self_module);
 
 	//计算jmp跳转到的地址
-	DWORD64 target_address = ((DWORD64)hook_address + 5) + this->Tools::ReadInt((PVOID)((DWORD64)hook_address + 1));
+	DWORD64 target_address = ((DWORD64)hook_address + 5) + this->BACTools::ReadInt((PVOID)((DWORD64)hook_address + 1));
 
 #if _WIN64
 	//判断是否有跳板
-	if ((this->Tools::ReadByte((PVOID)target_address) == 0xFF) && (this->Tools::ReadByte((PVOID)(target_address + 1)) == 0x25))
+	if ((this->BACTools::ReadByte((PVOID)target_address) == 0xFF) && (this->BACTools::ReadByte((PVOID)(target_address + 1)) == 0x25))
 	{
-		target_address = this->Tools::ReadULong64((PVOID)(((DWORD64)target_address + 6) + this->Tools::ReadInt((PVOID)((DWORD64)target_address + 2))));
+		target_address = this->BACTools::ReadULong64((PVOID)(((DWORD64)target_address + 6) + this->BACTools::ReadInt((PVOID)((DWORD64)target_address + 2))));
 		if ((target_address >= (DWORD64)self_module) && (target_address <= bac_module_end))
 			return true;
 		else
@@ -35,9 +35,9 @@ bool BAC::JudgmentHookModule(PVOID hook_address)
 		return false;
 	}
 #else
-	if ((this->Tools::ReadByte((PVOID)target_address) == 0xE9))
+	if ((this->BACTools::ReadByte((PVOID)target_address) == 0xE9))
 	{
-		target_address = ((DWORD64)target_address + 5) + this->Tools::ReadInt((PVOID)((DWORD64)target_address + 1));
+		target_address = ((DWORD64)target_address + 5) + this->BACTools::ReadInt((PVOID)((DWORD64)target_address + 1));
 		if ((target_address >= (DWORD64)self_module) && (target_address <= bac_module_end))
 			return true;
 		else
@@ -94,14 +94,14 @@ bool BAC::InitMemoryCRC32List()
 
 	//枚举进程模块信息<模块路径,模块地址>
 	std::map<std::string, DWORD64> process_module_list;
-	if (this->BAC::Tools::GetProcessModule(&process_module_list))
+	if (this->BAC::BACTools::GetProcessModule(&process_module_list))
 	{
 		for (auto& pair : process_module_list)
 		{
 			PVOID image_handle = (PVOID)pair.second;
 
-			DWORD64 text_address = (DWORD64)this->Tools::GetPeSectiontAddress(image_handle, ".text");
-			DWORD text_size = this->Tools::GetPeSectionSize(image_handle, ".text");
+			DWORD64 text_address = (DWORD64)this->BACTools::GetPeSectiontAddress(image_handle, ".text");
+			DWORD text_size = this->BACTools::GetPeSectionSize(image_handle, ".text");
 
 			//向CRC32列表中插入元素
 			this->_crc32_list[pair.first].emplace(text_address, text_size);

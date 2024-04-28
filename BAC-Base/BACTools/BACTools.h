@@ -17,13 +17,13 @@ typedef struct _CallerStackInfo
 }CallerStackInfo, * PCallerStackInfo;
 
 
-class Tools
+class BACTools
 {
 private:
 
 public:
-	Tools();
-	~Tools();
+	BACTools();
+	~BACTools();
 
 public:
 	PVOID64 GetModuleEndAddress(HMODULE module_handle);

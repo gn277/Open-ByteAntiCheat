@@ -68,7 +68,8 @@ public:
 	CUdpNodePtr* GetUdpNodePtr();
 
 public:
-	SERVER_ERROR Running();
+	SERVER_ERROR StartTcpServer(const wchar_t* bind_address, unsigned short port);
+	SERVER_ERROR StartUdpServer();
 
 };
 

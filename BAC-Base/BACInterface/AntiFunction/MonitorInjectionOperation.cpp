@@ -61,7 +61,7 @@ void BACLdrInitializeThunk(PCONTEXT NormalContext, PVOID SystemArgument1, PVOID 
 
 	//进行回溯检查
 	printf("%s stack info:\n", __FUNCTION__);
-	bac->Tools::GetStackInfoList();
+	bac->BACTools::GetStackInfoList();
 
 	return pfnLdrInitializeThunk(NormalContext, SystemArgument1, SystemArgument2);
 

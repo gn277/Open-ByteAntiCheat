@@ -12,6 +12,9 @@
     <Filter Include="BACServer">
       <UniqueIdentifier>{7f9bd47d-be5d-4dc8-83e3-f5971216c039}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GraphicalUserInterface">
+      <UniqueIdentifier>{f9744dd9-ae3c-4d08-81de-0427cdac892c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

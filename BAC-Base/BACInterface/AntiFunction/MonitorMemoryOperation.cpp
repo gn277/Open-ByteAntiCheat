@@ -20,7 +20,7 @@ NTSTATUS NTAPI BACNtProtectVirtualMemory(IN HANDLE ProcessHandle, IN OUT PVOID* 
 #endif
 
 	printf("%s stack info:\n", __FUNCTION__);
-	bac->Tools::GetStackInfoList();
+	bac->BACTools::GetStackInfoList();
 
 	//printf("%s-> new attribute:%p,old attribute:%p\n", __FUNCTION__, NewProtect, *(ULONG*)OldProtect);
 

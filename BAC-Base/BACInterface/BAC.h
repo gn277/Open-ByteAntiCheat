@@ -36,7 +36,7 @@ public:
 };
 
 
-class BAC : public BACKernel, public Tools
+class BAC : public BACKernel, public BACTools
 {
 private:
 	//BAC线程列表<线程函数名,线程句柄>
