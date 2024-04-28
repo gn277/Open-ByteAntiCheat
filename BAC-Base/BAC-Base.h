@@ -9,4 +9,3 @@
 
 extern "C" __declspec(dllexport) bool BACBaseInitialize(HMODULE module_handle);
 extern "C" __declspec(dllexport) bool BACBaseUnInitialize();
-

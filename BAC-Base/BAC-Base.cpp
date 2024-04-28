@@ -19,11 +19,11 @@ bool BACBaseInitialize(HMODULE module_handle)
 	freopen("CONOUT$", "w", stdout);
 #endif
 
-	//实例化BAC日志对象
+	//实例化BAC日志
 	baclog = std::make_shared<BACLog>();
 	try
 	{
-		//实例化BAC对象
+		//实例化BAC
 		bac = std::make_shared<BAC>(module_handle);
 
 #if NDEBUG
