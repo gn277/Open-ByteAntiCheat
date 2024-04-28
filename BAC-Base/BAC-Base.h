@@ -19,8 +19,8 @@
 #include "BACLog/BACLog.h"
 
 
-extern "C" BAC* bac;
-extern "C" BACLog* baclog;
+extern "C" std::shared_ptr<BAC> bac;
+extern "C" std::shared_ptr<BACLog> baclog;
 extern "C" HMODULE self_module;
 
 extern "C" __declspec(dllexport) bool BACBaseInitialize();

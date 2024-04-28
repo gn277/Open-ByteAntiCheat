@@ -20,6 +20,22 @@
 using namespace std;
 
 
+class BACError :public std::exception
+{
+private:
+	std::string _error_str;
+
+public:
+	BACError(const char* error);
+	BACError(std::string error);
+	~BACError();
+
+public:
+	virtual char const* what() const throw();
+
+};
+
+
 class BAC : public BACKernel, public Tools
 {
 private:

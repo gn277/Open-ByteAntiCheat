@@ -2,6 +2,24 @@
 #include "../BAC-Base.h"
 
 
+BACError::BACError(const char* error) :_error_str(error)
+{
+}
+
+BACError::BACError(std::string error) :_error_str(error)
+{
+}
+
+BACError::~BACError()
+{
+}
+
+char const* BACError::what() const throw()
+{
+	return this->_error_str.c_str();
+}
+
+
 BAC::BAC()
 {
 }

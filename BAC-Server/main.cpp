@@ -1,12 +1,16 @@
-#include <Windows.h>
+#include "BACServer/BACServer.h"
+
+std::shared_ptr<BACServer> server = nullptr;
 
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpcmdLine, _In_ int nCmdShow)
 {
-
-
-
 	HACCEL acc_table = LoadAccelerators(hInstance, MAKEINTRESOURCE(NULL));
+
+	//实例化BACServer
+	server = std::make_shared<BACServer>();
+	//开启TCP服务
+
 
 	//主消息循环:
 	MSG msg;
@@ -17,10 +21,15 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+
+		//处理业务
+		{
+
+		}
 	}
 
 	//处理退出事件
-
+	server.~shared_ptr();
 
 	return (int)msg.wParam;
 }
