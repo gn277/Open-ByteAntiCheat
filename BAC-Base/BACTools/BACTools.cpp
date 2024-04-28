@@ -243,10 +243,7 @@ void BACTools::GetStackInfoList()
 	for (unsigned int i = 0; i < frames; i++)
 	{
 		CallerStackInfo caller_info = GetMemoryModuleInfo(callers_stack[i]);
-		printf("*** %d: caller: \"%s\"+%p\n", i, caller_info.caller_module_name.c_str(), caller_info.caller_offset);
-		//printf("***%d: caller_module_name:%s caller_module_handle:%p caller_offset:%p caller_add:%p \n",
-		//	i, caller_info.caller_module_name.c_str(), caller_info.caller_module_handle,
-		//	caller_info.caller_offset, caller_info.caller_address);
+		std::cout << "*** " << std::internal << i << " : caller: " << caller_info.caller_module_name << "+" << std::hex << caller_info.caller_offset << std::endl;
 	}
 }
 
