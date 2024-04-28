@@ -16,7 +16,9 @@ BACBase::~BACBase()
 
 void* BACBase::operator new(size_t size, POOL_TYPE pool_type)
 {
+#pragma warning(disable : 4996)
     return ExAllocatePoolWithTag(pool_type, size, 'bacb');
+#pragma warning(default : 4996)
 }
 
 void BACBase::operator delete(void* pointer)

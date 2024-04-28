@@ -23,7 +23,9 @@ MemoryProtect::~MemoryProtect()
 
 void* MemoryProtect::operator new(size_t size, POOL_TYPE pool_type)
 {
+#pragma warning(disable : 4996)
     return ExAllocatePoolWithTag(pool_type, size, 'memo');
+#pragma warning(default : 4996)
 }
 
 void MemoryProtect::operator delete(void* pointer)
@@ -52,7 +54,9 @@ HANDLE MemoryProtect::GetProcessIDByName(const wchar_t* process_name)
 	}
 
 	//…Í«Îø’º‰
+#pragma warning(disable : 4996)
 	p_proc_info = ExAllocatePool(NonPagedPool, ret_length);
+#pragma warning(default : 4996)
 	if (!p_proc_info)
 	{
 		DbgPrint("[BAC]:ExAllocatePool error!\n");

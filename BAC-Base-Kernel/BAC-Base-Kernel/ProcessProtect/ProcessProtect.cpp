@@ -38,7 +38,9 @@ ProcessProtect::~ProcessProtect()
 
 void* ProcessProtect::operator new(size_t size, POOL_TYPE pool_type)
 {
+#pragma warning(disable : 4996)
     return ExAllocatePoolWithTag(pool_type, size, 'proc');
+#pragma warning(default : 4996)
 }
 
 void ProcessProtect::operator delete(void* pointer)
@@ -171,7 +173,9 @@ HANDLE ProcessProtect::GetProcessIDByName(const wchar_t* process_name)
 	}
 
 	//ÉêÇë¿Õ¼ä
+#pragma warning(disable : 4996)
 	p_proc_info = ExAllocatePool(NonPagedPool, ret_length);
+#pragma warning(default : 4996)
 	if (!p_proc_info)
 	{
 		DbgPrint("[BAC]:ExAllocatePool error!\n");
@@ -226,7 +230,9 @@ bool ProcessProtect::GetProcessIDByNameToList(const wchar_t* process_name)
 	}
 
 	//ÉêÇë¿Õ¼ä
+#pragma warning(disable : 4996)
 	p_proc_info = ExAllocatePool(NonPagedPool, ret_length);
+#pragma warning(default : 4996)
 	if (!p_proc_info)
 	{
 		DbgPrint("[BAC]:ExAllocatePool error!\n");
@@ -248,7 +254,9 @@ bool ProcessProtect::GetProcessIDByNameToList(const wchar_t* process_name)
 				HANDLE pid = p_proc_index->ProcessId;
 				//DbgPrint("[BAC]:ProcName:  %-20ws     pid:  %u\n", p_proc_index->ProcessName.Buffer, pid);
 
+#pragma warning(disable : 4996)
 				PProtectProcessList p_list = (PProtectProcessList)ExAllocatePoolWithTag(NonPagedPool, sizeof(ProtectProcessList), 'list');
+#pragma warning(default : 4996)
 				if (!p_list)
 					return false;
 

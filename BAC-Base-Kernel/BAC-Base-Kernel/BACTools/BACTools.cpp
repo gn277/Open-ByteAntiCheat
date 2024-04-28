@@ -11,7 +11,9 @@ BACTools::~BACTools()
 
 void* BACTools::operator new(size_t size, POOL_TYPE pool_type)
 {
+#pragma warning(disable : 4996)
     return ExAllocatePoolWithTag(pool_type, size, 'bact');
+#pragma warning(default : 4996)
 }
 
 void BACTools::operator delete(void* pointer)
