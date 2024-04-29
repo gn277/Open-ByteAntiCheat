@@ -111,8 +111,18 @@ bool BACBaseInitialize(HMODULE module_handle)
 			"BAC::LoopEvent",
 			CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)BAC::LoopEvent, NULL, NULL, NULL));
 
-		//连接服务器
+		//实例化BACClient
 		client = std::make_shared<BACClient>();
+
+		//连接TCP服务器
+		auto result = client->ConnectTcpServer("127.0.0.1", 5999);
+		if (result != BASE_SUCCESS)
+		{
+			baclog->FileLog("Connect Tcp Server Error:" + std::to_string(result));
+			::MessageBoxA(::GetActiveWindow(), std::string("Connect Tcp Server Error:" + std::to_string(result)).c_str(), "BAC", MB_OK);
+			ExitProcess(result);
+		}
+
 
 		baclog->FileLogf("%s-> %s: %s", "[BAC]", __FUNCTION__, "Leave");
 		return true;
@@ -163,8 +173,7 @@ BOOL APIENTRY DllMain(HMODULE h_module, DWORD ul_reason_for_call, LPVOID lpReser
 	{
 		case DLL_PROCESS_ATTACH:
 		{
-			if (!BACBaseInitialize(h_module))
-				MessageBoxA(NULL, "BAC load error, please check!", "Error", MB_OK);
+			BACBaseInitialize(h_module);
 			break;
 		}
 		case DLL_THREAD_ATTACH:

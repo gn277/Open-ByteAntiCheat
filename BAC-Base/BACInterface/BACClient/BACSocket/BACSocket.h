@@ -34,7 +34,6 @@ public:
 	~TcpServer();
 
 public:
-	BASE_ERROR ConnectServer(const char* host, int port);
 
 };
 

@@ -30,6 +30,7 @@ public:
 	~BACClient();
 
 public:
+	BASE_ERROR ConnectTcpServer(const char* host, int port);
 
 };
 

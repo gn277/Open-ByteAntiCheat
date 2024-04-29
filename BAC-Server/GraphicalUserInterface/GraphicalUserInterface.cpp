@@ -45,6 +45,11 @@ SERVER_ERROR GraphicalUserInterface::Running(_In_ HINSTANCE instance, _In_opt_ H
 	SERVER_ERROR status = SERVER_SUCCESS;
 	HACCEL acc_table = LoadAccelerators(instance, MAKEINTRESOURCE(NULL));
 
+#if _DEBUG
+	AllocConsole();
+	freopen("CONOUT$", "w", stdout);
+#endif
+
 	//实例化BACServer
 	server = std::make_shared<BACServer>();
 	//开启TCP服务

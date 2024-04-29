@@ -93,12 +93,3 @@ TcpServer::~TcpServer()
 {
 }
 
-BASE_ERROR TcpServer::ConnectServer(const char* host, int port)
-{
-	BASE_ERROR status = BASE_SUCCESS;
-
-
-
-	return status;
-}
-
