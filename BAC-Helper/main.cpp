@@ -9,8 +9,8 @@
 #include "BAC-Helper.h"
 #include "BAC-Config/BAC-Config.h"
 
-BACHelper* bac_helper = nullptr;
-BACConfig* bac_config = nullptr;
+std::shared_ptr<BACHelper> bac_helper = nullptr;
+std::shared_ptr<BACConfig> bac_config = nullptr;
 
 
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpcmdLine, _In_ int nCmdShow)
@@ -36,9 +36,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	////printf("driver name:%S\n", driver_name);
 
 	//实例化BACHelper
-	bac_helper = new BACHelper();
+	bac_helper = std::make_shared<BACHelper>();
 	//这里可以读一些配置信息
-	bac_config = new BACConfig();
+	bac_config = std::make_shared<BACConfig>();
 
 	//读取配置文件中的游戏进程名 自己在ByteAntiCheat目录下创建BACConfig.ini文件其中写GameFullName=TestGame.exe，发布时带着配置文件一起解压
 	std::string gamefile_full_name;
@@ -60,14 +60,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
 	//使用BAC-Helper启动注入BAC-Base模块后的新游戏进程
 
-
-
-	//释放BACConfig
-	if (bac_config)
-		delete bac_config;
-	//释放BACHelper
-	if (bac_helper)
-		delete bac_helper;
 
 	std::cout << "Launcher over ..." << std::endl;
 

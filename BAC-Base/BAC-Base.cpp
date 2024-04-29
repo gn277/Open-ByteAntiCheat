@@ -119,7 +119,7 @@ bool BACBaseInitialize(HMODULE module_handle)
 	}
 	catch (const std::shared_ptr<BACError>& e)
 	{
-		baclog->FileLog(std::string(__FUNCTION__) + "had exception: " + e->what());
+		baclog->FileLog(e->what());
 		return false;
 	}
 	catch (const std::shared_ptr<BACClientError>& e)
