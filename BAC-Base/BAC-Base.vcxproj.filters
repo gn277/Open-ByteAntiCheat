@@ -38,6 +38,15 @@
     <Filter Include="BACInterface\BACClient\BACSocket">
       <UniqueIdentifier>{42aa2dd8-3707-45b4-ae6e-47536426b0e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BACInterface\GameRender">
+      <UniqueIdentifier>{d865a10d-5a58-4215-96ac-e234b4fa4f72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BACInterface\GameRender\Direct">
+      <UniqueIdentifier>{6428f272-e204-4235-9392-bca0c9865a68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BACInterface\GameRender\OpenGL">
+      <UniqueIdentifier>{d94b5807-aebd-411d-9b47-18ab3e529fe3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BAC-Base.h">
@@ -79,6 +88,12 @@
     </ClInclude>
     <ClInclude Include="BACInterface\BACError.h">
       <Filter>BACInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="BACInterface\GameRender\Direct\Direct.h">
+      <Filter>BACInterface\GameRender\Direct</Filter>
+    </ClInclude>
+    <ClInclude Include="BACInterface\GameRender\OpenGL\OpenGL.h">
+      <Filter>BACInterface\GameRender\OpenGL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +153,12 @@
     </ClCompile>
     <ClCompile Include="BACInterface\BACClient\BACSocket\BACSocket.cpp">
       <Filter>BACInterface\BACClient\BACSocket</Filter>
+    </ClCompile>
+    <ClCompile Include="BACInterface\GameRender\Direct\Direct.cpp">
+      <Filter>BACInterface\GameRender\Direct</Filter>
+    </ClCompile>
+    <ClCompile Include="BACInterface\GameRender\OpenGL\OpenGL.cpp">
+      <Filter>BACInterface\GameRender\OpenGL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

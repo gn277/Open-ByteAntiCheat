@@ -182,6 +182,8 @@
     <ClInclude Include="BACInterface\BACClient\BACSocket\BACSocket.h" />
     <ClInclude Include="BACInterface\BACError.h" />
     <ClInclude Include="BACInterface\BACKernelApi\BACKernel.h" />
+    <ClInclude Include="BACInterface\GameRender\Direct\Direct.h" />
+    <ClInclude Include="BACInterface\GameRender\OpenGL\OpenGL.h" />
     <ClInclude Include="BACInterface\SystemApi.h" />
     <ClInclude Include="BACLog\BACLog.h" />
     <ClInclude Include="BACTools\BACTools.h" />
@@ -207,6 +209,8 @@
     <ClCompile Include="BACInterface\BACClient\BACClient.cpp" />
     <ClCompile Include="BACInterface\BACClient\BACSocket\BACSocket.cpp" />
     <ClCompile Include="BACInterface\BACKernelApi\BACKernel.cpp" />
+    <ClCompile Include="BACInterface\GameRender\Direct\Direct.cpp" />
+    <ClCompile Include="BACInterface\GameRender\OpenGL\OpenGL.cpp" />
     <ClCompile Include="BACLog\BACLog.cpp" />
     <ClCompile Include="BACTools\BACTools.cpp" />
   </ItemGroup>

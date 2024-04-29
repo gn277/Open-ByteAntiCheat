@@ -147,10 +147,7 @@ bool BACBaseUnInitialize()
 
 	//如果BAC实例化成功则卸载驱动
 	if (bac)
-	{
-		if(!bac->BACKernel::UnInstallDriver())
-			throw "uninitialize bac kernel error";
-	}
+		bac->BACKernel::UnInstallDriver();
 
 	baclog->FunctionLog(__FUNCTION__, "Leave");
 
