@@ -19,11 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\BAC-Base\BACTools\BACTools.cpp" />
     <ClCompile Include="BACServer\BACServer.cpp" />
     <ClCompile Include="GraphicalUserInterface\GraphicalUserInterface.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\BAC-Base\BACTools\BACTools.h" />
+    <ClInclude Include="BACServer\BACProtocol\BACProtocol.h" />
     <ClInclude Include="BACServer\BACServer.h" />
     <ClInclude Include="BACServer\BACServerError.h" />
     <ClInclude Include="GraphicalUserInterface\GraphicalUserInterface.h" />

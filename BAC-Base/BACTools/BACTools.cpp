@@ -1,5 +1,4 @@
 #include "BACTools.h"
-#include "../BACInterface/BAC.h"
 
 
 BACTools::BACTools()
@@ -125,7 +124,7 @@ bool BACTools::GetProcessModule(std::map<std::string, DWORD64>* p_process_module
 #if NDEBUG
 	VMProtectBeginUltra("Tools::GetProcessModule");
 #endif
-	baclog->FunctionLog(__FUNCTION__, "Enter");
+	//baclog->FunctionLog(__FUNCTION__, "Enter");
 
 	HMODULE* p_module = NULL;
 	HANDLE handle = NULL;
@@ -136,7 +135,7 @@ bool BACTools::GetProcessModule(std::map<std::string, DWORD64>* p_process_module
 	handle = ::OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, ::GetCurrentProcessId());
 	if (NULL == handle)
 	{
-		baclog->FileLogf("can't open process[ID:0x%x]handle,error code:0x%08x\n", ::GetCurrentProcessId(), ::GetLastError());
+		//baclog->FileLogf("can't open process[ID:0x%x]handle,error code:0x%08x\n", ::GetCurrentProcessId(), ::GetLastError());
 		return false;
 	}
 
@@ -157,7 +156,7 @@ bool BACTools::GetProcessModule(std::map<std::string, DWORD64>* p_process_module
 		}
 	}
 
-	baclog->FunctionLog(__FUNCTION__, "Leave");
+	//baclog->FunctionLog(__FUNCTION__, "Leave");
 	HeapFree(GetProcessHeap(), 0, p_module);
 	CloseHandle(handle);
 	return true;
@@ -244,5 +243,186 @@ void BACTools::GetStackInfoList()
 		CallerStackInfo caller_info = GetMemoryModuleInfo(callers_stack[i]);
 		std::cout << "*** " << std::internal << i << " : caller: " << caller_info.caller_module_name << "+" << std::hex << caller_info.caller_offset << std::endl;
 	}
+}
+
+std::string BACTools::ToHexString(std::string s)
+{
+	std::ostringstream out;
+
+	out << std::hex << std::setw(2) << std::setfill('0');
+	for (size_t i = 0; i < s.size(); i++)
+		out << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>((unsigned char)s.data()[i]);
+
+	return out.str();
+}
+
+std::string BACTools::ToHexString(unsigned char* s, size_t len)
+{
+	std::ostringstream out;
+
+	out << std::hex << std::setw(2) << std::setfill('0');
+	for (size_t i = 0; i < len; i++)
+		out << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(s[i]);
+
+	return out.str();
+}
+
+std::string BACTools::NumberToHexString(void* i, unsigned int len)
+{
+	std::stringstream stream;
+
+	stream << std::setfill('0') << std::setw(len * 2)
+		<< std::hex << i;
+
+	return stream.str();
+}
+
+std::string BACTools::ToBytes(void* data, unsigned int len)
+{
+	std::string stringb;
+	char* bytes = new char[len];
+
+	memcpy(bytes, &data, len);
+	stringb.append(bytes, len);
+
+	bytes = nullptr;
+	delete[] bytes;
+
+	return stringb;
+}
+
+std::wstring BACTools::StringToWString(const std::string& str)
+{
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+	return converter.from_bytes(str);
+}
+
+std::string BACTools::WStringToString(std::wstring& wide_string)
+{
+	std::wstring_convert<std::codecvt_utf8<wchar_t>> utf8_conv;
+	return utf8_conv.to_bytes(wide_string);
+}
+
+int BACTools::Hex2Dec(char ch)
+{
+	if (ch >= '0' && ch <= '9')
+		return ch - '0';
+	else if (ch >= 'A' && ch <= 'Z')
+		return ch - 'A' + 10;
+	else if (ch >= 'a' && ch <= 'z')
+		return ch - 'z' + 10;
+	else
+		return -1;
+}
+
+unsigned long long BACTools::HexToDecTwo2(const char* hex_str)
+{
+	unsigned long long num = 0;
+	unsigned long long temp;
+	int bits;
+	int i;
+
+	int len = (int)strlen(hex_str);
+
+	for (i = 0, temp = 0; i < len; i++, temp = 0)
+	{
+		temp = this->Hex2Dec(*(hex_str + i));
+		bits = (len - i - 1) * 4;
+		temp = temp << bits;
+		num = num | temp;
+	}
+	return num;
+}
+
+unsigned char* BACTools::EndianSwap(unsigned char* pData, int startIndex, int length)
+{
+	int i, cnt, end, start;
+	cnt = length / 2;
+	start = startIndex;
+	end = startIndex + length - 1;
+	unsigned char tmp;
+
+	for (i = 0; i < cnt; i++)
+	{
+		tmp = pData[start + i];
+		pData[start + i] = pData[end - i];
+		pData[end - i] = tmp;
+	}
+
+	return pData;
+}
+
+unsigned int* BACTools::SmallToBig(unsigned int* value)
+{
+	char tmp = '\0';
+	char* ptr = (char*)value;
+
+	tmp = *ptr;
+	*ptr = *(ptr + 3);
+	*(ptr + 3) = tmp;
+	tmp = *(ptr + 1);
+	*(ptr + 1) = *(ptr + 2);
+	*(ptr + 2) = tmp;
+
+	return value;
+}
+
+bool BACTools::ReadFileToMemory(std::string file_path, std::string* p_buffer, unsigned long long read_offset, unsigned long long read_len, int mode)
+{
+	std::ifstream file(file_path, mode);
+	unsigned long long read_file_len = read_len;
+
+	if (!file.is_open())
+		return false;
+
+	if (read_offset == 0)
+	{
+		//获取文件大小
+		file.seekg(0, std::ifstream::end);
+		read_file_len = file.tellg();
+		file.seekg(0);
+	}
+	else
+	{
+		//根据想要读取的偏移获取对应长度数据
+		file.seekg(read_offset, std::ios::beg);
+	}
+
+	//读取文件数据
+	char* temp_buffer = new char[read_file_len];
+
+	file.read(temp_buffer, read_file_len);
+	p_buffer->append(temp_buffer, read_file_len);
+
+	file.close();
+	delete[] temp_buffer;
+
+	return true;
+}
+
+bool BACTools::WriteMemoryToFile(std::string file_path, std::string buffer, int mode)
+{
+	std::ofstream file(file_path, mode);
+
+	if (!file.is_open())
+		return false;
+
+	//写入文件数据
+	file.write(buffer.data(), buffer.size());
+	file.close();
+
+	return true;
+}
+
+bool BACTools::CreateFile_(std::string file_path, int mode)
+{
+	std::fstream file(file_path, mode);
+
+	if (!file.is_open())
+		return false;
+
+	file.close();
+
+	return true;
 }
 

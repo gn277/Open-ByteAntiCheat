@@ -43,3 +43,29 @@ HMODULE BAC::GetSelfModuleHandle()
 	return this->_self_module;
 }
 
+BASE_ERROR BAC::InitializeBACClient()
+{
+#if NDEBUG
+	VMProtectBeginUltra("BAC::InitializeBACClient");
+#endif
+	baclog->FunctionLog(__FUNCTION__, "Enter");
+
+	//连接TCP服务器
+	auto status = client->ConnectTcpServer("127.0.0.1", 999);
+	if (status != BASE_SUCCESS)
+		return status;
+
+	//发送登录命令
+	status = client->Login();
+	if (status != BASE_SUCCESS)
+		return status;
+
+
+
+	baclog->FunctionLog(__FUNCTION__, "Leave");
+#if NDEBUG
+	VMProtectEnd();
+#endif
+	return BASE_SUCCESS;
+}
+

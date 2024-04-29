@@ -114,15 +114,14 @@ bool BACBaseInitialize(HMODULE module_handle)
 		//实例化BACClient
 		client = std::make_shared<BACClient>();
 
-		//连接TCP服务器
-		auto result = client->ConnectTcpServer("127.0.0.1", 5999);
+		//初始化BACClient
+		auto result = bac->InitializeBACClient();
 		if (result != BASE_SUCCESS)
 		{
 			baclog->FileLog("Connect Tcp Server Error:" + std::to_string(result));
 			::MessageBoxA(::GetActiveWindow(), std::string("Connect Tcp Server Error:" + std::to_string(result)).c_str(), "BAC", MB_OK);
 			ExitProcess(result);
 		}
-
 
 		baclog->FileLogf("%s-> %s: %s", "[BAC]", __FUNCTION__, "Leave");
 		return true;

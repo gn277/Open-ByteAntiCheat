@@ -15,6 +15,12 @@
     <Filter Include="GraphicalUserInterface">
       <UniqueIdentifier>{f9744dd9-ae3c-4d08-81de-0427cdac892c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BACServer\BACProtocol">
+      <UniqueIdentifier>{44059fe7-e717-4d06-8af7-86e7850d9cca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BACTools">
+      <UniqueIdentifier>{0d5e4fcc-5a5c-4a06-a71a-5a05000b48c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -23,6 +29,9 @@
     </ClCompile>
     <ClCompile Include="GraphicalUserInterface\GraphicalUserInterface.cpp">
       <Filter>GraphicalUserInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="..\BAC-Base\BACTools\BACTools.cpp">
+      <Filter>BACTools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -34,6 +43,12 @@
     </ClInclude>
     <ClInclude Include="GraphicalUserInterface\GraphicalUserInterface.h">
       <Filter>GraphicalUserInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="BACServer\BACProtocol\BACProtocol.h">
+      <Filter>BACServer\BACProtocol</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BAC-Base\BACTools\BACTools.h">
+      <Filter>BACTools</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

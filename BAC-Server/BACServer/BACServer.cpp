@@ -88,10 +88,28 @@ EnHandleResult BACServer::OnReceive(ITcpServer* pSender, CONNID dwConnID, const 
 	{
 		try
 		{
-			////获取客户端发来的数据并派遣
-			//PPcPacket p_packet = (PPcPacket)data.data();
-			//std::cout << "command:" << p_packet->header.command << std::endl;
-			//std::cout << "data len:" << p_packet->header.data_length << std::endl;
+			//获取客户端发来的数据并派遣
+			PBACPacketHeader p_header = (PBACPacketHeader)data.data();
+			std::cout << "command:" << p_header->cmd<< std::endl;
+			std::cout << "status" << p_header->status << std::endl;
+			std::cout << "data len:" << p_header->data_len << std::endl;
+
+			//判断命令
+			switch (p_header->cmd)
+			{
+				case BACCommand::BAC_CLIENT_LOGIN:
+				{
+					//填充登录响应头
+					BACPacketHeader header = { 0,BACStatus::Success,p_header->cmd };
+					std::string buffer((const char*)&header, sizeof(BACPacketHeader));
+
+
+					client->server->Send(client->connect_id, (const BYTE*)buffer.data(), (int)buffer.size());
+					break;
+				}
+				default:
+					throw std::make_shared<BACServerError>("unknown packet status: " + std::to_string(p_header->status));
+			}
 
 		}
 		catch (const std::shared_ptr<BACServerError>& e)

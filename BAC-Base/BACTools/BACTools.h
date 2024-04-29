@@ -4,6 +4,12 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <iomanip>
+#include <algorithm>
+#include <sstream>
+#include <fstream>
+#include <codecvt> // codecvt_utf8
+#include <locale>  // wstring_convert
 #include <Psapi.h>
 #include <DbgHelp.h>
 #pragma comment(lib, "dbghelp.lib")
@@ -46,6 +52,27 @@ private:
 
 public:
 	void GetStackInfoList();
+
+public:
+	std::string ToHexString(std::string s);
+	std::string ToHexString(unsigned char* s, size_t len);
+	std::string NumberToHexString(void* i, unsigned int len);
+	std::string ToBytes(void* data, unsigned int len);
+	std::wstring StringToWString(const std::string& str);
+	std::string WStringToString(std::wstring& wide_string);
+
+	int Hex2Dec(char ch);
+	unsigned long long HexToDecTwo2(const char* hex_str);
+
+public:
+	//将下标为startIndex开始，长度为length的这段数据进行大小端转换
+	virtual unsigned char* EndianSwap(unsigned char* pData, int startIndex, int length);
+	virtual unsigned int* SmallToBig(unsigned int* value);
+
+public:
+	virtual bool ReadFileToMemory(std::string file_path, std::string* p_buffer, unsigned long long read_offset = 0, unsigned long long read_len = 0, int mode = std::ios::in | std::ios::binary);
+	virtual bool WriteMemoryToFile(std::string file_path, std::string buffer, int mode = std::ios::out | std::ios::binary);
+	virtual bool CreateFile_(std::string file_path, int mode = std::ios::in | std::ios::out);
 
 };
 

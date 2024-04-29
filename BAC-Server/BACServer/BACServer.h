@@ -7,6 +7,8 @@
 #include <cJSON.h>
 
 #include "BACServerError.h"
+#include "BACProtocol/BACProtocol.h"
+#include "../../BAC-Base/BACTools/BACTools.h"
 
 typedef struct _ClientNode
 {
@@ -34,7 +36,7 @@ public:
 };
 
 
-class BACServer :public CTcpServerListener, public CUdpNodeListener
+class BACServer :public CTcpServerListener, public CUdpNodeListener, public BACTools
 {
 private:
 	CTcpServerPtr _tcp;

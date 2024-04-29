@@ -4,6 +4,8 @@
 #include <winsock.h>
 
 #include "../../BACError.h"
+#include "../BACTools/BACTools.h"
+#include "../../../../BAC-Server/BACServer/BACProtocol/BACProtocol.h"
 
 
 class BACTcpSocket
@@ -25,7 +27,7 @@ public:
 };
 
 
-class TcpServer :public BACTcpSocket
+class TcpServer :public BACTcpSocket, public BACTools
 {
 private:
 
@@ -34,6 +36,14 @@ public:
 	~TcpServer();
 
 public:
+	auto Send(BACCommand cmd, std::string data, BACStatus status = BACStatus::None) -> int;
+	auto Recv(std::string* buffer, int recv_len) -> int;
+	static auto GetStatus(std::string buffer) -> BACStatus;
+	static auto GetCommand(std::string buffer) -> BACCommand;
+	static auto GetData(std::string buffer) -> PVOID;
+
+public:
+	auto Login() -> BASE_ERROR;
 
 };
 

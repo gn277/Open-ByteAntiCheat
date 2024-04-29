@@ -53,7 +53,7 @@ SERVER_ERROR GraphicalUserInterface::Running(_In_ HINSTANCE instance, _In_opt_ H
 	//实例化BACServer
 	server = std::make_shared<BACServer>();
 	//开启TCP服务
-	status = server->StartTcpServer(L"0.0.0.0", 5999);
+	status = server->StartTcpServer(L"0.0.0.0", 999);
 	if (status != SERVER_SUCCESS)
 	{
 		OutPutLog(__FUNCTION__, "Start tcp server error");
