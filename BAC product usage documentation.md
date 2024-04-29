@@ -1,3 +1,12 @@
+编译环境配置：
+====
+使用到的开源库：
+* HP-Socket：
+	https://github.com/ldcsaa/HP-Socket
+	BAC-Server使用6.0.1版本 
+	下载后解压，将Include和Lib两个文件夹复制到BAC-Server项目路径下：BAC-Server\hp-socket-6.0.1-lib-win
+* 
+
 无游戏项目源码时使用方法：
 ====
 1.Release生成后需要将以下文件在VMP中进行编译：
