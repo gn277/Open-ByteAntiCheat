@@ -116,7 +116,8 @@ auto TcpServer::Recv(std::string* buffer, int recv_len) -> int
 	auto recved = this->BACTcpSocket::Recv(temp, recv_len);
 
 	buffer->append(temp, recved);
-	delete[] temp;
+	if (temp)
+		delete[] temp;
 
 	return recved;
 }
@@ -129,7 +130,8 @@ auto TcpServer::Recv(int recv_len) -> std::string
 	auto recved = this->BACTcpSocket::Recv(temp, recv_len);
 
 	temp_data.append(temp, recved);
-	delete[] temp;
+	if (temp)
+		delete[] temp;
 
 	return temp_data;
 }

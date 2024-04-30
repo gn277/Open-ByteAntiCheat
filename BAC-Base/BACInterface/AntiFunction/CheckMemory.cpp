@@ -72,19 +72,19 @@ void BAC::CheckHookPointer()
 	VMProtectBeginUltra("BAC::CheckHookPointer");
 #endif
 
-	for (auto pair : this->_hook_list)
+	for (auto api_name : this->_hook_list)
 	{
-		for (auto tpair : pair.second)
+		for (auto api_address : api_name.second)
 		{
 			//效验CRC32
-			if (tpair.second != this->CRC32((void*)tpair.first, 5))
+			if (api_address.second != this->CRC32((void*)api_address.first, 5))
 			{
-				std::cout << "[LOG]:" << __FUNCTION__ << " " << pair.first << " CRC32 value is error" << std::endl;
-				client->SendAbnormalGameData(pair.first + " CRC32 value is error");
+				std::cout << "[LOG]:" << __FUNCTION__ << " " << api_name.first << " CRC32 value is error" << std::endl;
+				client->SendAbnormalGameData(api_name.first + " CRC32 value is error");
 			}
 
 			//效验Hook点jmp后四位是否跳转到BAC模块中
-			if (!this->JudgmentHookModule((void*)tpair.first))
+			if (!this->JudgmentHookModule((void*)api_address.first))
 				std::cout << "[LOG]:" << __FUNCTION__ << " hook to address not bac module!" << std::endl;
 		}
 	}
@@ -152,17 +152,18 @@ void BAC::CheckMemoryCRC32()
 	}
 
 	//计算CRC32值并检查
-	for (auto& pair : this->_crc32_list)
+	for (auto& module_path : this->_crc32_list)
 	{
 		//printf("当前检查的模块：%s,", pair.first.c_str());
-		for (auto& tpair : pair.second)
+		for (auto& module_begin_address : module_path.second)
 		{
-			unsigned int crc32_value = this->CRC32((PVOID)tpair.first, tpair.second);
+			unsigned int crc32_value = this->CRC32((PVOID)module_begin_address.first, module_begin_address.second);
 			//printf("地址：%p,CRC32值：%p\n", tpair.first, crc32_value);
-			if (crc32_value != crc32_value_list[tpair.first])
+			if (crc32_value != crc32_value_list[module_begin_address.first])
 			{
 				//检测到当前模块被修改，可以dump并和本地文件一起上传服务器做数据回溯
-				printf("检查到模块内存被修改：%s\n", pair.first.c_str());
+				printf("checked current module been changed：%s\n", module_path.first.c_str());
+				client->SendAbnormalGameData("checked current module been changed: " + module_path.first);
 			}
 		}
 	}

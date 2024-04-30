@@ -292,6 +292,8 @@ auto BACServer::GetClientAbnormalGameData(PClientNode p_client, std::string buff
 	{
 		case BACStatus::Request:
 		{
+			std::cout << "user: " << this->_clients[p_client->connect_id]->user_id << " " << buffer.substr(sizeof(BACPacketHeader), p_header->data_len) << std::endl;
+
 			this->ResponseStatus(p_client, p_header->cmd);
 			break;
 		}
