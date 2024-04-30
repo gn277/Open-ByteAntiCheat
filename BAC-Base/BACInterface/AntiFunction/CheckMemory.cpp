@@ -25,12 +25,16 @@ bool BAC::JudgmentHookModule(PVOID hook_address)
 		else
 		{
 			std::cout << "[LOG]:" << __FUNCTION__ << " send to server detours hook had been changed" << std::endl;
+
+			client->SendAbnormalGameData("detours hook had been changed");
 			return false;
 		}
 	}
 	else
 	{
 		std::cout << "[LOG]:" << __FUNCTION__ << " send to server is not BAC's detours lib hook" << std::endl;
+
+		client->SendAbnormalGameData("find not BAC's detours lib hook");
 		return false;
 	}
 #else
@@ -42,12 +46,16 @@ bool BAC::JudgmentHookModule(PVOID hook_address)
 		else
 		{
 			//std::cout << "[LOG]:" << __FUNCTION__ << " send to server detours hook had been changed" << std::endl;
+
+			client->SendAbnormalGameData("detours hook had been changed");
 			return false;
 		}
 	}
 	else
 	{
 		//std::cout << "[LOG]:" << __FUNCTION__ << " send to server is not BAC's detours lib hook" << std::endl;
+
+		client->SendAbnormalGameData("find not BAC's detours lib hook"");
 		return false;
 	}
 #endif
@@ -70,7 +78,10 @@ void BAC::CheckHookPointer()
 		{
 			//效验CRC32
 			if (tpair.second != this->CRC32((void*)tpair.first, 5))
+			{
 				std::cout << "[LOG]:" << __FUNCTION__ << " " << pair.first << " CRC32 value is error" << std::endl;
+				client->SendAbnormalGameData(pair.first + " CRC32 value is error");
+			}
 
 			//效验Hook点jmp后四位是否跳转到BAC模块中
 			if (!this->JudgmentHookModule((void*)tpair.first))

@@ -56,11 +56,14 @@ BASE_ERROR BAC::InitializeBACClient()
 		return status;
 
 	//发送登录命令
-	status = client->Login();
+	status = client->Login("BacUser_1");
 	if (status != BASE_SUCCESS)
 		return status;
 
-
+	//发送机器信息
+	status = client->SendMachineInfo();
+	if (status != BASE_SUCCESS)
+		return status;
 
 	baclog->FunctionLog(__FUNCTION__, "Leave");
 #if NDEBUG

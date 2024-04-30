@@ -1,5 +1,4 @@
 #include "BACSocket.h"
-#include "../../BAC.h"
 
 
 BACTcpSocket::BACTcpSocket(int af, int type, int protocol)
@@ -122,7 +121,20 @@ auto TcpServer::Recv(std::string* buffer, int recv_len) -> int
 	return recved;
 }
 
-auto TcpServer::GetStatus(std::string buffer) -> BACStatus
+auto TcpServer::Recv(int recv_len) -> std::string
+{
+	std::string temp_data;
+	char* temp = new char[recv_len];
+
+	auto recved = this->BACTcpSocket::Recv(temp, recv_len);
+
+	temp_data.append(temp, recved);
+	delete[] temp;
+
+	return temp_data;
+}
+
+auto TcpServer::GetResponseStatus(std::string buffer) -> BACStatus
 {
 	PBACPacketHeader p_header = (PBACPacketHeader)buffer.data();
 
@@ -136,40 +148,10 @@ auto TcpServer::GetCommand(std::string buffer) -> BACCommand
 	return p_header->cmd;
 }
 
-auto TcpServer::GetData(std::string buffer) -> PVOID
+auto TcpServer::GetDataLength(std::string buffer) -> unsigned long long
 {
-	return buffer.substr(sizeof(BACPacketHeader)).data();
-}
-
-auto TcpServer::Login() -> BASE_ERROR
-{
-	baclog->FunctionLog(__FUNCTION__, "Enter");
-
-	//·¢ËÍµÇÂ¼ÃüÁî
-	if (!this->Send(BAC_CLIENT_LOGIN, ""))
-	{
-		baclog->FunctionLog(__FUNCTION__, "Leave");
-		return BASE_CLIENT_LOGIN_ERROR;
-	}
-
-	//½ÓÊÕ·µ»ØÃüÁî
-	std::string buffer;
-	if (!this->Recv(&buffer, sizeof(BACPacketHeader)))
-	{
-		baclog->FunctionLog(__FUNCTION__, "Leave");
-		return BASE_CLIENT_LOGIN_ERROR;
-	}
-
-	//ÅĞ¶Ï·µ»ØÃüÁî
 	PBACPacketHeader p_header = (PBACPacketHeader)buffer.data();
-	if (p_header->status != BACStatus::Success)
-	{
-		baclog->FileLogf("BASE login status error:%d", p_header->status);
-		baclog->FunctionLog(__FUNCTION__, "Leave");
-		return BASE_CLIENT_LOGIN_ERROR;
-	}
 
-	baclog->FunctionLog(__FUNCTION__, "Leave");
-	return BASE_SUCCESS;
+	return p_header->data_len;
 }
 

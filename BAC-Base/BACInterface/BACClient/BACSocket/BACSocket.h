@@ -36,14 +36,14 @@ public:
 	~TcpServer();
 
 public:
-	auto Send(BACCommand cmd, std::string data, BACStatus status = BACStatus::None) -> int;
+	auto Send(BACCommand cmd, std::string data = "", BACStatus status = BACStatus::Request) -> int;
 	auto Recv(std::string* buffer, int recv_len) -> int;
-	static auto GetStatus(std::string buffer) -> BACStatus;
-	static auto GetCommand(std::string buffer) -> BACCommand;
-	static auto GetData(std::string buffer) -> PVOID;
+	auto Recv(int recv_len) -> std::string;
+	auto GetResponseStatus(std::string buffer) -> BACStatus;
+	auto GetCommand(std::string buffer) -> BACCommand;
+	auto GetDataLength(std::string buffer) -> unsigned long long;
 
 public:
-	auto Login() -> BASE_ERROR;
 
 };
 

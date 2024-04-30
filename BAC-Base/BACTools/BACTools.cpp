@@ -121,9 +121,6 @@ DWORD BACTools::GetPeSectionSize(PVOID image, const char* section_name)
 
 bool BACTools::GetProcessModule(std::map<std::string, DWORD64>* p_process_module_list)
 {
-#if NDEBUG
-	VMProtectBeginUltra("Tools::GetProcessModule");
-#endif
 	//baclog->FunctionLog(__FUNCTION__, "Enter");
 
 	HMODULE* p_module = NULL;
@@ -160,9 +157,6 @@ bool BACTools::GetProcessModule(std::map<std::string, DWORD64>* p_process_module
 	HeapFree(GetProcessHeap(), 0, p_module);
 	CloseHandle(handle);
 	return true;
-#if NDEBUG
-	VMProtectEnd();
-#endif
 }
 
 CallerStackInfo BACTools::GetMemoryModuleInfo(PVOID address)

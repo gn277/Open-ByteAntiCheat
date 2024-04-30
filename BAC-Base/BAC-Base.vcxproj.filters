@@ -47,6 +47,9 @@
     <Filter Include="BACInterface\GameRender\OpenGL">
       <UniqueIdentifier>{d94b5807-aebd-411d-9b47-18ab3e529fe3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="BACInterface\BACClient\BACProtocol">
+      <UniqueIdentifier>{1ee2f61c-5dde-4c8e-9a8b-469d921a2e34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BAC-Base.h">
@@ -94,6 +97,9 @@
     </ClInclude>
     <ClInclude Include="BACInterface\GameRender\OpenGL\OpenGL.h">
       <Filter>BACInterface\GameRender\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\BAC-Server\BACServer\BACProtocol\BACProtocol.h">
+      <Filter>BACInterface\BACClient\BACProtocol</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
