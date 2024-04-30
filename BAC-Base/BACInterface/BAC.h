@@ -104,6 +104,8 @@ public:
 	void CheckMemoryCRC32();
 	//添加BAC线程句柄
 	void AppendBACThreadHandle(std::string function_name, HANDLE thread_handle);
+	//清除BAC线程句柄
+	void EraseBACThreadHandle(const std::string function_name);
 
 public:
 	HMODULE GetSelfModuleHandle();
