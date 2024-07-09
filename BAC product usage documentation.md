@@ -3,10 +3,16 @@
 使用到的开源库：
 * HP-Socket：
 	* https://github.com/ldcsaa/HP-Socket
-	* BAC-Server使用6.0.1版本 
+	* BAC-Server使用6.0.1版本
 	* 下载后解压，将Include和Lib两个文件夹复制到BAC-Server项目路径下：BAC-Server\hp-socket-6.0.1-lib-win
 * cJSON
 * Detours
+每个项目属性配置：
+* 常规->Windows SDK 版本：设置为自己的SDK版本即可
+* 常规->平台工具集：设置为自己的工具集版本即可
+* 常规->C++ 语言标准：ISO C++20 标准 (/std:c++20)
+* 常规->C 语言标准：ISO C17 (2018)标准 (/std:c17)
+* BAC-Base-Kernel->属性->Driver Signing->General->Sign Mode改为Off
 
 无游戏项目源码时使用方法：
 ====
